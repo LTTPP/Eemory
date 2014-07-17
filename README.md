@@ -1,0 +1,4 @@
+EEvernote
+=========
+
+Evernote Eclipse Plugin
