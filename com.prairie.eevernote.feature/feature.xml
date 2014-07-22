@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.prairie.eevernote.feature"
+      label="EEvernote"
+      version="1.0.0.qualifier"
+      provider-name="Jianwei Liu">
+
+   <description url="https://github.com/prairie/EEvernote">
+      The EEvernote is the easiest way to save resources
+in your Eclipse like Java code into your Evernote account.
+   </description>
+
+   <copyright>
+      (c) Copyright Jianwei Liu. All rights reserved.
+   </copyright>
+
+   <license>
+      Place Holder
+   </license>
+
+   <url>
+      <discovery label="EEvernote" url="https://github.com/prairie/EEvernote"/>
+   </url>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+   </requires>
+
+   <plugin
+         id="com.prairie.eevernote"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>

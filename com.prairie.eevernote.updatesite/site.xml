@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="EEvernote Update Site" url="https://github.com/prairie/EEvernote">
+      Eclipse Update Site for EEvernote Plug-in
+   </description>
+   <feature url="features/com.prairie.eevernote.feature_1.0.0.201402181129.jar" id="com.prairie.eevernote.feature" version="1.0.0.201402181129">
+      <category name="EEvernote"/>
+   </feature>
+   <category-def name="EEvernote" label="EEvernote"/>
+</site>

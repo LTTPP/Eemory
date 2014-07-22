@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.prairie.eevernote.feature_1.0.0.qualifier.jar" id="com.prairie.eevernote.feature" version="1.0.0.qualifier">
+      <category name="EEvernote"/>
+   </feature>
+   <category-def name="EEvernote" label="EEvernote"/>
+</site>
