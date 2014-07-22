@@ -8,6 +8,7 @@ public interface Constants {
 	public static final String TAGS_SEPARATOR = ",";
 	public static final String STRING_EMPTY = "";
 	public static final String COLON = ":";
+	public static final String FILENAME_DELIMITER = ".";
 	public static final String MD5 = "MD5";
 	public static final char ZERO_CHAR = '0';
 	public static final String SimpleDateFormat = "yyyy-MM-dd'T'HH:mm:ss";
@@ -15,6 +16,7 @@ public interface Constants {
 	public static final String PropertiesFile = "EEProperties.properties";
 	public static final String LEFT_PARENTHESIS = "(";
 	public static final String RIGHT_PARENTHESIS = ")";
+	public static final String IMG_PNG = "png";
 	// -=-=-=-=-=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-
 
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Settings Keys =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -66,5 +68,12 @@ public interface Constants {
 	public static final String EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE = "EEClipperPlugin.ActionDelegate.AddSelectionToEvernote.Message";
 	public static final String EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_SUBTASK_MESSAGE = "EEClipperPlugin.ActionDelegate.AddSelectionToEvernote.Subtask.Message";
 	public static final String EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_OUTOFDATEMESSAGE = "EEClipperPlugin.ActionDelegate.AddSelectionToEvernote.OutOfDateMessage";
+
+	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Command IDs =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	public static final String EEPLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipToEvernote";
+	public static final String EEPLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipSelectionToEvernote";
+	public static final String EEPLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipFileToEvernote";
+	public static final String EEPLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipScreenshotToEvernote";
+	public static final String EEPLUGIN_COMMAND_ID_CONFIGURATIONS = "com.prairie.eevernote.commands.Configurations";
 
 }

@@ -17,6 +17,10 @@
 			<commandParameter id="com.prairie.eevernote.command.parameter" name="Command Parameter" optional="true">
 			</commandParameter>
 		</command>
+		<command name="Clip Screenshot to Evernote" categoryId="com.prairie.eevernote.commands.category" id="com.prairie.eevernote.commands.ClipScreenshotToEvernote">
+			<commandParameter id="com.prairie.eevernote.command.parameter" name="Command Parameter" optional="true">
+			</commandParameter>
+		</command>
 		<command name="EEvernote Configurations..." categoryId="com.prairie.eevernote.commands.category" id="com.prairie.eevernote.commands.Configurations">
 			<commandParameter id="com.prairie.eevernote.command.parameter" name="Command Parameter" optional="true">
 			</commandParameter>
@@ -51,6 +55,8 @@
 			        <instanceof value="org.eclipse.jface.text.ITextSelection" />
 				</with>
 		    </enabledWhen>
+		</handler>
+		<handler name="EEvernote Handler" commandId="com.prairie.eevernote.commands.ClipScreenshotToEvernote" class="com.prairie.eevernote.handlers.EEHandler">
 		</handler>
 		<handler name="EEvernote Handler" commandId="com.prairie.eevernote.commands.Configurations" class="com.prairie.eevernote.handlers.EEHandler">
 		</handler>
@@ -91,6 +97,12 @@
 					value="Clip File to Evernote">
 				</parameter>
 			</command>
+			<command label="Clip Screenshot to Evernote" icon="icons/icon_screenshot_16x16.png"
+				commandId="com.prairie.eevernote.commands.ClipScreenshotToEvernote">
+				<parameter name="com.prairie.eevernote.command.parameter"
+					value="Clip Screenshot to Evernote">
+				</parameter>
+			</command>
 			<separator name="separatorLine" visible="true">
 			</separator>
 			<command label="EEvernote Configurations..."
@@ -115,6 +127,12 @@
 					commandId="com.prairie.eevernote.commands.ClipFileToEvernote">
 					<parameter name="com.prairie.eevernote.command.parameter"
 						value="Clip File to Evernote">
+					</parameter>
+				</command>
+				<command label="Clip Screenshot to Evernote" icon="icons/icon_screenshot_16x16.png"
+					commandId="com.prairie.eevernote.commands.ClipScreenshotToEvernote">
+					<parameter name="com.prairie.eevernote.command.parameter"
+						value="Clip Screenshot to Evernote">
 					</parameter>
 				</command>
 				<separator name="separatorLine" visible="true">

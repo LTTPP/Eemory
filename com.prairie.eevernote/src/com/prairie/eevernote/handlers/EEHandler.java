@@ -1,9 +1,15 @@
 package com.prairie.eevernote.handlers;
 
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -41,8 +47,8 @@ import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.StringUtil;
 import com.prairie.eevernote.widgets.ConfigurationsDialog;
-import com.prairie.eevernote.widgets.Settings;
 import com.prairie.eevernote.widgets.HotTextDialog;
+import com.prairie.eevernote.widgets.Settings;
 
 public class EEHandler extends AbstractHandler implements Constants {
 
@@ -56,13 +62,15 @@ public class EEHandler extends AbstractHandler implements Constants {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
-		if (event.getCommand().getId().equals("com.prairie.eevernote.commands.AddToEvernote")) {
+		if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE)) {
 			// TODO
-		} else if (event.getCommand().getId().equals("com.prairie.eevernote.commands.AddSelectionToEvernote")) {
+		} else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE)) {
 			clipSelectionClicked(event);
-		} else if (event.getCommand().getId().equals("com.prairie.eevernote.commands.AddFileToEvernote")) {
+		} else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE)) {
 			clipFileClicked(event);
-		} else if (event.getCommand().getId().equals("com.prairie.eevernote.commands.Configurations")) {
+		} else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE)) {
+			clipScreenshotClicked(event);
+		} else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CONFIGURATIONS)) {
 			configurationsClicked(event);
 		}
 		return null;
@@ -201,6 +209,48 @@ public class EEHandler extends AbstractHandler implements Constants {
 
 		} catch (OutOfDateException e) {
 			MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), EEPlugin.getName() + StringUtil.STRING_EMPTY + EEPlugin.getVersion() + EEPlugin.getVersion() + EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_OUTOFDATEMESSAGE));
+		} catch (Throwable e) {
+			MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), e.getLocalizedMessage());
+		}
+	}
+
+	public void clipScreenshotClicked(final ExecutionEvent event) throws ExecutionException {
+		try {
+			final EEClipper clipper = this.getEEClipper();
+			int option = HotTextDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
+			if (option == HotTextDialog.OK) {
+				this.setClipperArgs(clipper, HotTextDialog.getThis().getQuickSettings());
+			} else if (option == HotTextDialog.CANCEL) {
+				return;
+			}
+
+			BufferedImage screenshot = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+			final File  file = File.createTempFile(Helper.timestamp(), FILENAME_DELIMITER + IMG_PNG);
+			ImageIO.write(screenshot, IMG_PNG, file);
+
+			final List<File> files = ListUtil.list();
+			files.add(file);
+
+			Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE), IProgressMonitor.UNKNOWN);
+					try {
+						monitor.subTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_SUBTASK_MESSAGE));
+						clipper.clipFile(files);
+					} catch (Throwable e) {
+						return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
+					}
+					monitor.done();
+					file.delete();
+					return Status.OK_STATUS;
+				}
+			};
+			job.setUser(true);
+			job.schedule();
+
+		} catch (OutOfDateException e) {
+			MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), EEPlugin.getName() + StringUtil.STRING_EMPTY + EEPlugin.getVersion() + EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE));
 		} catch (Throwable e) {
 			MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), e.getLocalizedMessage());
 		}
