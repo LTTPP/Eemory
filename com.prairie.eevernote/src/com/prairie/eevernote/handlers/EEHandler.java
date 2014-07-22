@@ -225,7 +225,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 			}
 
 			BufferedImage screenshot = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-			final File  file = File.createTempFile(Helper.timestamp(), FILENAME_DELIMITER + IMG_PNG);
+			final File  file = File.createTempFile(Helper.tempFileName(), FILENAME_DELIMITER + IMG_PNG);
 			ImageIO.write(screenshot, IMG_PNG, file);
 
 			final List<File> files = ListUtil.list();

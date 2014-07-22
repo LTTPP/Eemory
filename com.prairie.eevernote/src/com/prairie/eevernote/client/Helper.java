@@ -31,6 +31,12 @@ public class Helper {
 		return formatter.format(new Date());
 	}
 
+	public static String tempFileName() {
+		// 2014-02-21T18-35-32
+		SimpleDateFormat formatter = new SimpleDateFormat(Constants.SimpleDateFormat2);
+		return formatter.format(new Date());
+	}
+
 	public static String mimeType(File file) {
 		if (MimeUtil.getMimeDetector(Constants.MimeDetector) == null) {
 			MimeUtil.registerMimeDetector(Constants.MimeDetector);

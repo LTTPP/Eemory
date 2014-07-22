@@ -12,6 +12,7 @@ public interface Constants {
 	public static final String MD5 = "MD5";
 	public static final char ZERO_CHAR = '0';
 	public static final String SimpleDateFormat = "yyyy-MM-dd'T'HH:mm:ss";
+	public static final String SimpleDateFormat2 = "yyyy-MM-dd'T'HH-mm-ss-";
 	public static final String MimeDetector = "eu.medsea.mimeutil.detector.MagicMimeMimeDetector";
 	public static final String PropertiesFile = "EEProperties.properties";
 	public static final String LEFT_PARENTHESIS = "(";
