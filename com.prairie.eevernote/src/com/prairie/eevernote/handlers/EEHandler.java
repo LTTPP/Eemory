@@ -1,8 +1,5 @@
 package com.prairie.eevernote.handlers;
 
-import java.awt.Rectangle;
-import java.awt.Robot;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Iterator;
@@ -46,6 +43,7 @@ import com.prairie.eevernote.exception.OutOfDateException;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.StringUtil;
+import com.prairie.eevernote.widgets.CaptureView;
 import com.prairie.eevernote.widgets.ConfigurationsDialog;
 import com.prairie.eevernote.widgets.HotTextDialog;
 import com.prairie.eevernote.widgets.Settings;
@@ -224,12 +222,12 @@ public class EEHandler extends AbstractHandler implements Constants {
 				return;
 			}
 
-			BufferedImage screenshot = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+			BufferedImage screenshot = CaptureView.showView();
 			final File  file = File.createTempFile(Helper.tempFileName(), FILENAME_DELIMITER + IMG_PNG);
-			ImageIO.write(screenshot, IMG_PNG, file);
+			//ImageIO.write(screenshot, IMG_PNG, file);
 
 			final List<File> files = ListUtil.list();
-			files.add(file);
+			//files.add(file);
 
 			Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
 				@Override
@@ -242,7 +240,9 @@ public class EEHandler extends AbstractHandler implements Constants {
 						return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
 					}
 					monitor.done();
-					file.delete();
+					if (file != null && file.exists()) {
+						file.delete();
+					}
 					return Status.OK_STATUS;
 				}
 			};
