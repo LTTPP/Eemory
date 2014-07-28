@@ -2,30 +2,36 @@ package com.prairie.eevernote.widgets;
 
 public class GeomRectangle {
 
-	private GeomPoint topLeftPoint;
-	private GeomPoint bottomRightPoint;
+	private GeomPoint startPoint;
+	private GeomPoint endPoint;
 
 	public GeomRectangle() {
-		this.topLeftPoint = new GeomPoint();
-		this.bottomRightPoint = new GeomPoint();
+		this.startPoint = new GeomPoint();
+		this.endPoint = new GeomPoint();
 	}
 
 	public GeomPoint getTopLeftPoint() {
-		refactor();
-		return topLeftPoint;
+		return new GeomPoint(Math.min(startPoint.getX(), endPoint.getX()), Math.min(startPoint.getY(), endPoint.getY()));
 	}
 
-	public void setTopLeftPoint(GeomPoint topLeftPoint) {
-		this.topLeftPoint = topLeftPoint;
+	public GeomPoint getStartPoint() {
+		return this.startPoint;
+	}
+
+	public void setStartPoint(GeomPoint topLeftPoint) {
+		this.startPoint = topLeftPoint;
 	}
 
 	public GeomPoint getBottomRightPoint() {
-		refactor();
-		return bottomRightPoint;
+		return new GeomPoint(Math.max(startPoint.getX(), endPoint.getX()), Math.max(startPoint.getY(), endPoint.getY()));
 	}
 
-	public void setBottomRightPoint(GeomPoint bottomRightPoint) {
-		this.bottomRightPoint = bottomRightPoint;
+	public GeomPoint getEndPoint() {
+		return this.endPoint;
+	}
+
+	public void setEndPoint(GeomPoint bottomRightPoint) {
+		this.endPoint = bottomRightPoint;
 	}
 
 	public int getWidth() {
@@ -36,20 +42,39 @@ public class GeomRectangle {
 		return getBottomRightPoint().getY() - getTopLeftPoint().getY();
 	}
 
-	private void refactor() {
-		if (topLeftPoint.compareTo(bottomRightPoint) < 0) {
-			return;
-		}
-		if (topLeftPoint.getX() > bottomRightPoint.getX()) {
-			int temp = topLeftPoint.getX();
-			topLeftPoint.setX(bottomRightPoint.getX());
-			bottomRightPoint.setX(temp);
-		}
+	public GeomPoint getTopRightPoint() {
+		return new GeomPoint(getBottomRightPoint().getX(), getTopLeftPoint().getY());
+	}
 
-		if (topLeftPoint.getY() > bottomRightPoint.getY()) {
-			int temp = topLeftPoint.getY();
-			topLeftPoint.setY(bottomRightPoint.getY());
-			bottomRightPoint.setY(temp);
+	public GeomPoint getBottomLeftPoint() {
+		return new GeomPoint(getTopLeftPoint().getX(), getBottomRightPoint().getY());
+	}
+
+	public Position positionOfPoint(GeomPoint point) {
+		if (point.equals(this.getTopLeftPoint())) {
+			return Position.NORTHWEST;
+		} else if (point.equals(this.getTopRightPoint())) {
+			return Position.NORTHEAST;
+		} else if (point.equals(this.getBottomLeftPoint())) {
+			return Position.SOUTHWEST;
+		} else if (point.equals(this.getBottomRightPoint())) {
+			return Position.SOUTHEAST;
+		} else if ((point.getX() == this.getTopLeftPoint().getX()) && (point.getY() > this.getTopLeftPoint().getY()) && (point.getY() < this.getBottomRightPoint().getY())) {
+			return Position.WEST;
+		} else if ((point.getX() == this.getBottomRightPoint().getX()) && (point.getY() > this.getTopLeftPoint().getY()) && (point.getY() < this.getBottomRightPoint().getY())) {
+			return Position.EAST;
+		} else if ((point.getY() == this.getTopLeftPoint().getY()) && (point.getX() > this.getTopLeftPoint().getX()) && (point.getY() < this.getBottomRightPoint().getX())) {
+			return Position.NORTH;
+		} else if ((point.getY() == this.getBottomRightPoint().getY()) && (point.getX() > this.getTopLeftPoint().getX()) && (point.getX() < this.getBottomRightPoint().getX())) {
+			return Position.SOUTH;
+		} else if (point.getX() > this.getTopLeftPoint().getX() && point.getX() < this.getBottomRightPoint().getX() && point.getY() > this.getTopLeftPoint().getY() && point.getY() < this.getBottomRightPoint().getY()) {
+			return Position.INSIDE;
+		} else {
+			return Position.OUTSIDE;
 		}
+	}
+
+	enum Position {
+		SOUTHWEST, SOUTHEAST, NORTHWEST, NORTHEAST, NORTH, SOUTH, WEST, EAST, OUTSIDE, INSIDE
 	}
 }

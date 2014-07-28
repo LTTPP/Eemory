@@ -5,6 +5,15 @@ public class GeomPoint implements Comparable<GeomPoint> {
 	private int x;
 	private int y;
 
+	public GeomPoint() {
+		this(0, 0);
+	}
+
+	public GeomPoint(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+
 	public int getX() {
 		return x;
 	}
@@ -35,4 +44,23 @@ public class GeomPoint implements Comparable<GeomPoint> {
 		}
 		return 0;
 	}
+
+	@Override
+	public int hashCode() {
+		int result = 17;
+		result = 31 * result + (this.getX() * this.getX() + this.getY() * this.getY());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof GeomPoint) {
+			GeomPoint p = (GeomPoint) obj;
+			if ((p.getX() == this.getX()) && (p.getY() == this.getY())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
