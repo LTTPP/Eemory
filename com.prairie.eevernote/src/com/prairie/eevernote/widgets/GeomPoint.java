@@ -1,6 +1,6 @@
 package com.prairie.eevernote.widgets;
 
-public class GeomPoint implements Comparable<GeomPoint> {
+public class GeomPoint {
 
 	private int x;
 	private int y;
@@ -33,16 +33,6 @@ public class GeomPoint implements Comparable<GeomPoint> {
 	public void setLocation(int x, int y) {
 		setX(x);
 		setY(y);
-	}
-
-	@Override
-	public int compareTo(GeomPoint o) {
-		if (this.getX() < o.getX() && this.getY() < o.getY()) {
-			return -1;
-		} else if (this.getX() > o.getX() && this.getY() > o.getY()) {
-			return 1;
-		}
-		return 0;
 	}
 
 	@Override

@@ -53,20 +53,20 @@ public class CaptureView extends JWindow implements Constants {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON1) {
-					if (e.getClickCount() == 1) {
+					if (e.getClickCount() == Constants.ONE) {
 						if (!isCaptured) {
 							isCaptureFullScreenViaClick = true;
-							rectangle.getStartPoint().setLocation(0, 0);
+							rectangle.getStartPoint().setLocation(Constants.ZERO, Constants.ZERO);
 							rectangle.getEndPoint().setLocation(new Double(Toolkit.getDefaultToolkit().getScreenSize().getWidth()).intValue(), new Double(Toolkit.getDefaultToolkit().getScreenSize().getHeight()).intValue());
 							repaint();
 							isCaptured = true;
 						}
-					} else if (e.getClickCount() == 2) {
+					} else if (e.getClickCount() == Constants.TWO) {
 						setVisible(false);
 						dispose();
 					}
 				} else if (e.getButton() == MouseEvent.BUTTON3) {
-					if (e.getClickCount() == 1) {
+					if (e.getClickCount() == Constants.ONE) {
 						if (isCaptured) {
 							resetView();
 							isCaptured = false;
@@ -85,7 +85,7 @@ public class CaptureView extends JWindow implements Constants {
 				if (!isCaptured && (e.getButton() == MouseEvent.BUTTON1)) {
 					rectangle.getStartPoint().setLocation(e.getX(), e.getY());
 					isCapturing = true;
-					resetTimes(1);
+					resetTimes(Constants.ONE);
 				}
 			}
 
@@ -94,7 +94,7 @@ public class CaptureView extends JWindow implements Constants {
 				if (isCapturing && (e.getButton() == MouseEvent.BUTTON1)) {
 					rectangle.getEndPoint().setLocation(e.getX(), e.getY());
 					isCapturing = false;
-					isCaptured = rectangle.getWidth() > 0 && rectangle.getHeight() > 0;
+					isCaptured = rectangle.getWidth() > Constants.ZERO && rectangle.getHeight() > Constants.ZERO;
 				}
 			}
 		});
@@ -103,10 +103,12 @@ public class CaptureView extends JWindow implements Constants {
 			public void mouseDragged(MouseEvent e) {
 				if (isCapturing) {
 					if (runTimes()) {
-						maskFullScreen(0.7F);
+						maskFullScreen(Constants.ONE_DOT_SEVEN_F);
 					}
 					rectangle.getEndPoint().setLocation(e.getX(), e.getY());
 					repaint();
+				} else if (isCaptured) {
+					//
 				}
 			}
 
@@ -149,12 +151,19 @@ public class CaptureView extends JWindow implements Constants {
 			Graphics2D graphics2D = (Graphics2D) graphics;
 			graphics2D.drawImage(cropedScreenshot, rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY(), null);
 			graphics2D.setColor(Color.GREEN);
-			graphics2D.drawRect(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY(), Math.abs(rectangle.getBottomRightPoint().getX() - rectangle.getTopLeftPoint().getX()), Math.abs(rectangle.getBottomRightPoint().getY() - rectangle.getTopLeftPoint().getY()));
+			graphics2D.drawRect(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY(), rectangle.getWidth(), rectangle.getHeight());
+			for (GeomRectangle.Position p : GeomRectangle.Position.values()) {
+				GeomPoint point = rectangle.pointAt(p);
+				if (point != null) {
+					graphics2D.drawRect(point.getX() - 2, point.getY() - 2, 4, 4);
+					graphics2D.fillRect(point.getX() - 2, point.getY() - 2, 4, 4);
+				}
+			}
 		}
 	}
 
 	private boolean runTimes() {
-		return runTimes-- > 0;
+		return runTimes-- > Constants.ZERO;
 	}
 
 	private void resetTimes(int times) {
@@ -162,7 +171,7 @@ public class CaptureView extends JWindow implements Constants {
 	}
 
 	private BufferedImage mask(BufferedImage image, float scaleFactor) {
-		RescaleOp ro = new RescaleOp(scaleFactor, 0, null);
+		RescaleOp ro = new RescaleOp(scaleFactor, Constants.ZERO, null);
 		BufferedImage rescaledScreenshot = ro.filter(image, null);
 		return rescaledScreenshot;
 	}
@@ -172,7 +181,7 @@ public class CaptureView extends JWindow implements Constants {
 			@Override
 			public void paintComponent(Graphics graphics) {
 				super.paintComponent(graphics);
-				((Graphics2D) graphics).drawImage(mask(fullScreen, scaleFactor), 0, 0, null);
+				((Graphics2D) graphics).drawImage(mask(fullScreen, scaleFactor), Constants.ZERO, Constants.ZERO, null);
 			}
 		});
 		requestFocus();
@@ -186,10 +195,10 @@ public class CaptureView extends JWindow implements Constants {
 			public void paintComponent(Graphics graphics) {
 				super.paintComponent(graphics);
 				Graphics2D graphics2D = (Graphics2D) graphics;
-				graphics2D.drawImage(fullScreen, 0, 0, null);
+				graphics2D.drawImage(fullScreen, Constants.ZERO, Constants.ZERO, null);
 				graphics2D.setColor(Color.GREEN);
-				graphics2D.setStroke(new BasicStroke(6));
-				graphics2D.drawRect(0, 0, new Double(Toolkit.getDefaultToolkit().getScreenSize().getWidth()).intValue(), new Double(Toolkit.getDefaultToolkit().getScreenSize().getHeight()).intValue());
+				graphics2D.setStroke(new BasicStroke(Constants.SIX));
+				graphics2D.drawRect(Constants.ZERO, Constants.ZERO, new Double(Toolkit.getDefaultToolkit().getScreenSize().getWidth()).intValue(), new Double(Toolkit.getDefaultToolkit().getScreenSize().getHeight()).intValue());
 			}
 		});
 		requestFocus();

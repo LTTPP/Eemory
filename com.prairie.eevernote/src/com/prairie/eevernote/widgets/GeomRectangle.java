@@ -50,6 +50,27 @@ public class GeomRectangle {
 		return new GeomPoint(getTopLeftPoint().getX(), getBottomRightPoint().getY());
 	}
 
+	public GeomPoint pointAt(Position position) {
+		if (position == Position.EAST) {
+			return new GeomPoint(this.getBottomRightPoint().getX(), (this.getTopLeftPoint().getY() + this.getBottomRightPoint().getY()) / 2);
+		} else if (position == Position.SOUTH) {
+			return new GeomPoint((this.getTopLeftPoint().getX() + this.getBottomRightPoint().getX()) / 2, this.getBottomRightPoint().getY());
+		} else if (position == Position.WEST) {
+			return new GeomPoint(this.getTopLeftPoint().getX(), (this.getTopLeftPoint().getY() + this.getBottomRightPoint().getY()) / 2);
+		} else if (position == Position.NORTH) {
+			return new GeomPoint((this.getTopLeftPoint().getX() + this.getBottomRightPoint().getX()) / 2, this.getTopLeftPoint().getY());
+		} else if (position == Position.SOUTHEAST) {
+			return this.getBottomRightPoint();
+		} else if (position == Position.SOUTHWEST) {
+			return this.getBottomLeftPoint();
+		} else if (position == Position.NORTHEAST) {
+			this.getTopRightPoint();
+		} else if (position == Position.NORTHWEST) {
+			this.getTopLeftPoint();
+		}
+		return null;
+	}
+
 	public Position positionOfPoint(GeomPoint point) {
 		if (point.equals(this.getTopLeftPoint())) {
 			return Position.NORTHWEST;

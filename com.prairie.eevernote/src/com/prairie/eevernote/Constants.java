@@ -18,6 +18,17 @@ public interface Constants {
 	public static final String LEFT_PARENTHESIS = "(";
 	public static final String RIGHT_PARENTHESIS = ")";
 	public static final String IMG_PNG = "png";
+	public static final int ZERO = 0;
+	public static final int ONE = 1;
+	public static final int TWO = 2;
+	public static final int THREE = 3;
+	public static final int FOUR = 4;
+	public static final int FIVE = 5;
+	public static final int SIX = 6;
+	public static final int SEVEN = 7;
+	public static final int EIGHT = 8;
+	public static final int NINE = 9;
+	public static final float ONE_DOT_SEVEN_F = 0.7F;
 	// -=-=-=-=-=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-
 
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Settings Keys =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
