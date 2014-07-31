@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -223,10 +225,10 @@ public class EEHandler extends AbstractHandler implements Constants {
 
 			BufferedImage screenshot = CaptureView.showView();
 			final File  file = File.createTempFile(FileUtil.tempFileName(), FILENAME_DELIMITER + IMG_PNG);
-			//ImageIO.write(screenshot, IMG_PNG, file);
+			ImageIO.write(screenshot, IMG_PNG, file);
 
 			final List<File> files = ListUtil.list();
-			//files.add(file);
+			files.add(file);
 
 			Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
 				@Override

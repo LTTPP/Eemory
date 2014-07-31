@@ -206,28 +206,61 @@ public class GeomRectangle implements Constants {
 		} else if (position == Position.SOUTHWEST) {
 			if (getStartPoint().equals(getBottomLeftPoint())) {
 				startPoint.move(x, y);
-			} else if (getEndPoint().equals(getBottomLeftPoint())) {
+			} else if (getStartPoint().equals(getTopRightPoint())) {
 				endPoint.move(x, y);
+			} else if (getStartPoint().equals(getTopLeftPoint())) {
+				startPoint.move(x, 0);
+				endPoint.move(0, y);
+			} else if (getStartPoint().equals(getBottomRightPoint())) {
+				startPoint.move(0, y);
+				endPoint.move(x, 0);
 			}
 		} else if (position == Position.SOUTHEAST) {
 			if (getStartPoint().equals(getBottomRightPoint())) {
 				startPoint.move(x, y);
-			} else if (getEndPoint().equals(getBottomRightPoint())) {
+			} else if (getStartPoint().equals(getTopLeftPoint())) {
 				endPoint.move(x, y);
+			} else if (getStartPoint().equals(getTopRightPoint())) {
+				startPoint.move(x, 0);
+				endPoint.move(0, y);
+			} else if (getStartPoint().equals(getBottomLeftPoint())) {
+				startPoint.move(0, y);
+				endPoint.move(x, 0);
 			}
 		} else if (position == Position.NORTHWEST) {
 			if (getStartPoint().equals(getTopLeftPoint())) {
 				startPoint.move(x, y);
-			} else if (getEndPoint().equals(getTopLeftPoint())) {
+			} else if (getStartPoint().equals(getBottomRightPoint())) {
 				endPoint.move(x, y);
+			} else if (getStartPoint().equals(getTopRightPoint())) {
+				startPoint.move(0, y);
+				endPoint.move(x, 0);
+			} else if (getStartPoint().equals(getBottomLeftPoint())) {
+				startPoint.move(x, 0);
+				endPoint.move(0, y);
 			}
 		} else if (position == Position.NORTHEAST) {
 			if (getStartPoint().equals(getTopRightPoint())) {
 				startPoint.move(x, y);
-			} else if (getEndPoint().equals(getTopRightPoint())) {
+			} else if (getStartPoint().equals(getBottomLeftPoint())) {
 				endPoint.move(x, y);
+			} else if (startPoint.equals(getTopLeftPoint())) {
+				startPoint.move(0, y);
+				endPoint.move(x, 0);
+			} else if (startPoint.equals(getBottomRightPoint())) {
+				startPoint.move(x, 0);
+				endPoint.move(0, y);
 			}
 		}
+	}
+
+	public boolean isRealRectangle() {
+		return getWidth() > 0 && getHeight() > 0;
+	}
+
+	@Override
+	public String toString() {
+		return LEFT_PARENTHESIS + getTopLeftPoint() + COMMA + getWidth() + COMMA + getHeight() + RIGHT_PARENTHESIS;
 	}
 
 	enum Position {
