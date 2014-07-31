@@ -6,6 +6,7 @@ public interface Constants {
 	public static final String PLUGIN_ID = "com.prairie.eevernote"; //$NON-NLS-1$
 
 	public static final String TAGS_SEPARATOR = ",";
+	public static final String COMMA = ",";
 	public static final String STRING_EMPTY = "";
 	public static final String COLON = ":";
 	public static final String FILENAME_DELIMITER = ".";
@@ -21,6 +22,7 @@ public interface Constants {
 	public static final int ZERO = 0;
 	public static final int ONE = 1;
 	public static final int TWO = 2;
+	public static final int NEGATIVE_TWO = -2;
 	public static final int THREE = 3;
 	public static final int FOUR = 4;
 	public static final int FIVE = 5;
@@ -70,7 +72,7 @@ public interface Constants {
 	public static final String EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS = "EEClipperPlugin.Configurations.Comments";
 	public static final String EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED = "EEClipperPlugin.Configurations.ErrorOccurred";
 
-	public static final int EECLIPPERPLUGIN_CONFIGURATIONS_REFRESH_ID = -143259786;
+	public static final int EECLIPPERPLUGIN_CONFIGURATIONS_REFRESH_ID = -143259786; // random number
 	public static final String EECLIPPERPLUGIN_CONFIGURATIONS_REFRESH = "EEClipperPlugin.Configurations.Refresh";
 
 	public static final String EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE = "EEClipperPlugin.ActionDelegate.AddFileToEvernote.Message";

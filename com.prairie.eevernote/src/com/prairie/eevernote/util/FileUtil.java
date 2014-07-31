@@ -1,4 +1,4 @@
-package com.prairie.eevernote.client;
+package com.prairie.eevernote.util;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -8,28 +8,7 @@ import com.prairie.eevernote.Constants;
 
 import eu.medsea.mimeutil.MimeUtil;
 
-/**
- * Helper class
- */
-public class Helper {
-
-	public static String bytesToHex(byte[] bytes) {
-		StringBuilder sb = new StringBuilder();
-		for (byte hashByte : bytes) {
-			int intVal = 0xff & hashByte;
-			if (intVal < 0x10) {
-				sb.append(Constants.ZERO_CHAR);
-			}
-			sb.append(Integer.toHexString(intVal));
-		}
-		return sb.toString();
-	}
-
-	public static String timestamp() {
-		// 2014-02-21T18:35:32
-		SimpleDateFormat formatter = new SimpleDateFormat(Constants.SimpleDateFormat);
-		return formatter.format(new Date());
-	}
+public class FileUtil {
 
 	public static String tempFileName() {
 		// 2014-02-21T18-35-32
@@ -42,6 +21,18 @@ public class Helper {
 			MimeUtil.registerMimeDetector(Constants.MimeDetector);
 		}
 		return MimeUtil.getMimeTypes(file).toString();
+	}
+
+	public static String bytesToHex(byte[] bytes) {
+		StringBuilder sb = new StringBuilder();
+		for (byte hashByte : bytes) {
+			int intVal = 0xff & hashByte;
+			if (intVal < 0x10) {
+				sb.append(Constants.ZERO_CHAR);
+			}
+			sb.append(Integer.toHexString(intVal));
+		}
+		return sb.toString();
 	}
 
 }

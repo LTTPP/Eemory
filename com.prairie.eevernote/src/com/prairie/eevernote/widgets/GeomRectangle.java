@@ -1,6 +1,26 @@
 package com.prairie.eevernote.widgets;
 
-public class GeomRectangle {
+import com.prairie.eevernote.Constants;
+
+/*
+ * ......                   ......                   ......
+ * .    .....................    .....................    .
+ * ......   	            ......                   ......
+ *   .                                                 .
+ *   .                                                 .
+ *   .                                                 .
+ * ......                                            ......
+ * .    .          SAMPLE SCREENSHOT MODEL           .    .
+ * ......                                            ......
+ *   .                                                 .
+ *   .                                                 .
+ *   .                                                 .
+ * ......					 ......                  ......
+ * .    .....................      ..................     .
+ * ......		             ......                  ......
+ *
+ */
+public class GeomRectangle implements Constants {
 
 	private GeomPoint startPoint;
 	private GeomPoint endPoint;
@@ -8,6 +28,11 @@ public class GeomRectangle {
 	public GeomRectangle() {
 		this.startPoint = new GeomPoint();
 		this.endPoint = new GeomPoint();
+	}
+
+	public GeomRectangle(final GeomPoint startPoint, final GeomPoint endPoint) {
+		this.startPoint = startPoint;
+		this.endPoint = endPoint;
 	}
 
 	public GeomPoint getTopLeftPoint() {
@@ -18,7 +43,7 @@ public class GeomRectangle {
 		return this.startPoint;
 	}
 
-	public void setStartPoint(GeomPoint topLeftPoint) {
+	public void setStartPoint(final GeomPoint topLeftPoint) {
 		this.startPoint = topLeftPoint;
 	}
 
@@ -30,7 +55,7 @@ public class GeomRectangle {
 		return this.endPoint;
 	}
 
-	public void setEndPoint(GeomPoint bottomRightPoint) {
+	public void setEndPoint(final GeomPoint bottomRightPoint) {
 		this.endPoint = bottomRightPoint;
 	}
 
@@ -50,15 +75,63 @@ public class GeomRectangle {
 		return new GeomPoint(getTopLeftPoint().getX(), getBottomRightPoint().getY());
 	}
 
-	public GeomPoint pointAt(Position position) {
+	public GeomPoint getTopPoint() {
+		return new GeomPoint((this.getTopLeftPoint().getX() + this.getBottomRightPoint().getX()) / TWO, this.getTopLeftPoint().getY());
+	}
+
+	public GeomPoint getLeftPoint() {
+		return new GeomPoint(this.getTopLeftPoint().getX(), (this.getTopLeftPoint().getY() + this.getBottomRightPoint().getY()) / TWO);
+	}
+
+	public GeomPoint getBottomPoint() {
+		return new GeomPoint((this.getTopLeftPoint().getX() + this.getBottomRightPoint().getX()) / TWO, this.getBottomRightPoint().getY());
+	}
+
+	public GeomPoint getRightPoint() {
+		return new GeomPoint(this.getBottomRightPoint().getX(), (this.getTopLeftPoint().getY() + this.getBottomRightPoint().getY()) / TWO);
+	}
+
+	public GeomRectangle getTopRectangle() {
+		return new GeomRectangle(new GeomPoint(this.getTopPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getTopPoint()).move(TWO, TWO));
+	}
+
+	public GeomRectangle getBottomRectangle() {
+		return new GeomRectangle(new GeomPoint(this.getBottomPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getBottomPoint()).move(TWO, TWO));
+	}
+
+	public GeomRectangle getLeftRectangle() {
+		return new GeomRectangle(new GeomPoint(this.getLeftPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getLeftPoint()).move(TWO, TWO));
+	}
+
+	public GeomRectangle getRightRectangle() {
+		return new GeomRectangle(new GeomPoint(this.getRightPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getRightPoint()).move(TWO, TWO));
+	}
+
+	public GeomRectangle getTopLeftRectangle() {
+		return new GeomRectangle(new GeomPoint(this.getTopLeftPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getTopLeftPoint()).move(TWO, TWO));
+	}
+
+	public GeomRectangle getTopRightRectangle() {
+		return new GeomRectangle(new GeomPoint(this.getTopRightPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getTopRightPoint()).move(TWO, TWO));
+	}
+
+	public GeomRectangle getBottomLeftRectangle() {
+		return new GeomRectangle(new GeomPoint(this.getBottomLeftPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getBottomLeftPoint()).move(TWO, TWO));
+	}
+
+	public GeomRectangle getBottomRightRectangle() {
+		return new GeomRectangle(new GeomPoint(this.getBottomRightPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getBottomRightPoint()).move(TWO, TWO));
+	}
+
+	public GeomPoint pointAt(final Position position) {
 		if (position == Position.EAST) {
-			return new GeomPoint(this.getBottomRightPoint().getX(), (this.getTopLeftPoint().getY() + this.getBottomRightPoint().getY()) / 2);
+			return new GeomPoint(this.getBottomRightPoint().getX(), (this.getTopLeftPoint().getY() + this.getBottomRightPoint().getY()) / TWO);
 		} else if (position == Position.SOUTH) {
-			return new GeomPoint((this.getTopLeftPoint().getX() + this.getBottomRightPoint().getX()) / 2, this.getBottomRightPoint().getY());
+			return new GeomPoint((this.getTopLeftPoint().getX() + this.getBottomRightPoint().getX()) / TWO, this.getBottomRightPoint().getY());
 		} else if (position == Position.WEST) {
-			return new GeomPoint(this.getTopLeftPoint().getX(), (this.getTopLeftPoint().getY() + this.getBottomRightPoint().getY()) / 2);
+			return new GeomPoint(this.getTopLeftPoint().getX(), (this.getTopLeftPoint().getY() + this.getBottomRightPoint().getY()) / TWO);
 		} else if (position == Position.NORTH) {
-			return new GeomPoint((this.getTopLeftPoint().getX() + this.getBottomRightPoint().getX()) / 2, this.getTopLeftPoint().getY());
+			return new GeomPoint((this.getTopLeftPoint().getX() + this.getBottomRightPoint().getX()) / TWO, this.getTopLeftPoint().getY());
 		} else if (position == Position.SOUTHEAST) {
 			return this.getBottomRightPoint();
 		} else if (position == Position.SOUTHWEST) {
@@ -71,27 +144,89 @@ public class GeomRectangle {
 		return null;
 	}
 
-	public Position positionOfPoint(GeomPoint point) {
-		if (point.equals(this.getTopLeftPoint())) {
+	public Position positionOf(final GeomPoint point) {
+		if (point.equals(this.getTopLeftPoint()) || this.getTopLeftRectangle().contains(point)) {
 			return Position.NORTHWEST;
-		} else if (point.equals(this.getTopRightPoint())) {
+		} else if (point.equals(this.getTopRightPoint()) || this.getTopRightRectangle().contains(point)) {
 			return Position.NORTHEAST;
-		} else if (point.equals(this.getBottomLeftPoint())) {
+		} else if (point.equals(this.getBottomLeftPoint()) || this.getBottomLeftRectangle().contains(point)) {
 			return Position.SOUTHWEST;
-		} else if (point.equals(this.getBottomRightPoint())) {
+		} else if (point.equals(this.getBottomRightPoint()) || this.getBottomRightRectangle().contains(point)) {
 			return Position.SOUTHEAST;
-		} else if ((point.getX() == this.getTopLeftPoint().getX()) && (point.getY() > this.getTopLeftPoint().getY()) && (point.getY() < this.getBottomRightPoint().getY())) {
+		} else if ((point.getX() == this.getTopLeftPoint().getX()) && (point.getY() > this.getTopLeftPoint().getY()) && (point.getY() < this.getBottomRightPoint().getY()) || this.getTopLeftRectangle().contains(point)) {
 			return Position.WEST;
-		} else if ((point.getX() == this.getBottomRightPoint().getX()) && (point.getY() > this.getTopLeftPoint().getY()) && (point.getY() < this.getBottomRightPoint().getY())) {
+		} else if ((point.getX() == this.getBottomRightPoint().getX()) && (point.getY() > this.getTopLeftPoint().getY()) && (point.getY() < this.getBottomRightPoint().getY()) || this.getBottomRightRectangle().contains(point)) {
 			return Position.EAST;
-		} else if ((point.getY() == this.getTopLeftPoint().getY()) && (point.getX() > this.getTopLeftPoint().getX()) && (point.getY() < this.getBottomRightPoint().getX())) {
+		} else if ((point.getY() == this.getTopLeftPoint().getY()) && (point.getX() > this.getTopLeftPoint().getX()) && (point.getY() < this.getBottomRightPoint().getX()) || this.getTopLeftRectangle().contains(point)) {
 			return Position.NORTH;
-		} else if ((point.getY() == this.getBottomRightPoint().getY()) && (point.getX() > this.getTopLeftPoint().getX()) && (point.getX() < this.getBottomRightPoint().getX())) {
+		} else if ((point.getY() == this.getBottomRightPoint().getY()) && (point.getX() > this.getTopLeftPoint().getX()) && (point.getX() < this.getBottomRightPoint().getX()) || this.getBottomRightRectangle().contains(point)) {
 			return Position.SOUTH;
 		} else if (point.getX() > this.getTopLeftPoint().getX() && point.getX() < this.getBottomRightPoint().getX() && point.getY() > this.getTopLeftPoint().getY() && point.getY() < this.getBottomRightPoint().getY()) {
 			return Position.INSIDE;
 		} else {
 			return Position.OUTSIDE;
+		}
+	}
+
+	public boolean contains(GeomPoint point) {
+		return point.getX() >= this.getTopLeftPoint().getX() && point.getX() <= this.getBottomRightPoint().getX() && point.getY() >= this.getTopLeftPoint().getY() && point.getY() <= this.getBottomRightPoint().getY();
+	}
+
+	public GeomRectangle move(int x, int y) {
+		this.startPoint.move(x, y);
+		this.endPoint.move(x, y);
+		return this;
+	}
+
+	public void resize(Position position, int x, int y) {
+		if (position == Position.EAST) {
+			if (getStartPoint().equals(getTopRightPoint()) || getStartPoint().equals(getBottomRightPoint())) {
+				startPoint.move(x, y);
+			} else if (getEndPoint().equals(getTopRightPoint()) || getEndPoint().equals(getBottomRightPoint())) {
+				endPoint.move(x, y);
+			}
+		} else if (position == Position.SOUTH) {
+			if (getStartPoint().equals(getBottomLeftPoint()) || getStartPoint().equals(getBottomRightPoint())) {
+				startPoint.move(x, y);
+			} else if (getEndPoint().equals(getBottomLeftPoint()) || getEndPoint().equals(getBottomRightPoint())) {
+				endPoint.move(x, y);
+			}
+		} else if (position == Position.WEST) {
+			if (getStartPoint().equals(getTopLeftPoint()) || getStartPoint().equals(getBottomLeftPoint())) {
+				startPoint.move(x, y);
+			} else if (getEndPoint().equals(getTopLeftPoint()) || getEndPoint().equals(getBottomLeftPoint())) {
+				endPoint.move(x, y);
+			}
+		} else if (position == Position.NORTH) {
+			if (getStartPoint().equals(getTopLeftPoint()) || getStartPoint().equals(getTopRightPoint())) {
+				startPoint.move(x, y);
+			} else if (getEndPoint().equals(getTopLeftPoint()) || getEndPoint().equals(getTopRightPoint())) {
+				endPoint.move(x, y);
+			}
+		} else if (position == Position.SOUTHWEST) {
+			if (getStartPoint().equals(getBottomLeftPoint())) {
+				startPoint.move(x, y);
+			} else if (getEndPoint().equals(getBottomLeftPoint())) {
+				endPoint.move(x, y);
+			}
+		} else if (position == Position.SOUTHEAST) {
+			if (getStartPoint().equals(getBottomRightPoint())) {
+				startPoint.move(x, y);
+			} else if (getEndPoint().equals(getBottomRightPoint())) {
+				endPoint.move(x, y);
+			}
+		} else if (position == Position.NORTHWEST) {
+			if (getStartPoint().equals(getTopLeftPoint())) {
+				startPoint.move(x, y);
+			} else if (getEndPoint().equals(getTopLeftPoint())) {
+				endPoint.move(x, y);
+			}
+		} else if (position == Position.NORTHEAST) {
+			if (getStartPoint().equals(getTopRightPoint())) {
+				startPoint.move(x, y);
+			} else if (getEndPoint().equals(getTopRightPoint())) {
+				endPoint.move(x, y);
+			}
 		}
 	}
 

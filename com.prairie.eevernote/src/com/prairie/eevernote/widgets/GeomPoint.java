@@ -1,6 +1,8 @@
 package com.prairie.eevernote.widgets;
 
-public class GeomPoint {
+import com.prairie.eevernote.Constants;
+
+public class GeomPoint implements Constants {
 
 	private int x;
 	private int y;
@@ -12,6 +14,11 @@ public class GeomPoint {
 	public GeomPoint(int x, int y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	public GeomPoint(final GeomPoint point) {
+		this.x = point.getX();
+		this.y = point.getY();
 	}
 
 	public int getX() {
@@ -35,11 +42,19 @@ public class GeomPoint {
 		setY(y);
 	}
 
+	public GeomPoint move(int x, int y) {
+		this.x = this.getX() + x;
+		this.x = this.getX() >= 0 ? this.getX() : 0;
+
+		this.y = this.getY() + y;
+		this.y = this.getY() >= 0 ? this.getY() : 0;
+
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
-		int result = 17;
-		result = 31 * result + (this.getX() * this.getX() + this.getY() * this.getY());
-		return result;
+		return this.getX() * this.getX() + this.getY() * this.getY();
 	}
 
 	@Override
@@ -51,6 +66,21 @@ public class GeomPoint {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public Object clone() {
+		GeomPoint o = null;
+		try {
+			o = (GeomPoint) super.clone();
+		} catch (CloneNotSupportedException e) {
+		}
+		return o;
+	}
+
+	@Override
+	public String toString() {
+		return LEFT_PARENTHESIS + this.getX() + COMMA + this.getY() + RIGHT_PARENTHESIS;
 	}
 
 }

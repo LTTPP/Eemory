@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -38,8 +36,9 @@ import com.prairie.eevernote.EEPlugin;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperManager;
-import com.prairie.eevernote.client.Helper;
 import com.prairie.eevernote.exception.OutOfDateException;
+import com.prairie.eevernote.util.DateTimeUtil;
+import com.prairie.eevernote.util.FileUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.StringUtil;
@@ -191,7 +190,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 
 					monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE), IProgressMonitor.UNKNOWN);
 					try {
-						clipper.clipSelection(((ITextSelection) selection).getText(), file.getName() + Constants.COLON + Helper.timestamp());
+						clipper.clipSelection(((ITextSelection) selection).getText(), file.getName() + Constants.COLON + DateTimeUtil.timestamp());
 						monitor.subTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_SUBTASK_MESSAGE));
 					} catch (final Throwable e) {
 						return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
@@ -223,7 +222,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 			}
 
 			BufferedImage screenshot = CaptureView.showView();
-			final File  file = File.createTempFile(Helper.tempFileName(), FILENAME_DELIMITER + IMG_PNG);
+			final File  file = File.createTempFile(FileUtil.tempFileName(), FILENAME_DELIMITER + IMG_PNG);
 			//ImageIO.write(screenshot, IMG_PNG, file);
 
 			final List<File> files = ListUtil.list();

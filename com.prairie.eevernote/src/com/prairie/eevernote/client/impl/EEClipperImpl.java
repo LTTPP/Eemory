@@ -33,9 +33,9 @@ import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEPlugin;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.client.EEClipper;
-import com.prairie.eevernote.client.Helper;
 import com.prairie.eevernote.enml.ENML;
 import com.prairie.eevernote.exception.OutOfDateException;
+import com.prairie.eevernote.util.FileUtil;
 import com.prairie.eevernote.util.ListStringizer;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapStringizer;
@@ -136,12 +136,12 @@ public class EEClipperImpl extends EEClipper {
 		}
 
 		// create resource
-		String mimeType = Helper.mimeType(file); // E.g "image/png"
+		String mimeType = FileUtil.mimeType(file); // E.g "image/png"
 		Resource resource = createResource(file, mimeType);
 		note.addToResources(resource);
 
 		// create content
-		String hashHex = Helper.bytesToHex(resource.getData().getBodyHash());
+		String hashHex = FileUtil.bytesToHex(resource.getData().getBodyHash());
 		String content = ENML.content(hashHex, mimeType, comments);
 		note.setContent(content);
 
@@ -194,11 +194,11 @@ public class EEClipperImpl extends EEClipper {
 		Iterator<File> iter = files.iterator();
 		while (iter.hasNext()) {
 			File file = iter.next();
-			String mimeType = Helper.mimeType(file); // E.g "image/png"
+			String mimeType = FileUtil.mimeType(file); // E.g "image/png"
 			Resource resource = createResource(file, mimeType);
 			note.addToResources(resource);
 
-			String hashHex = Helper.bytesToHex(resource.getData().getBodyHash());
+			String hashHex = FileUtil.bytesToHex(resource.getData().getBodyHash());
 			update = ENML.resource(hashHex, mimeType) + update;
 		}
 
