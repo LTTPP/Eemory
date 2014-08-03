@@ -173,12 +173,15 @@ public class GeomRectangle implements Constants {
 	}
 
 	public GeomRectangle move(int x, int y) {
+		if (!this.startPoint.isMovable(x, y) || !this.endPoint.isMovable(x, y)) {
+			return this;
+		}
 		this.startPoint.move(x, y);
 		this.endPoint.move(x, y);
 		return this;
 	}
 
-	public void resize(Position position, int x, int y) {
+	public GeomRectangle resize(Position position, int x, int y) {
 		if (position == Position.EAST) {
 			if (getStartPoint().equals(getTopRightPoint()) || getStartPoint().equals(getBottomRightPoint())) {
 				startPoint.move(x, y);
@@ -252,10 +255,16 @@ public class GeomRectangle implements Constants {
 				endPoint.move(0, y);
 			}
 		}
+		return this;
 	}
 
 	public boolean isRealRectangle() {
 		return getWidth() > 0 && getHeight() > 0;
+	}
+
+	public void clear() {
+		this.startPoint.clear();
+		this.endPoint.clear();
 	}
 
 	@Override

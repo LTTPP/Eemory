@@ -2,7 +2,9 @@ package com.prairie.eevernote.widgets;
 
 import java.awt.AWTException;
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.HeadlessException;
@@ -16,17 +18,18 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JWindow;
 
 import com.prairie.eevernote.Constants;
+import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.util.ColorUtil;
 import com.prairie.eevernote.util.ImageUtil;
 import com.prairie.eevernote.util.RunningCounter;
 import com.prairie.eevernote.widgets.GeomRectangle.Position;
 
 @SuppressWarnings("serial")
-public class CaptureView extends JWindow implements Constants {
+public class CaptureView extends JFrame implements Constants {
 
 	private BufferedImage fullScreen;
 	private GeomRectangle rectangle = new GeomRectangle();
@@ -40,12 +43,14 @@ public class CaptureView extends JWindow implements Constants {
 
 		this.fullScreen = ImageUtil.captureScreen(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
 		setSize(Toolkit.getDefaultToolkit().getScreenSize());
+		setUndecorated(true);
 		resetView();
 
 		addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyTyped(KeyEvent e) {
+			public void keyReleased(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					rectangle.clear();
 					setVisible(false);
 					dispose();
 				}
@@ -60,11 +65,11 @@ public class CaptureView extends JWindow implements Constants {
 							isCaptureFullScreenViaClick = true;
 							rectangle.getStartPoint().setLocation(ZERO, ZERO);
 							rectangle.getEndPoint().setLocation(new Double(Toolkit.getDefaultToolkit().getScreenSize().getWidth()).intValue(), new Double(Toolkit.getDefaultToolkit().getScreenSize().getHeight()).intValue());
+							maskFullScreen(EEPLUGIN_SCREENSHOT_MASK_FULLSCREEN_SCALEFACTOR);
 							repaint();
 							isCaptured = true;
 						}
 					} else if (e.getClickCount() == TWO) {
-						System.out.println(">>>>>>>" + rectangle);
 						setVisible(false);
 						dispose();
 					}
@@ -76,6 +81,7 @@ public class CaptureView extends JWindow implements Constants {
 							isCaptureFullScreenViaClick = false;
 							setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 						} else {
+							rectangle.clear();
 							setVisible(false);
 							dispose();
 						}
@@ -108,7 +114,7 @@ public class CaptureView extends JWindow implements Constants {
 			public void mouseDragged(MouseEvent e) {
 				if (isCapturing) {
 					if (counter.hasTimes()) {
-						maskFullScreen(ONE_DOT_SEVEN_F);
+						maskFullScreen(EEPLUGIN_SCREENSHOT_MASK_FULLSCREEN_SCALEFACTOR);
 					}
 					rectangle.getEndPoint().setLocation(e.getX(), e.getY());
 					if (rectangle.isRealRectangle()) {
@@ -175,35 +181,44 @@ public class CaptureView extends JWindow implements Constants {
 		super.paint(graphics);
 		if (isCapturing || isCaptureFullScreenViaClick || isResize()) {
 			Image cropedScreenshot = fullScreen.getSubimage(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY(), rectangle.getWidth(), rectangle.getHeight());
-			Graphics2D graphics2D = (Graphics2D) graphics;
-			graphics2D.drawImage(cropedScreenshot, rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY(), null);
+			Graphics2D g2 = (Graphics2D) graphics;
+			g2.drawImage(cropedScreenshot, rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY(), null);
 
-			graphics2D.setColor(ColorUtil.EVERNOTE_GREEN);
-			graphics2D.drawRect(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY(), rectangle.getWidth(), rectangle.getHeight());
+			g2.setColor(ColorUtil.EVERNOTE_GREEN);
+			g2.drawRect(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY(), rectangle.getWidth(), rectangle.getHeight());
 
-			graphics2D.drawRect(rectangle.getTopLeftRectangle().getTopLeftPoint().getX(), rectangle.getTopLeftRectangle().getTopLeftPoint().getY(), rectangle.getTopLeftRectangle().getWidth(), rectangle.getTopLeftRectangle().getHeight());
-			graphics2D.fillRect(rectangle.getTopLeftRectangle().getTopLeftPoint().getX(), rectangle.getTopLeftRectangle().getTopLeftPoint().getY(), rectangle.getTopLeftRectangle().getWidth(), rectangle.getTopLeftRectangle().getHeight());
+			g2.drawRect(rectangle.getTopLeftRectangle().getTopLeftPoint().getX(), rectangle.getTopLeftRectangle().getTopLeftPoint().getY(), rectangle.getTopLeftRectangle().getWidth(), rectangle.getTopLeftRectangle().getHeight());
+			g2.fillRect(rectangle.getTopLeftRectangle().getTopLeftPoint().getX(), rectangle.getTopLeftRectangle().getTopLeftPoint().getY(), rectangle.getTopLeftRectangle().getWidth(), rectangle.getTopLeftRectangle().getHeight());
 
-			graphics2D.drawRect(rectangle.getTopRightRectangle().getTopLeftPoint().getX(), rectangle.getTopRightRectangle().getTopLeftPoint().getY(), rectangle.getTopRightRectangle().getWidth(), rectangle.getTopRightRectangle().getHeight());
-			graphics2D.fillRect(rectangle.getTopRightRectangle().getTopLeftPoint().getX(), rectangle.getTopRightRectangle().getTopLeftPoint().getY(), rectangle.getTopRightRectangle().getWidth(), rectangle.getTopRightRectangle().getHeight());
+			g2.drawRect(rectangle.getTopRightRectangle().getTopLeftPoint().getX(), rectangle.getTopRightRectangle().getTopLeftPoint().getY(), rectangle.getTopRightRectangle().getWidth(), rectangle.getTopRightRectangle().getHeight());
+			g2.fillRect(rectangle.getTopRightRectangle().getTopLeftPoint().getX(), rectangle.getTopRightRectangle().getTopLeftPoint().getY(), rectangle.getTopRightRectangle().getWidth(), rectangle.getTopRightRectangle().getHeight());
 
-			graphics2D.drawRect(rectangle.getBottomLeftRectangle().getTopLeftPoint().getX(), rectangle.getBottomLeftRectangle().getTopLeftPoint().getY(), rectangle.getBottomLeftRectangle().getWidth(), rectangle.getBottomLeftRectangle().getHeight());
-			graphics2D.fillRect(rectangle.getBottomLeftRectangle().getTopLeftPoint().getX(), rectangle.getBottomLeftRectangle().getTopLeftPoint().getY(), rectangle.getBottomLeftRectangle().getWidth(), rectangle.getBottomLeftRectangle().getHeight());
+			g2.drawRect(rectangle.getBottomLeftRectangle().getTopLeftPoint().getX(), rectangle.getBottomLeftRectangle().getTopLeftPoint().getY(), rectangle.getBottomLeftRectangle().getWidth(), rectangle.getBottomLeftRectangle().getHeight());
+			g2.fillRect(rectangle.getBottomLeftRectangle().getTopLeftPoint().getX(), rectangle.getBottomLeftRectangle().getTopLeftPoint().getY(), rectangle.getBottomLeftRectangle().getWidth(), rectangle.getBottomLeftRectangle().getHeight());
 
-			graphics2D.drawRect(rectangle.getBottomRightRectangle().getTopLeftPoint().getX(), rectangle.getBottomRightRectangle().getTopLeftPoint().getY(), rectangle.getBottomRightRectangle().getWidth(), rectangle.getBottomRightRectangle().getHeight());
-			graphics2D.fillRect(rectangle.getBottomRightRectangle().getTopLeftPoint().getX(), rectangle.getBottomRightRectangle().getTopLeftPoint().getY(), rectangle.getBottomRightRectangle().getWidth(), rectangle.getBottomRightRectangle().getHeight());
+			g2.drawRect(rectangle.getBottomRightRectangle().getTopLeftPoint().getX(), rectangle.getBottomRightRectangle().getTopLeftPoint().getY(), rectangle.getBottomRightRectangle().getWidth(), rectangle.getBottomRightRectangle().getHeight());
+			g2.fillRect(rectangle.getBottomRightRectangle().getTopLeftPoint().getX(), rectangle.getBottomRightRectangle().getTopLeftPoint().getY(), rectangle.getBottomRightRectangle().getWidth(), rectangle.getBottomRightRectangle().getHeight());
 
-			graphics2D.drawRect(rectangle.getTopRectangle().getTopLeftPoint().getX(), rectangle.getTopRectangle().getTopLeftPoint().getY(), rectangle.getTopRectangle().getWidth(), rectangle.getTopRectangle().getHeight());
-			graphics2D.fillRect(rectangle.getTopRectangle().getTopLeftPoint().getX(), rectangle.getTopRectangle().getTopLeftPoint().getY(), rectangle.getTopRectangle().getWidth(), rectangle.getTopLeftRectangle().getHeight());
+			g2.drawRect(rectangle.getTopRectangle().getTopLeftPoint().getX(), rectangle.getTopRectangle().getTopLeftPoint().getY(), rectangle.getTopRectangle().getWidth(), rectangle.getTopRectangle().getHeight());
+			g2.fillRect(rectangle.getTopRectangle().getTopLeftPoint().getX(), rectangle.getTopRectangle().getTopLeftPoint().getY(), rectangle.getTopRectangle().getWidth(), rectangle.getTopLeftRectangle().getHeight());
 
-			graphics2D.drawRect(rectangle.getBottomRectangle().getTopLeftPoint().getX(), rectangle.getBottomRectangle().getTopLeftPoint().getY(), rectangle.getBottomRectangle().getWidth(), rectangle.getBottomRectangle().getHeight());
-			graphics2D.fillRect(rectangle.getBottomRectangle().getTopLeftPoint().getX(), rectangle.getBottomRectangle().getTopLeftPoint().getY(), rectangle.getBottomRectangle().getWidth(), rectangle.getBottomRectangle().getHeight());
+			g2.drawRect(rectangle.getBottomRectangle().getTopLeftPoint().getX(), rectangle.getBottomRectangle().getTopLeftPoint().getY(), rectangle.getBottomRectangle().getWidth(), rectangle.getBottomRectangle().getHeight());
+			g2.fillRect(rectangle.getBottomRectangle().getTopLeftPoint().getX(), rectangle.getBottomRectangle().getTopLeftPoint().getY(), rectangle.getBottomRectangle().getWidth(), rectangle.getBottomRectangle().getHeight());
 
-			graphics2D.drawRect(rectangle.getLeftRectangle().getTopLeftPoint().getX(), rectangle.getLeftRectangle().getTopLeftPoint().getY(), rectangle.getLeftRectangle().getWidth(), rectangle.getLeftRectangle().getHeight());
-			graphics2D.fillRect(rectangle.getLeftRectangle().getTopLeftPoint().getX(), rectangle.getLeftRectangle().getTopLeftPoint().getY(), rectangle.getLeftRectangle().getWidth(), rectangle.getLeftRectangle().getHeight());
+			g2.drawRect(rectangle.getLeftRectangle().getTopLeftPoint().getX(), rectangle.getLeftRectangle().getTopLeftPoint().getY(), rectangle.getLeftRectangle().getWidth(), rectangle.getLeftRectangle().getHeight());
+			g2.fillRect(rectangle.getLeftRectangle().getTopLeftPoint().getX(), rectangle.getLeftRectangle().getTopLeftPoint().getY(), rectangle.getLeftRectangle().getWidth(), rectangle.getLeftRectangle().getHeight());
 
-			graphics2D.drawRect(rectangle.getRightRectangle().getTopLeftPoint().getX(), rectangle.getRightRectangle().getTopLeftPoint().getY(), rectangle.getRightRectangle().getWidth(), rectangle.getRightRectangle().getHeight());
-			graphics2D.fillRect(rectangle.getRightRectangle().getTopLeftPoint().getX(), rectangle.getRightRectangle().getTopLeftPoint().getY(), rectangle.getRightRectangle().getWidth(), rectangle.getRightRectangle().getHeight());
+			g2.drawRect(rectangle.getRightRectangle().getTopLeftPoint().getX(), rectangle.getRightRectangle().getTopLeftPoint().getY(), rectangle.getRightRectangle().getWidth(), rectangle.getRightRectangle().getHeight());
+			g2.fillRect(rectangle.getRightRectangle().getTopLeftPoint().getX(), rectangle.getRightRectangle().getTopLeftPoint().getY(), rectangle.getRightRectangle().getWidth(), rectangle.getRightRectangle().getHeight());
+
+			GeomPoint p = rectangle.getTopLeftPoint();
+			if (p.getY() - (EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO) < ZERO) {
+				p = new GeomPoint(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY() + (EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO));
+			}
+			g2.drawImage(ImageUtil.mask(fullScreen.getSubimage(p.getX(), p.getY() - (EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO), EEPLUGIN_SCREENSHOT_HINT_WIDTH, EEPLUGIN_SCREENSHOT_HINT_HEIGHT), EEPLUGIN_SCREENSHOT_HINT_SCALEFACTOR), p.getX(), p.getY() - (EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO), null);
+			g2.setColor(Color.WHITE);
+			g2.setFont(getFont().deriveFont(Font.BOLD));
+			g2.drawString(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_CLIPSCREENSHOTTOEVERNOTE_HINT), p.getX() + EEPLUGIN_SCREENSHOT_HINT_TEXT_START_X, p.getY() + EEPLUGIN_SCREENSHOT_HINT_TEXT_START_Y);
 		}
 	}
 
@@ -229,26 +244,31 @@ public class CaptureView extends JWindow implements Constants {
 			@Override
 			public void paintComponent(Graphics graphics) {
 				super.paintComponent(graphics);
-				Graphics2D graphics2D = (Graphics2D) graphics;
-				graphics2D.drawImage(fullScreen, ZERO, ZERO, null);
-				graphics2D.setColor(ColorUtil.EVERNOTE_GREEN);
-				graphics2D.setStroke(new BasicStroke(SIX));
-				graphics2D.drawRect(ZERO, ZERO, new Double(Toolkit.getDefaultToolkit().getScreenSize().getWidth()).intValue(), new Double(Toolkit.getDefaultToolkit().getScreenSize().getHeight()).intValue());
+				Graphics2D g2 = (Graphics2D) graphics;
+				g2.drawImage(fullScreen, ZERO, ZERO, null);
+				g2.setColor(ColorUtil.EVERNOTE_GREEN);
+				g2.setStroke(new BasicStroke(SIX));
+				g2.drawRect(ZERO, ZERO, new Double(Toolkit.getDefaultToolkit().getScreenSize().getWidth()).intValue(), new Double(Toolkit.getDefaultToolkit().getScreenSize().getHeight()).intValue());
 			}
 		});
-		requestFocus();
 		setAlwaysOnTop(true);
 		setVisible(true);
+		requestFocus();
 	}
 
 	public BufferedImage getScreenshot() {
+		if (!rectangle.isRealRectangle()) {
+			return null;
+		}
 		return this.fullScreen.getSubimage(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY(), rectangle.getWidth(), rectangle.getHeight());
 	}
 
-	public static BufferedImage showView() throws HeadlessException, AWTException {
-		CaptureView view = new CaptureView();
+	public static BufferedImage showView() throws HeadlessException, AWTException, InterruptedException {
+		final CaptureView view = new CaptureView();
 		view.setVisible(true);
+		while (view.isVisible()) {
+			Thread.sleep(100);
+		}
 		return view.getScreenshot();
 	}
-
 }

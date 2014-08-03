@@ -36,6 +36,7 @@ import com.evernote.thrift.TException;
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEPlugin;
 import com.prairie.eevernote.EEProperties;
+import com.prairie.eevernote.ErrorMessage;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperManager;
 import com.prairie.eevernote.exception.OutOfDateException;
@@ -224,6 +225,9 @@ public class EEHandler extends AbstractHandler implements Constants {
 			}
 
 			BufferedImage screenshot = CaptureView.showView();
+			if (screenshot == null) {
+				return;
+			}
 			final File  file = File.createTempFile(FileUtil.tempFileName(), FILENAME_DELIMITER + IMG_PNG);
 			ImageIO.write(screenshot, IMG_PNG, file);
 
@@ -238,7 +242,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 						monitor.subTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_SUBTASK_MESSAGE));
 						clipper.clipFile(files);
 					} catch (Throwable e) {
-						return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
+						return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, ErrorMessage.getMessage(e));
 					}
 					monitor.done();
 					if (file != null && file.exists()) {

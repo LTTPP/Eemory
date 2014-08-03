@@ -1,5 +1,7 @@
 package com.prairie.eevernote.widgets;
 
+import java.awt.Toolkit;
+
 import com.prairie.eevernote.Constants;
 
 public class GeomPoint implements Constants {
@@ -42,14 +44,24 @@ public class GeomPoint implements Constants {
 		setY(y);
 	}
 
+	public boolean isMovable(int x, int y) {
+		if (getX() + x >= 0 && getX() + x <= Toolkit.getDefaultToolkit().getScreenSize().getWidth() && getY() + y >= 0 && getY() + y <= Toolkit.getDefaultToolkit().getScreenSize().getHeight()) {
+			return true;
+		}
+		return false;
+	}
+
 	public GeomPoint move(int x, int y) {
-		this.x = this.getX() + x;
-		this.x = this.getX() >= 0 ? this.getX() : 0;
-
-		this.y = this.getY() + y;
-		this.y = this.getY() >= 0 ? this.getY() : 0;
-
+		if (isMovable(x, y)) {
+			this.x = getX() + x;
+			this.y = getY() + y;
+		}
 		return this;
+	}
+
+	public void clear() {
+		this.x = 0;
+		this.y = 0;
 	}
 
 	@Override

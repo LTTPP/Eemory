@@ -4,6 +4,10 @@ import com.prairie.eevernote.Constants;
 
 public final class StringUtil {
 
+	public static boolean nullString(String string) {
+		return string == null;
+	}
+
 	public static boolean nullOrEmptyString(String string) {
 		return (string == null) || (string.length() == 0);
 	}

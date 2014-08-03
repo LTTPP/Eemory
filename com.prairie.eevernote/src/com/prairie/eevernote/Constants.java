@@ -16,8 +16,11 @@ public interface Constants {
 	public static final String SimpleDateFormat2 = "yyyy-MM-dd'T'HH-mm-ss-";
 	public static final String MimeDetector = "eu.medsea.mimeutil.detector.MagicMimeMimeDetector";
 	public static final String PropertiesFile = "EEProperties.properties";
+	public static final String ErrorMessageFile = "ErrorMessage.properties";
 	public static final String LEFT_PARENTHESIS = "(";
 	public static final String RIGHT_PARENTHESIS = ")";
+	public static final String LEFT_BRACE = "{";
+	public static final String RIGHT_BRACE = "}";
 	public static final String IMG_PNG = "png";
 	public static final int ZERO = 0;
 	public static final int ONE = 1;
@@ -30,7 +33,6 @@ public interface Constants {
 	public static final int SEVEN = 7;
 	public static final int EIGHT = 8;
 	public static final int NINE = 9;
-	public static final float ONE_DOT_SEVEN_F = 0.7F;
 	// -=-=-=-=-=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-
 
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Settings Keys =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -83,11 +85,24 @@ public interface Constants {
 	public static final String EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_SUBTASK_MESSAGE = "EEClipperPlugin.ActionDelegate.AddSelectionToEvernote.Subtask.Message";
 	public static final String EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_OUTOFDATEMESSAGE = "EEClipperPlugin.ActionDelegate.AddSelectionToEvernote.OutOfDateMessage";
 
+	public static final String EECLIPPERPLUGIN_ACTIONDELEGATE_CLIPSCREENSHOTTOEVERNOTE_MESSAGE = "EEClipperPlugin.ActionDelegate.ClipScreenshotToEvernote.Message";
+	public static final String EECLIPPERPLUGIN_ACTIONDELEGATE_CLIPSCREENSHOTTOEVERNOTE_SUBTASK_MESSAGE = "EEClipperPlugin.ActionDelegate.ClipScreenshotToEvernote.Subtask.Message";
+	public static final String EECLIPPERPLUGIN_ACTIONDELEGATE_CLIPSCREENSHOTTOEVERNOTE_OUTOFDATEMESSAGE = "EEClipperPlugin.ActionDelegate.ClipScreenshotToEvernote.OutOfDateMessage";
+	public static final String EECLIPPERPLUGIN_ACTIONDELEGATE_CLIPSCREENSHOTTOEVERNOTE_HINT = "EEClipperPlugin.ActionDelegate.ClipScreenshotToEvernote.Hint";
+
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Command IDs =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	public static final String EEPLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipToEvernote";
 	public static final String EEPLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipSelectionToEvernote";
 	public static final String EEPLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipFileToEvernote";
 	public static final String EEPLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipScreenshotToEvernote";
 	public static final String EEPLUGIN_COMMAND_ID_CONFIGURATIONS = "com.prairie.eevernote.commands.Configurations";
+
+	public static final int EEPLUGIN_SCREENSHOT_HINT_HEIGHT = 18;
+	public static final int EEPLUGIN_SCREENSHOT_HINT_WIDTH = 235;
+	public static float EEPLUGIN_SCREENSHOT_HINT_SCALEFACTOR = 0.3F;
+	public static final int EEPLUGIN_SCREENSHOT_HINT_TEXT_START_X = 5;
+	public static final int EEPLUGIN_SCREENSHOT_HINT_TEXT_START_Y = -6;
+
+	public static final float EEPLUGIN_SCREENSHOT_MASK_FULLSCREEN_SCALEFACTOR = 0.7F;
 
 }
