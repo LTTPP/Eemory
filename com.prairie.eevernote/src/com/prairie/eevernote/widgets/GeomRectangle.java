@@ -1,6 +1,7 @@
 package com.prairie.eevernote.widgets;
 
 import com.prairie.eevernote.Constants;
+import com.prairie.eevernote.util.NumberUtil;
 
 /*
  * ......                   ......                   ......
@@ -92,35 +93,35 @@ public class GeomRectangle implements Constants {
 	}
 
 	public GeomRectangle getTopRectangle() {
-		return new GeomRectangle(new GeomPoint(this.getTopPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getTopPoint()).move(TWO, TWO));
+		return new GeomRectangle(new GeomPoint(this.getTopPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(this.getTopPoint()).move(TWO, TWO));
 	}
 
 	public GeomRectangle getBottomRectangle() {
-		return new GeomRectangle(new GeomPoint(this.getBottomPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getBottomPoint()).move(TWO, TWO));
+		return new GeomRectangle(new GeomPoint(this.getBottomPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(this.getBottomPoint()).move(TWO, TWO));
 	}
 
 	public GeomRectangle getLeftRectangle() {
-		return new GeomRectangle(new GeomPoint(this.getLeftPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getLeftPoint()).move(TWO, TWO));
+		return new GeomRectangle(new GeomPoint(this.getLeftPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(this.getLeftPoint()).move(TWO, TWO));
 	}
 
 	public GeomRectangle getRightRectangle() {
-		return new GeomRectangle(new GeomPoint(this.getRightPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getRightPoint()).move(TWO, TWO));
+		return new GeomRectangle(new GeomPoint(this.getRightPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(this.getRightPoint()).move(TWO, TWO));
 	}
 
 	public GeomRectangle getTopLeftRectangle() {
-		return new GeomRectangle(new GeomPoint(this.getTopLeftPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getTopLeftPoint()).move(TWO, TWO));
+		return new GeomRectangle(new GeomPoint(this.getTopLeftPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(this.getTopLeftPoint()).move(TWO, TWO));
 	}
 
 	public GeomRectangle getTopRightRectangle() {
-		return new GeomRectangle(new GeomPoint(this.getTopRightPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getTopRightPoint()).move(TWO, TWO));
+		return new GeomRectangle(new GeomPoint(this.getTopRightPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(this.getTopRightPoint()).move(TWO, TWO));
 	}
 
 	public GeomRectangle getBottomLeftRectangle() {
-		return new GeomRectangle(new GeomPoint(this.getBottomLeftPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getBottomLeftPoint()).move(TWO, TWO));
+		return new GeomRectangle(new GeomPoint(this.getBottomLeftPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(this.getBottomLeftPoint()).move(TWO, TWO));
 	}
 
 	public GeomRectangle getBottomRightRectangle() {
-		return new GeomRectangle(new GeomPoint(this.getBottomRightPoint()).move(NEGATIVE_TWO, NEGATIVE_TWO), new GeomPoint(this.getBottomRightPoint()).move(TWO, TWO));
+		return new GeomRectangle(new GeomPoint(this.getBottomRightPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(this.getBottomRightPoint()).move(TWO, TWO));
 	}
 
 	public GeomPoint pointAt(final Position position) {

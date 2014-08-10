@@ -184,7 +184,7 @@ public class CaptureView extends JFrame implements Constants {
 			Graphics2D g2 = (Graphics2D) graphics;
 			g2.drawImage(cropedScreenshot, rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY(), null);
 
-			g2.setColor(ColorUtil.EVERNOTE_GREEN);
+			g2.setColor(ColorUtil.AWT_EVERNOTE_GREEN);
 			g2.drawRect(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY(), rectangle.getWidth(), rectangle.getHeight());
 
 			g2.drawRect(rectangle.getTopLeftRectangle().getTopLeftPoint().getX(), rectangle.getTopLeftRectangle().getTopLeftPoint().getY(), rectangle.getTopLeftRectangle().getWidth(), rectangle.getTopLeftRectangle().getHeight());
@@ -246,7 +246,7 @@ public class CaptureView extends JFrame implements Constants {
 				super.paintComponent(graphics);
 				Graphics2D g2 = (Graphics2D) graphics;
 				g2.drawImage(fullScreen, ZERO, ZERO, null);
-				g2.setColor(ColorUtil.EVERNOTE_GREEN);
+				g2.setColor(ColorUtil.AWT_EVERNOTE_GREEN);
 				g2.setStroke(new BasicStroke(SIX));
 				g2.drawRect(ZERO, ZERO, new Double(Toolkit.getDefaultToolkit().getScreenSize().getWidth()).intValue(), new Double(Toolkit.getDefaultToolkit().getScreenSize().getHeight()).intValue());
 			}

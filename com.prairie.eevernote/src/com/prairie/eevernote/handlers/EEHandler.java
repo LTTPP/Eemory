@@ -23,10 +23,8 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -39,8 +37,8 @@ import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.ErrorMessage;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperManager;
+import com.prairie.eevernote.enml.ENML;
 import com.prairie.eevernote.exception.OutOfDateException;
-import com.prairie.eevernote.util.DateTimeUtil;
 import com.prairie.eevernote.util.FileUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapUtil;
@@ -141,7 +139,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 			job.schedule();
 
 		} catch (OutOfDateException e) {
-			MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), EEPlugin.getName() + StringUtil.STRING_EMPTY + EEPlugin.getVersion() + EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE));
+			MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), EEPlugin.getName() + StringUtil.EMPTY + EEPlugin.getVersion() + EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE));
 		} catch (Throwable e) {
 			MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), e.getLocalizedMessage());
 		}
@@ -157,34 +155,9 @@ public class EEHandler extends AbstractHandler implements Constants {
 				return;
 			}
 
-			// For Evaluation
-			IEditorPart editor = HandlerUtil.getActiveEditor(event);
-			StyledText text = (StyledText) editor.getAdapter(Control.class);
-			StyleRange[] r = text.getStyleRanges();
-			for (int i =0;i<r.length;i++) {
-				System.out.println(r[i].toString());
-			}
-			// For Evaluation
-
-			Display.getDefault().syncExec(new Runnable() {// TODO to remove display sync
-						@Override
-						public void run() {
-							// Selection
-							selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();// TODO
-							if (selection instanceof ITextSelection) {
-								// File
-								IEditorPart editorPart = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getActiveEditor();
-								IFile iFile = (IFile) ((editorPart.getEditorInput().getAdapter(IFile.class)));
-								if (iFile != null) {
-									file = iFile.getLocation().makeAbsolute().toFile();
-								} else {
-									return;
-								}
-							} else {
-								return;
-							}
-						}
-					});
+			final IEditorPart editor = HandlerUtil.getActiveEditor(event);
+			StyledText styledText = (StyledText) editor.getAdapter(Control.class);
+			final String snippet = ENML.toSnippet(styledText);
 
 			Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE)) {
 
@@ -193,7 +166,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 
 					monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE), IProgressMonitor.UNKNOWN);
 					try {
-						clipper.clipSelection(((ITextSelection) selection).getText(), file.getName() + Constants.COLON + DateTimeUtil.timestamp());
+						clipper.clipSelection(snippet, editor.getTitle());
 						monitor.subTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_SUBTASK_MESSAGE));
 					} catch (final Throwable e) {
 						return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
@@ -208,7 +181,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 			job.schedule();
 
 		} catch (OutOfDateException e) {
-			MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), EEPlugin.getName() + StringUtil.STRING_EMPTY + EEPlugin.getVersion() + EEPlugin.getVersion() + EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_OUTOFDATEMESSAGE));
+			MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), EEPlugin.getName() + StringUtil.EMPTY + EEPlugin.getVersion() + EEPlugin.getVersion() + EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_OUTOFDATEMESSAGE));
 		} catch (Throwable e) {
 			MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), e.getLocalizedMessage());
 		}
@@ -255,7 +228,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 			job.schedule();
 
 		} catch (OutOfDateException e) {
-			MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), EEPlugin.getName() + StringUtil.STRING_EMPTY + EEPlugin.getVersion() + EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE));
+			MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), EEPlugin.getName() + StringUtil.EMPTY + EEPlugin.getVersion() + EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE));
 		} catch (Throwable e) {
 			MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), e.getLocalizedMessage());
 		}

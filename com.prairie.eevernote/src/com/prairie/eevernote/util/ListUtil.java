@@ -56,4 +56,8 @@ public final class ListUtil {
 		return list == null || list.size() == 0;
 	}
 
+	public static boolean nullList(List<?> list) {
+		return list == null;
+	}
+
 }

@@ -17,7 +17,7 @@ public class ConfigTextContentAdapter extends TextContentAdapter {
 			if (existingText.contains(byOperator)) {
 				((Text) control).setText(existingText.substring(0, existingText.lastIndexOf(byOperator) + 1));
 			} else {
-				((Text) control).setText(StringUtil.STRING_EMPTY);
+				((Text) control).setText(StringUtil.EMPTY);
 			}
 			int newCursorPosition = ((Text) control).getText().length();
 			((Text) control).setSelection(newCursorPosition, newCursorPosition);

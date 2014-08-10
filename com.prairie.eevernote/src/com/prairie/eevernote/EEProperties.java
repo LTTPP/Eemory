@@ -39,7 +39,7 @@ public class EEProperties implements Constants {
 	public String getProperty(String key, String... replaces) {
 		String value = properties.getProperty(key);
 		if (StringUtil.nullString(value)) {
-			return StringUtil.STRING_EMPTY;
+			return StringUtil.EMPTY;
 		}
 		for (int i = ZERO; i < replaces.length; i++) {
 			value = value.replace(LEFT_BRACE + (i + ONE) + RIGHT_BRACE, replaces[i]);

@@ -208,7 +208,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
 	private void clearHintText(String property, String hintMsg) {
 		if (ConfigurationsDialog.this.getFieldValue(property).equals(getProperty(hintMsg))) {
-			ConfigurationsDialog.this.setFieldValue(property, StringUtil.STRING_EMPTY);
+			ConfigurationsDialog.this.setFieldValue(property, StringUtil.EMPTY);
 			// Sets foreground color to the default system color for this control.
 			ConfigurationsDialog.this.getField(property).setForeground(null);
 		}
@@ -285,7 +285,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 		Settings.set(SETTINGS_KEY_NOTE_CHECKED, this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE));
 		Settings.set(SETTINGS_KEY_NOTE_GUID, this.notes.get(this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
 
-		Settings.set(SETTINGS_KEY_TAGS, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS).equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE)) ? StringUtil.STRING_EMPTY : this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS));
+		Settings.set(SETTINGS_KEY_TAGS, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS).equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE)) ? StringUtil.EMPTY : this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS));
 		Settings.set(SETTINGS_KEY_TAGS_CHECKED, this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS));
 
 		Settings.set(SETTINGS_KEY_COMMENTS, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS));
@@ -360,7 +360,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (!button.getSelection()) {
-					text.setText(StringUtil.STRING_EMPTY);
+					text.setText(StringUtil.EMPTY);
 				}
 				text.setEnabled(button.getSelection());
 				// Fix Eclipse Bug 193933 – Text is not grayed out when disabled if custom foreground color is set.

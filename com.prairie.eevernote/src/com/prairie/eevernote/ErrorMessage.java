@@ -8,7 +8,7 @@ public class ErrorMessage {
 	public static String getMessage(Throwable t) {
 		if (t instanceof EDAMNotFoundException) {
 			EDAMNotFoundException e = (EDAMNotFoundException) t;
-			String args = StringUtil.STRING_EMPTY;
+			String args = StringUtil.EMPTY;
 			try {
 				args = EvernoteDataModel.forName(e.getIdentifier()).toReadableString();
 			} catch (IllegalArgumentException expt) {

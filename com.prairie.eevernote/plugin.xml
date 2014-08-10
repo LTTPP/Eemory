@@ -21,7 +21,7 @@
 			<commandParameter id="com.prairie.eevernote.command.parameter" name="Command Parameter" optional="true">
 			</commandParameter>
 		</command>
-		<command name="EEvernote Configurations..." categoryId="com.prairie.eevernote.commands.category" id="com.prairie.eevernote.commands.Configurations">
+		<command name="Clip Configurations..." categoryId="com.prairie.eevernote.commands.category" id="com.prairie.eevernote.commands.Configurations">
 			<commandParameter id="com.prairie.eevernote.command.parameter" name="Command Parameter" optional="true">
 			</commandParameter>
 		</command>
@@ -105,17 +105,17 @@
 			</command>
 			<separator name="separatorLine" visible="true">
 			</separator>
-			<command label="EEvernote Configurations..."
+			<command label="Clip Configurations..."
 				commandId="com.prairie.eevernote.commands.Configurations">
 				<parameter name="com.prairie.eevernote.command.parameter"
-					value="EEvernote Configurations...">
+					value="Clip Configurations...">
 				</parameter>
 			</command>
 			<!--/menu -->
 		</menuContribution>
 
 		<menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-			<menu label="EEvernote" icon="icons/icon_evernote_16x16.png"
+			<menu label="Clip to Evernote" icon="icons/icon_evernote_16x16.png"
 				id="com.prairie.eevernote.popupMenu">
 				<command label="Clip Selection to Evernote" icon="icons/icon_selection_16x16.png"
 					commandId="com.prairie.eevernote.commands.ClipSelectionToEvernote">
@@ -137,10 +137,10 @@
 				</command>
 				<separator name="separatorLine" visible="true">
 				</separator>
-				<command label="EEvernote Configurations..."
+				<command label="Clip Configurations..."
 					commandId="com.prairie.eevernote.commands.Configurations">
 					<parameter name="com.prairie.eevernote.command.parameter"
-						value="EEvernote Configurations...">
+						value="Clip Configurations...">
 					</parameter>
 				</command>
 				<visibleWhen checkEnabled="false">

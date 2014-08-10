@@ -28,7 +28,7 @@ public class FileUtil {
 		for (byte hashByte : bytes) {
 			int intVal = 0xff & hashByte;
 			if (intVal < 0x10) {
-				sb.append(Constants.ZERO_CHAR);
+				sb.append(String.valueOf(Constants.ZERO));
 			}
 			sb.append(Integer.toHexString(intVal));
 		}

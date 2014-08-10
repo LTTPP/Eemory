@@ -8,10 +8,13 @@ public interface Constants {
 	public static final String TAGS_SEPARATOR = ",";
 	public static final String COMMA = ",";
 	public static final String STRING_EMPTY = "";
+	public static final String STRING_NON_BREAKING_SPACE = " ";
+	public static final String TAB = "\t";
+	public static final String HTML_NBSP = "&nbsp;";
 	public static final String COLON = ":";
 	public static final String FILENAME_DELIMITER = ".";
+	public static final String POUND = "#";
 	public static final String MD5 = "MD5";
-	public static final char ZERO_CHAR = '0';
 	public static final String SimpleDateFormat = "yyyy-MM-dd'T'HH:mm:ss";
 	public static final String SimpleDateFormat2 = "yyyy-MM-dd'T'HH-mm-ss-";
 	public static final String MimeDetector = "eu.medsea.mimeutil.detector.MagicMimeMimeDetector";
@@ -21,11 +24,12 @@ public interface Constants {
 	public static final String RIGHT_PARENTHESIS = ")";
 	public static final String LEFT_BRACE = "{";
 	public static final String RIGHT_BRACE = "}";
+	public static final String LESS_THAN = "<";
+	public static final String GREATER_THAN = ">";
 	public static final String IMG_PNG = "png";
 	public static final int ZERO = 0;
 	public static final int ONE = 1;
 	public static final int TWO = 2;
-	public static final int NEGATIVE_TWO = -2;
 	public static final int THREE = 3;
 	public static final int FOUR = 4;
 	public static final int FIVE = 5;
@@ -33,7 +37,13 @@ public interface Constants {
 	public static final int SEVEN = 7;
 	public static final int EIGHT = 8;
 	public static final int NINE = 9;
+	public static final int TEN = 10;
+	public static final int HUNDRED = 100;
+	public static final int NEGATIVE = -1;
 	// -=-=-=-=-=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-
+
+	public static final String PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME = "org.eclipse.jdt.core";
+	public static final String PLUGIN_ORG_ECLIPSE_JDT_CORE_PREF_FORMATTER_TABULATION_SIZE = "org.eclipse.jdt.core.formatter.tabulation.size";
 
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Settings Keys =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -104,5 +114,23 @@ public interface Constants {
 	public static final int EEPLUGIN_SCREENSHOT_HINT_TEXT_START_Y = -6;
 
 	public static final float EEPLUGIN_SCREENSHOT_MASK_FULLSCREEN_SCALEFACTOR = 0.7F;
+
+	// ENML
+
+	public static final String VERSION_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+
+	public static final String DOCTYPE_DEFINITION = "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">";
+
+	public static final String NOTE_START = "<en-note>";
+
+	public static final String ENML_DTD = "enml2.dtd";
+	public static final String XHTML_1_0_LATIN_1_ENT = "xhtml-lat1.ent";
+	public static final String XHTML_1_0_SYMBOL_ENT = "xhtml-symbol.ent";
+	public static final String XHTML_1_0_SPECIAL_ENT = "xhtml-special.ent";
+
+	public static final String ENML_DTD_LOCATION = "dtd/enml2.dtd";
+	public static final String XHTML_1_0_LATIN_1_ENT_LOCATION = "dtd/xhtml-lat1.ent";
+	public static final String XHTML_1_0_SYMBOL_ENT_LOCATION = "dtd/xhtml-symbol.ent";
+	public static final String XHTML_1_0_SPECIAL_ENT_LOCATION = "dtd/xhtml-special.ent";
 
 }

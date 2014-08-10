@@ -10,6 +10,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 import com.evernote.auth.EvernoteAuth;
 import com.evernote.auth.EvernoteService;
 import com.evernote.clients.ClientFactory;
@@ -82,9 +86,11 @@ public class EEClipperImpl extends EEClipper {
 	 * @throws EDAMUserException
 	 * @throws IOException
 	 * @throws NoSuchAlgorithmException
+	 * @throws SAXException
+	 * @throws ParserConfigurationException
 	 */
 	@Override
-	public void clipFile(List<File> files) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException {
+	public void clipFile(List<File> files) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException {
 		if (ListUtil.nullOrEmptyList(files)) {
 			return;
 		}
@@ -106,10 +112,13 @@ public class EEClipperImpl extends EEClipper {
 	 * @throws EDAMNotFoundException
 	 * @throws EDAMSystemException
 	 * @throws EDAMUserException
+	 * @throws IOException
+	 * @throws SAXException
+	 * @throws ParserConfigurationException
 	 *
 	 */
 	@Override
-	public void clipSelection(String selection, String title) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException {
+	public void clipSelection(String selection, String title) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException {
 		if (StringUtil.nullOrEmptyOrBlankString(selection)) {
 			return;
 		}
@@ -127,7 +136,7 @@ public class EEClipperImpl extends EEClipper {
 		return false;
 	}
 
-	private void createNote(File file, String noteTitle) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException {
+	private void createNote(File file, String noteTitle) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException {
 		Note note = new Note();
 		note.setTitle(noteTitle);
 		// parent Notebook is optional; if omitted, default notebook is used
@@ -141,9 +150,11 @@ public class EEClipperImpl extends EEClipper {
 		note.addToResources(resource);
 
 		// create content
+		ENML enml = new ENML();
 		String hashHex = FileUtil.bytesToHex(resource.getData().getBodyHash());
-		String content = ENML.content(hashHex, mimeType, comments);
-		note.setContent(content);
+		enml.addResource(hashHex, mimeType);
+		enml.addComment(comments);
+		note.setContent(enml.get());
 
 		// create tags
 		if (!StringUtil.nullOrEmptyOrBlankString(tags)) {
@@ -153,7 +164,7 @@ public class EEClipperImpl extends EEClipper {
 		noteStore.createNote(note);
 	}
 
-	private void createNote(String selection, String noteTitle) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException {
+	private void createNote(String selection, String noteTitle) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException {
 		// simple text note with syntax highlighting/rich format
 		Note note = new Note();
 		note.setTitle(noteTitle);
@@ -162,8 +173,10 @@ public class EEClipperImpl extends EEClipper {
 			note.setNotebookGuid(this.notebookGuid);
 		}
 
-		String content = ENML.content(selection, null, comments);
-		note.setContent(content);
+		ENML enml = new ENML();
+		enml.addSnippet(selection);
+		enml.addComment(comments);
+		note.setContent(enml.get());
 
 		if (!StringUtil.nullOrEmptyOrBlankString(tags)) {
 			note.setTagNames(ListUtil.arrayToList(tags.split(Constants.TAGS_SEPARATOR)));
@@ -182,15 +195,16 @@ public class EEClipperImpl extends EEClipper {
 		return resource;
 	}
 
-	private void updateNote(List<File> files) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException {
+	private void updateNote(List<File> files) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException {
 		if (ListUtil.nullOrEmptyList(files)) {
 			return;
 		}
 
 		Note note = noteStore.getNote(this.noteGuid, true, false, false, false);
 
+		ENML enml = new ENML(note.getContent());
+
 		// update resource
-		String update = StringUtil.STRING_EMPTY;
 		Iterator<File> iter = files.iterator();
 		while (iter.hasNext()) {
 			File file = iter.next();
@@ -199,21 +213,14 @@ public class EEClipperImpl extends EEClipper {
 			note.addToResources(resource);
 
 			String hashHex = FileUtil.bytesToHex(resource.getData().getBodyHash());
-			update = ENML.resource(hashHex, mimeType) + update;
+			enml.addResource(hashHex, mimeType);
 		}
 
 		// update content
-		if (!StringUtil.nullOrEmptyOrBlankString(update)) {
-			String content = note.getContent();
-			// ------------------------
-			String beginPart = content.substring(0, content.indexOf(ENML.NOTE_START) + ENML.NOTE_START.length());
-			// ------------------------
-			if (!StringUtil.nullOrEmptyOrBlankString(comments)) {
-				update = ENML.comments(comments) + update;
-			}
-			content = content.replace(beginPart, beginPart + update);
-			note.setContent(content);
+		if (!StringUtil.nullOrEmptyOrBlankString(comments)) {
+			enml.addComment(comments);
 		}
+		note.setContent(enml.get());
 
 		// update tags
 		if (!StringUtil.nullOrEmptyOrBlankString(tags)) {
