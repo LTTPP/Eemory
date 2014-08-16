@@ -40,13 +40,13 @@ import com.prairie.eevernote.client.EEClipperManager;
 import com.prairie.eevernote.enml.ENML;
 import com.prairie.eevernote.exception.OutOfDateException;
 import com.prairie.eevernote.util.FileUtil;
+import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.StringUtil;
 import com.prairie.eevernote.widgets.CaptureView;
 import com.prairie.eevernote.widgets.ConfigurationsDialog;
 import com.prairie.eevernote.widgets.HotTextDialog;
-import com.prairie.eevernote.widgets.Settings;
 
 public class EEHandler extends AbstractHandler implements Constants {
 
@@ -111,7 +111,8 @@ public class EEHandler extends AbstractHandler implements Constants {
 			} else if (selection instanceof ITextSelection) {
 				IEditorPart editorPart = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getActiveEditor();
 				IFile iFile = (IFile) ((editorPart.getEditorInput().getAdapter(IFile.class)));
-				if (iFile != null) {// TODO iFile == null: how to handle this case in XML file
+				if (iFile != null) {// TODO iFile == null: how to handle this
+									// case in XML file
 					File file = iFile.getLocation().makeAbsolute().toFile();
 					files.add(file);
 				} else {
@@ -201,7 +202,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 			if (screenshot == null) {
 				return;
 			}
-			final File  file = File.createTempFile(FileUtil.tempFileName(), FILENAME_DELIMITER + IMG_PNG);
+			final File file = File.createTempFile(FileUtil.tempFileName(), FILENAME_DELIMITER + IMG_PNG);
 			ImageIO.write(screenshot, IMG_PNG, file);
 
 			final List<File> files = ListUtil.list();
@@ -239,19 +240,23 @@ public class EEHandler extends AbstractHandler implements Constants {
 	}
 
 	protected EEClipper getEEClipper() throws TException, EDAMUserException, EDAMSystemException, OutOfDateException {
-		final EEClipper clipper = EEClipperManager.getInstance().getEEClipper(Settings.get(Constants.SETTINGS_KEY_TOKEN));
+		final EEClipper clipper = EEClipperManager.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN));
 
-		if (!StringUtil.nullOrEmptyOrBlankString(Settings.get(Constants.SETTINGS_KEY_NOTEBOOK_GUID))) {
-			clipper.setNotebookGuid(Settings.get(Constants.SETTINGS_KEY_NOTEBOOK_GUID));
+		String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID);
+		if (!StringUtil.nullOrEmptyOrBlankString(value)) {
+			clipper.setNotebookGuid(value);
 		}
-		if (!StringUtil.nullOrEmptyOrBlankString(Settings.get(Constants.SETTINGS_KEY_NOTE_GUID))) {
-			clipper.setNoteGuid(Settings.get(Constants.SETTINGS_KEY_NOTE_GUID));
+		value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID);
+		if (!StringUtil.nullOrEmptyOrBlankString(value)) {
+			clipper.setNoteGuid(value);
 		}
-		if (!StringUtil.nullOrEmptyOrBlankString(Settings.get(Constants.SETTINGS_KEY_TAGS))) {
-			clipper.setTags(Settings.get(Constants.SETTINGS_KEY_TAGS));
+		value = IDialogSettingsUtil.get(SETTINGS_SECTION_TAGS, SETTINGS_KEY_NAME);
+		if (!StringUtil.nullOrEmptyOrBlankString(value)) {
+			clipper.setTags(value);
 		}
-		if (!StringUtil.nullOrEmptyOrBlankString(Settings.get(Constants.SETTINGS_KEY_COMMENTS))) {
-			clipper.setComments(Settings.get(Constants.SETTINGS_KEY_COMMENTS));
+		value = IDialogSettingsUtil.get(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_NAME);
+		if (!StringUtil.nullOrEmptyOrBlankString(value)) {
+			clipper.setComments(value);
 		}
 
 		return clipper;

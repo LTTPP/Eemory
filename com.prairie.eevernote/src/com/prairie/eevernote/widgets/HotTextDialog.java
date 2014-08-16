@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Text;
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.client.EEClipperManager;
+import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.StringUtil;
 
@@ -39,7 +40,7 @@ public class HotTextDialog extends Dialog implements Constants {
 	private SimpleContentProposalProvider noteProposalProvider;
 
 	private Map<String, Text> fields;
-	private Map<String, String> settings; // <Field Property, Field Value>
+	private Map<String, String> quickSettings; // <Field Property, Field Value>
 	private Map<String, Map<String, String>> matrix; // <Field Property, <Field Property, Field Value>>
 
 	public HotTextDialog(Shell parentShell) {
@@ -68,12 +69,12 @@ public class HotTextDialog extends Dialog implements Constants {
 
 		// ------------
 
-		if (!Settings.getBoolean(SETTINGS_KEY_NOTEBOOK_CHECKED)) {
+		if (!IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED)) {
 
 			Text notebookField = this.createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
 			this.addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebookField);
 			try {
-				this.notebooks = EEClipperManager.getInstance().getEEClipper(Settings.get(SETTINGS_KEY_TOKEN), false).listNotebooks();
+				this.notebooks = EEClipperManager.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false).listNotebooks();
 				this.enableFilteringContentAssist(notebookField, this.notebooks.keySet().toArray(new String[this.notebooks.size()]));
 			} catch (Throwable e) {
 				MessageDialog.openError(this.shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
@@ -82,22 +83,22 @@ public class HotTextDialog extends Dialog implements Constants {
 
 		// ------------
 
-		if (!Settings.getBoolean(SETTINGS_KEY_NOTE_CHECKED)) {
+		if (!IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTE, SETTINGS_KEY_CHECKED)) {
 			Text noteField = this.createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
 			this.addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, noteField);
 			try {
-				this.notes = EEClipperManager.getInstance().getEEClipper(Settings.get(SETTINGS_KEY_TOKEN), false).listNotesWithinNotebook(Settings.getBoolean(SETTINGS_KEY_NOTEBOOK_CHECKED) ? Settings.get(SETTINGS_KEY_NOTEBOOK_GUID) : this.notebooks.get(this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
+				this.notes = EEClipperManager.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false).listNotesWithinNotebook(IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED) ? IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) : this.notebooks.get(this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
 				this.noteProposalProvider = this.enableFilteringContentAssist(noteField, this.notes.keySet().toArray(new String[this.notes.size()]));
 			} catch (Throwable e) {
 				MessageDialog.openError(this.shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
 			}
-			if (!Settings.getBoolean(SETTINGS_KEY_NOTEBOOK_CHECKED)) {
+			if (IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED)) {
 				noteField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusGained(FocusEvent e) {
 						try {
 							if (HotTextDialog.this.shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)) {
-								HotTextDialog.this.notes = EEClipperManager.getInstance().getEEClipper(Settings.get(SETTINGS_KEY_TOKEN), false).listNotesWithinNotebook(HotTextDialog.this.notebooks.get(HotTextDialog.this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
+								HotTextDialog.this.notes = EEClipperManager.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false).listNotesWithinNotebook(HotTextDialog.this.notebooks.get(HotTextDialog.this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
 								HotTextDialog.this.noteProposalProvider.setProposals(HotTextDialog.this.notes.keySet().toArray(new String[HotTextDialog.this.notes.size()]));
 							}
 						} catch (Throwable e1) {
@@ -110,11 +111,11 @@ public class HotTextDialog extends Dialog implements Constants {
 
 		// ------------
 
-		if (!Settings.getBoolean(SETTINGS_KEY_TAGS_CHECKED)) {
+		if (!IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_TAGS, SETTINGS_KEY_CHECKED)) {
 			Text tagsField = this.createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
 			this.addField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, tagsField);
 			try {
-				this.enableFilteringContentAssist(tagsField, EEClipperManager.getInstance().getEEClipper(Settings.get(SETTINGS_KEY_TOKEN), false).listTags(), TAGS_SEPARATOR);
+				this.enableFilteringContentAssist(tagsField, EEClipperManager.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false).listTags(), TAGS_SEPARATOR);
 			} catch (Throwable e) {
 				MessageDialog.openError(HotTextDialog.this.shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
 			}
@@ -122,7 +123,7 @@ public class HotTextDialog extends Dialog implements Constants {
 
 		// ------------
 
-		if (!Settings.getBoolean(SETTINGS_KEY_COMMENTS_CHECKED)) {
+		if (!IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_CHECKED)) {
 			this.addField(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, this.createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS));
 		}
 
@@ -147,17 +148,17 @@ public class HotTextDialog extends Dialog implements Constants {
 	}
 
 	private void saveQuickSettings() {
-		if (this.settings == null) {
-			this.settings = MapUtil.map();
+		if (this.quickSettings == null) {
+			this.quickSettings = MapUtil.map();
 		}
-		this.settings.put(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, this.notebooks == null ? null : this.notebooks.get(this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
-		this.settings.put(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, this.notes == null ? null : this.notes.get(this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
-		this.settings.put(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS));
-		this.settings.put(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS));
+		this.quickSettings.put(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, this.notebooks == null ? null : this.notebooks.get(this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
+		this.quickSettings.put(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, this.notes == null ? null : this.notes.get(this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
+		this.quickSettings.put(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS));
+		this.quickSettings.put(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS));
 	}
 
 	public Map<String, String> getQuickSettings() {
-		return this.settings;
+		return this.quickSettings;
 	}
 
 	private boolean shouldRefresh(String uniqueKey, String property) {
@@ -189,7 +190,7 @@ public class HotTextDialog extends Dialog implements Constants {
 	}
 
 	protected static boolean shouldShow() {
-		return !Settings.getBoolean(SETTINGS_KEY_NOTEBOOK_CHECKED) || !Settings.getBoolean(SETTINGS_KEY_NOTE_CHECKED) || !Settings.getBoolean(SETTINGS_KEY_TAGS_CHECKED) || !Settings.getBoolean(SETTINGS_KEY_COMMENTS_CHECKED);
+		return !IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED) || !IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTE, SETTINGS_KEY_CHECKED) || !IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_TAGS, SETTINGS_KEY_CHECKED) || !IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_CHECKED);
 	}
 
 	protected Text createLabelTextField(Composite container, String labelText) {

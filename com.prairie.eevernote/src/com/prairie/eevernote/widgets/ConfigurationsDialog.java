@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Text;
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.client.EEClipperManager;
+import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.StringUtil;
 
@@ -209,21 +210,22 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 	private void clearHintText(String property, String hintMsg) {
 		if (ConfigurationsDialog.this.getFieldValue(property).equals(getProperty(hintMsg))) {
 			ConfigurationsDialog.this.setFieldValue(property, StringUtil.EMPTY);
-			// Sets foreground color to the default system color for this control.
+			// Sets foreground color to the default system color for this
+			// control.
 			ConfigurationsDialog.this.getField(property).setForeground(null);
 		}
 	}
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, Constants.EECLIPPERPLUGIN_CONFIGURATIONS_REFRESH_ID, getProperty(Constants.EECLIPPERPLUGIN_CONFIGURATIONS_REFRESH), false);
+		createButton(parent, EECLIPPERPLUGIN_CONFIGURATIONS_REFRESH_ID, getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_REFRESH), false);
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 
 	@Override
 	protected void buttonPressed(int buttonId) {
-		if (buttonId == Constants.EECLIPPERPLUGIN_CONFIGURATIONS_REFRESH_ID) {
+		if (buttonId == EECLIPPERPLUGIN_CONFIGURATIONS_REFRESH_ID) {
 			this.shouldRefresh = true;
 		} else {
 			super.buttonPressed(buttonId);
@@ -275,49 +277,49 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 	private void saveSettings() {
-		Settings.set(SETTINGS_KEY_TOKEN, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN));
-
-		Settings.set(SETTINGS_KEY_NOTEBOOK, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK));
-		Settings.set(SETTINGS_KEY_NOTEBOOK_CHECKED, this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK));
-		Settings.set(SETTINGS_KEY_NOTEBOOK_GUID, this.notebooks.get(this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
-
-		Settings.set(SETTINGS_KEY_NOTE, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE));
-		Settings.set(SETTINGS_KEY_NOTE_CHECKED, this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE));
-		Settings.set(SETTINGS_KEY_NOTE_GUID, this.notes.get(this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
-
-		Settings.set(SETTINGS_KEY_TAGS, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS).equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE)) ? StringUtil.EMPTY : this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS));
-		Settings.set(SETTINGS_KEY_TAGS_CHECKED, this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS));
-
-		Settings.set(SETTINGS_KEY_COMMENTS, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS));
-		Settings.set(SETTINGS_KEY_COMMENTS_CHECKED, this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS));
+		IDialogSettingsUtil.set(SETTINGS_KEY_TOKEN, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN));
+		addNewSection(SETTINGS_SECTION_NOTEBOOK, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), this.notebooks.get(this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
+		addNewSection(SETTINGS_SECTION_NOTE, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), this.notes.get(this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
+		addNewSection(SETTINGS_SECTION_TAGS, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS).equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE)) ? StringUtil.EMPTY : this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), null);
+		addNewSection(SETTINGS_SECTION_COMMENTS, this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), null);
 	}
 
 	private void restoreSettings(String label) {
 		if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN)) {
-			if (!StringUtil.nullOrEmptyOrBlankString(Settings.get(SETTINGS_KEY_TOKEN))) {
-				this.setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN, Settings.get(SETTINGS_KEY_TOKEN));
+			if (!StringUtil.nullOrEmptyOrBlankString(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN))) {
+				this.setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN, IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN));
 			}
 		} else if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)) {
-			this.enableField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, Settings.getBoolean(SETTINGS_KEY_NOTEBOOK_CHECKED));
-			if (this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK) && !StringUtil.nullOrEmptyOrBlankString(Settings.get(SETTINGS_KEY_NOTEBOOK))) {
-				this.setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, Settings.get(SETTINGS_KEY_NOTEBOOK));
+			this.enableField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED));
+			String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_NAME);
+			if (this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK) && !StringUtil.nullOrEmptyOrBlankString(value)) {
+				this.setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, value);
 			}
 		} else if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)) {
-			this.enableField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, Settings.getBoolean(SETTINGS_KEY_NOTE_CHECKED));
-			if (this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) && !StringUtil.nullOrEmptyOrBlankString(Settings.get(SETTINGS_KEY_NOTE))) {
-				this.setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, Settings.get(SETTINGS_KEY_NOTE));
+			this.enableField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTE, SETTINGS_KEY_CHECKED));
+			String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_NAME);
+			if (this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) && !StringUtil.nullOrEmptyOrBlankString(value)) {
+				this.setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, value);
 			}
 		} else if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS)) {
-			this.enableField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, Settings.getBoolean(SETTINGS_KEY_TAGS_CHECKED));
-			if (this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS) && !StringUtil.nullOrEmptyOrBlankString(Settings.get(SETTINGS_KEY_TAGS))) {
-				this.setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, Settings.get(SETTINGS_KEY_TAGS));
+			this.enableField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_TAGS, SETTINGS_KEY_CHECKED));
+			String value = IDialogSettingsUtil.get(SETTINGS_SECTION_TAGS, SETTINGS_KEY_NAME);
+			if (this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS) && !StringUtil.nullOrEmptyOrBlankString(value)) {
+				this.setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, value);
 			}
 		} else if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS)) {
-			this.enableField(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, Settings.getBoolean(SETTINGS_KEY_COMMENTS_CHECKED));
-			if (this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS) && !StringUtil.nullOrEmptyOrBlankString(Settings.get(SETTINGS_KEY_COMMENTS))) {
-				this.setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, Settings.get(SETTINGS_KEY_COMMENTS));
+			this.enableField(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_CHECKED));
+			String value = IDialogSettingsUtil.get(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_NAME);
+			if (this.fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS) && !StringUtil.nullOrEmptyOrBlankString(value)) {
+				this.setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, value);
 			}
 		}
+	}
+
+	private void addNewSection(String sectionName, String name, boolean isChecked, String guid) {
+		IDialogSettingsUtil.set(sectionName, SETTINGS_KEY_NAME, name);
+		IDialogSettingsUtil.set(sectionName, SETTINGS_KEY_CHECKED, isChecked);
+		IDialogSettingsUtil.set(sectionName, SETTINGS_KEY_GUID, guid);
 	}
 
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -349,7 +351,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
 	protected TextField createLablCheckTextField(Composite container, String labelText) {
 		final Button button = new Button(container, SWT.CHECK);
-		button.setText(getProperty(labelText) + Constants.COLON);
+		button.setText(getProperty(labelText) + COLON);
 		button.setSelection(true);
 
 		final Text text = new Text(container, SWT.BORDER);
@@ -363,7 +365,8 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 					text.setText(StringUtil.EMPTY);
 				}
 				text.setEnabled(button.getSelection());
-				// Fix Eclipse Bug 193933 – Text is not grayed out when disabled if custom foreground color is set.
+				// Fix Eclipse Bug 193933 – Text is not grayed out when disabled
+				// if custom foreground color is set.
 				text.setBackground(button.getSelection() ? null : ConfigurationsDialog.this.shell.getDisplay().getSystemColor(SWT.COLOR_TITLE_INACTIVE_FOREGROUND));
 			}
 		});
@@ -373,7 +376,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
 	protected TextField createLabelTextField(Composite container, String labelText) {
 		Label label = new Label(container, SWT.NONE);
-		label.setText(getProperty(labelText) + Constants.COLON);
+		label.setText(getProperty(labelText) + COLON);
 
 		Text text = new Text(container, SWT.BORDER);
 		text.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));

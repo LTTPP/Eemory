@@ -47,21 +47,16 @@ public interface Constants {
 
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Settings Keys =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-	public static final String SETTINGS_KEY_TOKEN = "Token";
+	public static final String SETTINGS_KEY_TOKEN = "token";
 
-	public static final String SETTINGS_KEY_NOTEBOOK = "Notebook";
-	public static final String SETTINGS_KEY_NOTEBOOK_GUID = "Notebook Guid";
-	public static final String SETTINGS_KEY_NOTEBOOK_CHECKED = "Notebook Checked";
+	public static final String SETTINGS_SECTION_NOTEBOOK = "notebook";
+	public static final String SETTINGS_SECTION_NOTE = "note";
+	public static final String SETTINGS_SECTION_TAGS = "tags";
+	public static final String SETTINGS_SECTION_COMMENTS = "comments";
 
-	public static final String SETTINGS_KEY_NOTE = "Note";
-	public static final String SETTINGS_KEY_NOTE_GUID = "Note Guid";
-	public static final String SETTINGS_KEY_NOTE_CHECKED = "Note Checked";
-
-	public static final String SETTINGS_KEY_TAGS = "Tags";
-	public static final String SETTINGS_KEY_TAGS_CHECKED = "Tags Checked";
-
-	public static final String SETTINGS_KEY_COMMENTS = "Comments";
-	public static final String SETTINGS_KEY_COMMENTS_CHECKED = "Comments Checked";
+	public static final String SETTINGS_KEY_NAME = "name";
+	public static final String SETTINGS_KEY_GUID = "guid";
+	public static final String SETTINGS_KEY_CHECKED = "isChecked";
 
 	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Strings =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 

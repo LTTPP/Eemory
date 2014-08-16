@@ -4,9 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +20,7 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import org.xml.sax.XMLReader;
 
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.util.ArrayUtil;
@@ -181,10 +182,11 @@ public class ENML implements Constants {
 	}
 
 	private void validate(String enml) throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
-		fac.setValidating(true);
-		DocumentBuilder builder = fac.newDocumentBuilder();
-		builder.setEntityResolver(new EntityResolver() {
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		factory.setValidating(true);
+		SAXParser parser = factory.newSAXParser();
+		XMLReader reader = parser.getXMLReader();
+		reader.setEntityResolver(new EntityResolver() {
 			@Override
 			public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
 				if (systemId.endsWith(ENML_DTD)) {
@@ -200,7 +202,7 @@ public class ENML implements Constants {
 				}
 			}
 		});
-		builder.setErrorHandler(new ErrorHandler() {
+		reader.setErrorHandler(new ErrorHandler() {
 			@Override
 			public void warning(SAXParseException exception) throws SAXException {
 				throw exception;
@@ -216,7 +218,7 @@ public class ENML implements Constants {
 				throw exception;
 			}
 		});
-		builder.parse(new ByteArrayInputStream(enml.getBytes(CharEncoding.UTF_8)));
+		reader.parse(new InputSource(new ByteArrayInputStream(enml.getBytes(CharEncoding.UTF_8))));
 	}
 
 	public String get() throws ParserConfigurationException, SAXException, IOException {
