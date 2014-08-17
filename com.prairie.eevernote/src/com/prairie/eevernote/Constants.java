@@ -112,9 +112,9 @@ public interface Constants {
 
 	// ENML
 
-	public static final String VERSION_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+	public static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
-	public static final String DOCTYPE_DEFINITION = "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">";
+	public static final String DOCTYPE_DECLARATION = "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">";
 
 	public static final String NOTE_START = "<en-note>";
 

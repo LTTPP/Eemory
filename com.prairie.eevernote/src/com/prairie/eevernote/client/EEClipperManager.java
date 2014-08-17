@@ -4,7 +4,7 @@ import com.evernote.edam.error.EDAMSystemException;
 import com.evernote.edam.error.EDAMUserException;
 import com.evernote.thrift.TException;
 import com.prairie.eevernote.EEProperties;
-import com.prairie.eevernote.client.impl.EEClipperDummy;
+import com.prairie.eevernote.client.impl.EEClipperNop;
 import com.prairie.eevernote.client.impl.EEClipperImpl;
 import com.prairie.eevernote.exception.OutOfDateException;
 import com.prairie.eevernote.util.StringUtil;
@@ -62,7 +62,7 @@ public class EEClipperManager {
 
 	public EEClipper getDummyEEClipper() {
 		if (this.dummyEEClipper == null) {
-			this.dummyEEClipper = new EEClipperDummy();
+			this.dummyEEClipper = new EEClipperNop();
 		}
 		return this.dummyEEClipper;
 	}

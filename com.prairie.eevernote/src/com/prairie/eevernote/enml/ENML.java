@@ -1,30 +1,22 @@
 package com.prairie.eevernote.enml;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
 
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.util.ArrayUtil;
 import com.prairie.eevernote.util.ColorUtil;
+import com.prairie.eevernote.util.EnmlUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.StringUtil;
 
@@ -81,7 +73,10 @@ public class ENML implements Constants {
 		note.addSnippet(snippet);
 	}
 
+	// 30M - 220ms
 	public static String toSnippet(StyledText styledText) {
+		System.out.println("parsing...");
+		long start = System.currentTimeMillis();
 		Point selection = styledText.getSelection();
 		String selectionText = styledText.getSelectionText();
 
@@ -101,6 +96,9 @@ public class ENML implements Constants {
 			TextRange[] textRanges = parse(lines[i], ranges, offset);
 			snippet += div(textRanges, face, String.valueOf(size));
 		}
+		long end = System.currentTimeMillis();
+
+		System.out.println(end - start);
 		return snippet;
 	}
 
@@ -181,55 +179,15 @@ public class ENML implements Constants {
 		return span;
 	}
 
-	private void validate(String enml) throws ParserConfigurationException, SAXException, IOException {
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setValidating(true);
-		SAXParser parser = factory.newSAXParser();
-		XMLReader reader = parser.getXMLReader();
-		reader.setEntityResolver(new EntityResolver() {
-			@Override
-			public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-				if (systemId.endsWith(ENML_DTD)) {
-					return new InputSource(getClass().getResourceAsStream(ENML_DTD_LOCATION));
-				} else if (systemId.endsWith(XHTML_1_0_LATIN_1_ENT)) {
-					return new InputSource(getClass().getResourceAsStream(XHTML_1_0_LATIN_1_ENT_LOCATION));
-				} else if (systemId.endsWith(XHTML_1_0_SYMBOL_ENT)) {
-					return new InputSource(getClass().getResourceAsStream(XHTML_1_0_SYMBOL_ENT_LOCATION));
-				} else if (systemId.endsWith(XHTML_1_0_SPECIAL_ENT)) {
-					return new InputSource(getClass().getResourceAsStream(XHTML_1_0_SPECIAL_ENT_LOCATION));
-				} else {
-					return null;
-				}
-			}
-		});
-		reader.setErrorHandler(new ErrorHandler() {
-			@Override
-			public void warning(SAXParseException exception) throws SAXException {
-				throw exception;
-			}
-
-			@Override
-			public void fatalError(SAXParseException exception) throws SAXException {
-				throw exception;
-			}
-
-			@Override
-			public void error(SAXParseException exception) throws SAXException {
-				throw exception;
-			}
-		});
-		reader.parse(new InputSource(new ByteArrayInputStream(enml.getBytes(CharEncoding.UTF_8))));
-	}
-
 	public String get() throws ParserConfigurationException, SAXException, IOException {
 		if (!StringUtil.nullOrEmptyOrBlankString(existingEnml)) {
 			String beginPart = existingEnml.substring(0, existingEnml.indexOf(NOTE_START) + NOTE_START.length());
 			existingEnml = existingEnml.replace(beginPart, beginPart + note);
-			validate(existingEnml);
+			EnmlUtil.validate(existingEnml);
 			return existingEnml;
 		} else {
-			String newEnml = VERSION_DECLARATION + DOCTYPE_DEFINITION + note;
-			validate(newEnml);
+			String newEnml = XML_DECLARATION + DOCTYPE_DECLARATION + note;
+			EnmlUtil.validate(newEnml);
 			return newEnml;
 		}
 	}
