@@ -2,7 +2,7 @@ package com.prairie.eevernote.enml;
 
 import com.prairie.eevernote.util.StringUtil;
 
-public class ENNote {
+public class Note {
 
 	private String body = StringUtil.EMPTY;
 

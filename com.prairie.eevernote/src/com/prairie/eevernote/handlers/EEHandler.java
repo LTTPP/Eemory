@@ -37,8 +37,8 @@ import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.ErrorMessage;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperManager;
-import com.prairie.eevernote.enml.ENML;
 import com.prairie.eevernote.exception.OutOfDateException;
+import com.prairie.eevernote.util.EnmlUtil;
 import com.prairie.eevernote.util.FileUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
@@ -158,7 +158,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 
 			final IEditorPart editor = HandlerUtil.getActiveEditor(event);
 			StyledText styledText = (StyledText) editor.getAdapter(Control.class);
-			final String snippet = ENML.toSnippet(styledText);
+			final String snippet = EnmlUtil.toSnippet(styledText);
 
 			Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE)) {
 

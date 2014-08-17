@@ -2,11 +2,11 @@ package com.prairie.eevernote.enml;
 
 import com.prairie.eevernote.util.StringUtil;
 
-public class Bold {
+public class B {
 
 	private String text = StringUtil.EMPTY;
 
-	public Bold(String text) {
+	public B(String text) {
 		this.text = text;
 	}
 

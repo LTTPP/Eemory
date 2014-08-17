@@ -2,11 +2,11 @@ package com.prairie.eevernote.enml;
 
 import com.prairie.eevernote.util.StringUtil;
 
-public class Italic {
+public class I {
 
 	private String text = StringUtil.EMPTY;
 
-	public Italic(String text) {
+	public I(String text) {
 		this.text = text;
 	}
 

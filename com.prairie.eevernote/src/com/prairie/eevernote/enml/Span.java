@@ -27,13 +27,13 @@ public class Span {
 		this.body = body;
 	}
 
-	public void addBold(Bold bold) {
+	public void addBold(B bold) {
 		if (!StringUtil.nullOrEmptyString(bold.toString())) {
 			body += bold;
 		}
 	}
 
-	public void addItalic(Italic italic) {
+	public void addItalic(I italic) {
 		if (!StringUtil.nullOrEmptyString(italic.toString())) {
 			body += italic;
 		}
