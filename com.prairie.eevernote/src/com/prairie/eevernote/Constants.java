@@ -40,6 +40,8 @@ public interface Constants {
 	public static final int TEN = 10;
 	public static final int HUNDRED = 100;
 	public static final int NEGATIVE = -1;
+
+	public static final String PLUS = "+";
 	// -=-=-=-=-=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-
 
 	public static final String PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME = "org.eclipse.jdt.core";

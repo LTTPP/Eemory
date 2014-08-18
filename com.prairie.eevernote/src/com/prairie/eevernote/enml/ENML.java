@@ -1,74 +1,90 @@
 package com.prairie.eevernote.enml;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import com.prairie.eevernote.Constants;
-import com.prairie.eevernote.util.EnmlUtil;
+import com.prairie.eevernote.util.DomUtil;
+import com.prairie.eevernote.util.EvernoteUtil;
 import com.prairie.eevernote.util.StringUtil;
 
 public class ENML implements Constants {
 
 	private String existingEnml = StringUtil.EMPTY;
-	private Note note;
 
-	public ENML() {
-		note = new Note();
+	private Document doc = null;
+	private Node root = null;
+	private List<Node> nodeList;
+
+	public ENML() throws DOMException, ParserConfigurationException {
+		doc = DomUtil.getBuilder().newDocument();
+		root = doc.createElement("en-note");
 	}
 
 	public ENML(String enml) {
 		this.existingEnml = enml;
 	}
 
-	private Div resource(String hashHex, String mimeType) {
-		Media media = new Media();
-		media.setAlign(Alignment.LEFT.name());
-		media.setHash(hashHex);
-		media.setType(mimeType);
-
-		Div div = new Div();
-		div.addMedia(media);
-		return div;
+	private Element div() throws DOMException, ParserConfigurationException {
+		return doc.createElement("div");
 	}
 
-	private Div comments(String comments) {
-		if (StringUtil.nullOrEmptyOrBlankString(comments)) {
-			return null;
-		}
-		Div div = new Div();
-		div.addText(comments + COLON);
-		return div;
+	private Element media(String hashHex, String mimeType) throws DOMException, ParserConfigurationException {
+		Element media = doc.createElement("en-media");
+		media.setAttribute("align", Alignment.LEFT.name());
+		media.setAttribute("type", hashHex);
+		media.setAttribute("hash", mimeType);
+		return media;
 	}
 
-	public void addResource(String hashHex, String mimeType) {
+	public void addResource(String hashHex, String mimeType) throws DOMException, ParserConfigurationException {
 		if (!StringUtil.nullOrEmptyOrBlankString(hashHex)) {
-			note.addDiv(resource(hashHex, mimeType));
+			Element div = div();
+			div.appendChild(media(hashHex, mimeType));
+			root.appendChild(div);
 		}
 	}
 
-	public void addComment(String comments) {
+	public void addComment(String comments) throws DOMException, ParserConfigurationException {
 		if (!StringUtil.nullOrEmptyOrBlankString(comments)) {
-			note.addDiv(comments(comments));
+			Element div = div();
+			div.setTextContent(comments + COLON);
+			root.appendChild(div);
 		}
 	}
 
-	public void addSnippet(String snippet) {
-		note.addSnippet(snippet);
+	public void addContent(Snippet content) {
+		if (root != null) {
+			for (Node n : content.getNodes()) {
+				root.appendChild(n);
+			}
+		} else {
+			nodeList = content.getNodes();
+		}
 	}
 
-	public String get() throws ParserConfigurationException, SAXException, IOException {
+	public String get() throws ParserConfigurationException, SAXException, IOException, TransformerException {
 		if (!StringUtil.nullOrEmptyOrBlankString(existingEnml)) {
-			String beginPart = existingEnml.substring(0, existingEnml.indexOf(NOTE_START) + NOTE_START.length());
-			existingEnml = existingEnml.replace(beginPart, beginPart + note);
-			EnmlUtil.validate(existingEnml);
+			String beginPart = existingEnml.substring(0, existingEnml.indexOf(NOTE_START) + NOTE_START.length());// TODO
+																													// fix
+																													// bug
+			existingEnml = existingEnml.replace(beginPart, beginPart + DomUtil.toString(nodeList));
+			EvernoteUtil.validateENML(existingEnml);
 			return existingEnml;
 		} else {
-			String newEnml = XML_DECLARATION + DOCTYPE_DECLARATION + note;
-			EnmlUtil.validate(newEnml);
+			String newEnml = DomUtil.toString(doc);
+			EvernoteUtil.validateENML(newEnml);
 			return newEnml;
 		}
 	}
+
 }

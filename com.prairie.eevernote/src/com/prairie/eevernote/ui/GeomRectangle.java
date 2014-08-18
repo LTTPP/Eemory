@@ -1,4 +1,4 @@
-package com.prairie.eevernote.widgets;
+package com.prairie.eevernote.ui;
 
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.util.NumberUtil;

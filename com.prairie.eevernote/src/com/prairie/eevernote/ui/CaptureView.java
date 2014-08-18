@@ -1,4 +1,4 @@
-package com.prairie.eevernote.widgets;
+package com.prairie.eevernote.ui;
 
 import java.awt.AWTException;
 import java.awt.BasicStroke;
@@ -23,10 +23,10 @@ import javax.swing.JPanel;
 
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
+import com.prairie.eevernote.ui.GeomRectangle.Position;
 import com.prairie.eevernote.util.ColorUtil;
 import com.prairie.eevernote.util.ImageUtil;
 import com.prairie.eevernote.util.RunningCounter;
-import com.prairie.eevernote.widgets.GeomRectangle.Position;
 
 @SuppressWarnings("serial")
 public class CaptureView extends JFrame implements Constants {

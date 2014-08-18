@@ -4,11 +4,13 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import com.prairie.eevernote.enml.Snippet;
+
 public abstract class EEClipper {
 
 	public abstract void clipFile(List<File> file) throws Exception;
 
-	public abstract void clipSelection(String selection, String title) throws Exception;
+	public abstract void clipSelection(Snippet selection, String title) throws Exception;
 
 	public abstract Map<String, String> listNotebooks() throws Exception;
 

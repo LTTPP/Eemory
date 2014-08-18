@@ -3,7 +3,8 @@
       id="com.prairie.eevernote.feature"
       label="EEvernote"
       version="1.0.0.qualifier"
-      provider-name="Jianwei Liu">
+      provider-name="Jianwei Liu"
+      plugin="com.prairie.eevernote">
 
    <description url="https://github.com/prairie/EEvernote">
       The EEvernote is the easiest way to save resources

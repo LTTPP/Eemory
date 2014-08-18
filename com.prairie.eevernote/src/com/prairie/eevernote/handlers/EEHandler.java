@@ -2,7 +2,6 @@ package com.prairie.eevernote.handlers;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -11,18 +10,12 @@ import javax.imageio.ImageIO;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
@@ -37,16 +30,17 @@ import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.ErrorMessage;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperManager;
+import com.prairie.eevernote.enml.Snippet;
 import com.prairie.eevernote.exception.OutOfDateException;
-import com.prairie.eevernote.util.EnmlUtil;
+import com.prairie.eevernote.ui.CaptureView;
+import com.prairie.eevernote.ui.ConfigurationsDialog;
+import com.prairie.eevernote.ui.HotTextDialog;
+import com.prairie.eevernote.util.EclipseUtil;
 import com.prairie.eevernote.util.FileUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.StringUtil;
-import com.prairie.eevernote.widgets.CaptureView;
-import com.prairie.eevernote.widgets.ConfigurationsDialog;
-import com.prairie.eevernote.widgets.HotTextDialog;
 
 public class EEHandler extends AbstractHandler implements Constants {
 
@@ -85,42 +79,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 				return;
 			}
 
-			ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
-			final List<File> files = ListUtil.list();
-			if (selection instanceof IStructuredSelection) {
-				Iterator<?> iterator = ((StructuredSelection) selection).iterator();
-				while (iterator.hasNext()) {
-					IFile iFile;
-					Object object = iterator.next();
-					if (object instanceof IFile) {
-						iFile = (IFile) object;
-					} else if (object instanceof ICompilationUnit) {
-						ICompilationUnit compilationUnit = (ICompilationUnit) object;
-						IResource resource = compilationUnit.getResource();
-						if (resource instanceof IFile) {
-							iFile = (IFile) resource;
-						} else {
-							continue;
-						}
-					} else {
-						continue;
-					}
-					File file = iFile.getLocation().makeAbsolute().toFile();
-					files.add(file);
-				}
-			} else if (selection instanceof ITextSelection) {
-				IEditorPart editorPart = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getActiveEditor();
-				IFile iFile = (IFile) ((editorPart.getEditorInput().getAdapter(IFile.class)));
-				if (iFile != null) {// TODO iFile == null: how to handle this
-									// case in XML file
-					File file = iFile.getLocation().makeAbsolute().toFile();
-					files.add(file);
-				} else {
-					return;
-				}
-			} else {
-				return;
-			}
+			final List<File> files = EclipseUtil.getSelectedFiles(event);
 
 			Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
 				@Override
@@ -158,7 +117,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 
 			final IEditorPart editor = HandlerUtil.getActiveEditor(event);
 			StyledText styledText = (StyledText) editor.getAdapter(Control.class);
-			final String snippet = EnmlUtil.toSnippet(styledText);
+			final Snippet snippet = new Snippet(styledText);
 
 			Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE)) {
 

@@ -48,6 +48,6 @@ public enum Alignment {
 				return value;
 			}
 		}
-		throw new IllegalArgumentException("Illegal Enum code: " + code);
+		throw new IllegalArgumentException("Illegal alignment code: " + code);
 	}
 }
