@@ -1,24 +1,11 @@
 package com.prairie.eevernote.util;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.apache.commons.lang3.CharEncoding;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
 
 import com.evernote.auth.EvernoteAuth;
 import com.evernote.auth.EvernoteService;
@@ -86,46 +73,6 @@ public class EvernoteUtil implements Constants {
 		data.setBody(body);
 
 		return data;
-	}
-
-	public static void validateENML(String enml) throws ParserConfigurationException, SAXException, IOException {
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setValidating(true);
-		SAXParser parser = factory.newSAXParser();
-		XMLReader reader = parser.getXMLReader();
-		reader.setEntityResolver(new EntityResolver() {
-			@Override
-			public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-				if (systemId.endsWith(ENML_DTD)) {
-					return new InputSource(getClass().getResourceAsStream(ENML_DTD_LOCATION));
-				} else if (systemId.endsWith(XHTML_1_0_LATIN_1_ENT)) {
-					return new InputSource(getClass().getResourceAsStream(XHTML_1_0_LATIN_1_ENT_LOCATION));
-				} else if (systemId.endsWith(XHTML_1_0_SYMBOL_ENT)) {
-					return new InputSource(getClass().getResourceAsStream(XHTML_1_0_SYMBOL_ENT_LOCATION));
-				} else if (systemId.endsWith(XHTML_1_0_SPECIAL_ENT)) {
-					return new InputSource(getClass().getResourceAsStream(XHTML_1_0_SPECIAL_ENT_LOCATION));
-				} else {
-					return null;
-				}
-			}
-		});
-		reader.setErrorHandler(new ErrorHandler() {
-			@Override
-			public void warning(SAXParseException exception) throws SAXException {
-				throw exception;
-			}
-
-			@Override
-			public void fatalError(SAXParseException exception) throws SAXException {
-				throw exception;
-			}
-
-			@Override
-			public void error(SAXParseException exception) throws SAXException {
-				throw exception;
-			}
-		});
-		reader.parse(new InputSource(new ByteArrayInputStream(enml.getBytes(CharEncoding.UTF_8))));
 	}
 
 }

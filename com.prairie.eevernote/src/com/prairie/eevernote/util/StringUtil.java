@@ -37,9 +37,12 @@ public final class StringUtil implements Constants {
 
 	public static String escapeEnml(String string) {
 		String escapedXml = StringEscapeUtils.escapeXml10(string);
+
 		escapedXml = escapedXml.replaceAll(NON_BREAKING_SPACE, HTML_NBSP);
+
 		int tabWidth = Platform.getPreferencesService().getInt(PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME, PLUGIN_ORG_ECLIPSE_JDT_CORE_PREF_FORMATTER_TABULATION_SIZE, ZERO, null);
 		escapedXml = escapedXml.replaceAll(TAB, org.apache.commons.lang3.StringUtils.repeat(HTML_NBSP, tabWidth));
+
 		return escapedXml;
 	}
 }

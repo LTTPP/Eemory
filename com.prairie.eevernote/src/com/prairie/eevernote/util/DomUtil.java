@@ -45,7 +45,9 @@ public class DomUtil implements Constants {
 	public static String toString(Node node, boolean omitDeclaration) throws TransformerException {
 		Transformer transformer = getTransformer();
 		transformer.setOutputProperty(OutputKeys.ENCODING, CharEncoding.UTF_8);
-		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, omitDeclaration ? "yes" : "no");
+		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, omitDeclaration ? YES : NO);
+		transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, DOCTYPE_DECLARATION);
+		transformer.setOutputProperty(OutputKeys.CDATA_SECTION_ELEMENTS, "div");
 
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		StreamResult result = new StreamResult(output);

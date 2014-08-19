@@ -42,6 +42,8 @@ public interface Constants {
 	public static final int NEGATIVE = -1;
 
 	public static final String PLUS = "+";
+	public static String YES = "yes";
+	public static String NO = "no";
 	// -=-=-=-=-=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-
 
 	public static final String PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME = "org.eclipse.jdt.core";
@@ -116,7 +118,7 @@ public interface Constants {
 
 	public static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
-	public static final String DOCTYPE_DECLARATION = "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">";
+	public static final String DOCTYPE_DECLARATION = "http://xml.evernote.com/pub/enml2.dtd";
 
 	public static final String NOTE_START = "<en-note>";
 
@@ -126,8 +128,8 @@ public interface Constants {
 	public static final String XHTML_1_0_SPECIAL_ENT = "xhtml-special.ent";
 
 	public static final String ENML_DTD_LOCATION = "dtd/enml2.dtd";
-	public static final String XHTML_1_0_LATIN_1_ENT_LOCATION = "dtd/xhtml-lat1.ent";
-	public static final String XHTML_1_0_SYMBOL_ENT_LOCATION = "dtd/xhtml-symbol.ent";
-	public static final String XHTML_1_0_SPECIAL_ENT_LOCATION = "dtd/xhtml-special.ent";
+	public static final String XHTML_1_0_LATIN_1_ENT_LOCATION = "../enml/dtd/xhtml-lat1.ent";
+	public static final String XHTML_1_0_SYMBOL_ENT_LOCATION = "../enml/dtd/xhtml-symbol.ent";
+	public static final String XHTML_1_0_SPECIAL_ENT_LOCATION = "../enml/dtd/xhtml-special.ent";
 
 }

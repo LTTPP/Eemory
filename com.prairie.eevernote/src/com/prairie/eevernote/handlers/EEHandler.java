@@ -30,7 +30,7 @@ import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.ErrorMessage;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperManager;
-import com.prairie.eevernote.enml.Snippet;
+import com.prairie.eevernote.enml.StyleText;
 import com.prairie.eevernote.exception.OutOfDateException;
 import com.prairie.eevernote.ui.CaptureView;
 import com.prairie.eevernote.ui.ConfigurationsDialog;
@@ -117,7 +117,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 
 			final IEditorPart editor = HandlerUtil.getActiveEditor(event);
 			StyledText styledText = (StyledText) editor.getAdapter(Control.class);
-			final Snippet snippet = new Snippet(styledText);
+			final List<List<StyleText>> styleText = EclipseUtil.getStyleText(styledText);
 
 			Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE)) {
 
@@ -126,7 +126,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 
 					monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE), IProgressMonitor.UNKNOWN);
 					try {
-						clipper.clipSelection(snippet, editor.getTitle());
+						clipper.clipSelection(styleText, editor.getTitle());
 						monitor.subTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_SUBTASK_MESSAGE));
 					} catch (final Throwable e) {
 						return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
