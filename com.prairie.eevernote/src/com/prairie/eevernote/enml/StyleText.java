@@ -69,4 +69,9 @@ public class StyleText implements ConstantsUtil {
         this.size = size;
     }
 
+    @Override
+    public String toString() {
+        return text;
+    }
+
 }

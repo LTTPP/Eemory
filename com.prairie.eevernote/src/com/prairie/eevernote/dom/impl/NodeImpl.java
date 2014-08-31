@@ -331,17 +331,6 @@ public class NodeImpl implements Node, ConstantsUtil, Cloneable {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof Node)) {
-            return false;
-        }
-        return isEqualNode((Node) obj);
-    }
-
-    @Override
     public Node cloneNode(final boolean deep) {
         Node newObject = null;
         try {
