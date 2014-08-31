@@ -281,10 +281,10 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     private void saveSettings() {
         IDialogSettingsUtil.set(SETTINGS_KEY_TOKEN, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN));
-        addNewSection(SETTINGS_SECTION_NOTEBOOK, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
-        addNewSection(SETTINGS_SECTION_NOTE, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), notes.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
-        addNewSection(SETTINGS_SECTION_TAGS, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS).equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE)) ? StringUtils.EMPTY : getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), null);
-        addNewSection(SETTINGS_SECTION_COMMENTS, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), null);
+        setSection(SETTINGS_SECTION_NOTEBOOK, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
+        setSection(SETTINGS_SECTION_NOTE, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), notes.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
+        setSection(SETTINGS_SECTION_TAGS, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS).equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE)) ? StringUtils.EMPTY : getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), null);
+        setSection(SETTINGS_SECTION_COMMENTS, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), null);
     }
 
     private void restoreSettings(final String label) {
@@ -319,7 +319,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         }
     }
 
-    private void addNewSection(final String sectionName, final String name, final boolean isChecked, final String guid) {
+    private void setSection(final String sectionName, final String name, final boolean isChecked, final String guid) {
         IDialogSettingsUtil.set(sectionName, SETTINGS_KEY_NAME, name);
         IDialogSettingsUtil.set(sectionName, SETTINGS_KEY_CHECKED, isChecked);
         IDialogSettingsUtil.set(sectionName, SETTINGS_KEY_GUID, guid);

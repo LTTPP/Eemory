@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import com.evernote.edam.error.EDAMNotFoundException;
 import com.evernote.edam.error.EDAMSystemException;
 import com.evernote.edam.error.EDAMUserException;
 import com.evernote.thrift.TException;
@@ -27,6 +28,7 @@ import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEPlugin;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.ErrorMessage;
+import com.prairie.eevernote.ErrorMessage.EvernoteDataModel;
 import com.prairie.eevernote.client.ClipperArgs;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
@@ -90,6 +92,12 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                     try {
                         clipper.clipFile(args);
                         monitor.subTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_SUBTASK_MESSAGE));
+                    } catch (EDAMNotFoundException e) {
+                        if (e.getIdentifier().equals(EvernoteDataModel.Note_notebookGuid.toString())) {
+                            return autoFixEDAMNotFoundNotebookGuidException(args);
+                        } else {
+                            return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
+                        }
                     } catch (Throwable e) {
                         return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
                     }
@@ -126,22 +134,24 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             final EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
 
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE)) {
-
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-
                     monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE), IProgressMonitor.UNKNOWN);
                     try {
                         clipper.clipSelection(args);
                         monitor.subTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_SUBTASK_MESSAGE));
+                    } catch (EDAMNotFoundException e) {
+                        if (e.getIdentifier().equals(EvernoteDataModel.Note_notebookGuid.toString())) {
+                            return autoFixEDAMNotFoundNotebookGuidException(args);
+                        } else {
+                            return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
+                        }
                     } catch (final Throwable e) {
                         return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
                     }
                     monitor.done();
-
                     return Status.OK_STATUS;
                 }
-
             };
             job.setUser(true);
             job.schedule();
@@ -182,6 +192,12 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                     try {
                         monitor.subTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_SUBTASK_MESSAGE));
                         clipper.clipFile(args);
+                    } catch (EDAMNotFoundException e) {
+                        if (e.getIdentifier().equals(EvernoteDataModel.Note_notebookGuid.toString())) {
+                            return autoFixEDAMNotFoundNotebookGuidException(args);
+                        } else {
+                            return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
+                        }
                     } catch (Throwable e) {
                         return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, ErrorMessage.getMessage(e));
                     }
@@ -244,6 +260,39 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                 args.setComments(values.get(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS));
             }
         }
+    }
+
+    private IStatus autoFixEDAMNotFoundNotebookGuidException(final ClipperArgs args) {
+        boolean fixed = fixNotebookGuid();
+        if (fixed) {
+            try {
+                String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID);
+                if (!StringUtil.isNullOrEmptyOrBlank(value)) {
+                    args.setNotebookGuid(value);
+                }
+                EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false).clipFile(args);
+            } catch (Throwable e) {
+                return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
+            }
+            return Status.OK_STATUS;
+        } else {
+            return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, "notebook not found");
+        }
+    }
+
+    private boolean fixNotebookGuid() {
+        try {
+            EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
+            Map<String, String> map = clipper.listNotebooks();
+            String guid = map.get(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_NAME));
+            if (!StringUtils.isBlank(guid)) {
+                IDialogSettingsUtil.set(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID, guid);
+                return true;
+            }
+        } catch (Exception e) {
+            // ignore and give up failure recovery
+        }
+        return false;
     }
 
 }

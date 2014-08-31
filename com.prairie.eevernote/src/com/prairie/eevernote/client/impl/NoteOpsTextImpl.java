@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.DOMException;
 import org.xml.sax.SAXException;
 
@@ -20,7 +21,6 @@ import com.prairie.eevernote.enml.ENML;
 import com.prairie.eevernote.exception.OutOfDateException;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.ListUtil;
-import com.prairie.eevernote.util.StringUtil;
 
 public class NoteOpsTextImpl extends NoteOps {
 
@@ -45,7 +45,7 @@ public class NoteOpsTextImpl extends NoteOps {
     private void create(final ClipperArgs args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, TransformerException, OutOfDateException {
         Note note = new Note();
         note.setTitle(args.getTitle());
-        if (!StringUtil.isNullOrEmptyOrBlank(args.getNotebookGuid())) {
+        if (!StringUtils.isBlank(args.getNotebookGuid())) {
             note.setNotebookGuid(args.getNotebookGuid());
         }
 
@@ -55,7 +55,7 @@ public class NoteOpsTextImpl extends NoteOps {
 
         note.setContent(enml.get());
 
-        if (!StringUtil.isNullOrEmptyOrBlank(args.getTags())) {
+        if (!StringUtils.isBlank(args.getTags())) {
             note.setTagNames(ListUtil.toList(args.getTags().split(ConstantsUtil.TAGS_SEPARATOR)));
         }
 
@@ -74,7 +74,7 @@ public class NoteOpsTextImpl extends NoteOps {
         note.setContent(enml.get());
 
         // update tags
-        if (!StringUtil.isNullOrEmptyOrBlank(args.getTags())) {
+        if (!StringUtils.isBlank(args.getTags())) {
             String[] tagNames = args.getTags().split(ConstantsUtil.TAGS_SEPARATOR);
             for (String tagName : tagNames) {
                 note.addToTagNames(tagName);
@@ -85,7 +85,7 @@ public class NoteOpsTextImpl extends NoteOps {
     }
 
     private boolean shouldUpdate(final ClipperArgs args) {
-        return !StringUtil.isNullOrEmptyOrBlank(args.getNoteGuid());
+        return !StringUtils.isBlank(args.getNoteGuid());
     }
 
 }
