@@ -30,7 +30,7 @@ import com.prairie.eevernote.util.StringUtil;
 public class ENML implements ConstantsUtil {
 
     // used to create new note
-    private Document document;
+    private final Document document;
     private Node root;
     // used for updating existing note
     private String existingEnml = StringUtils.EMPTY;
@@ -51,6 +51,7 @@ public class ENML implements ConstantsUtil {
     }
 
     public ENML(final String enml) {
+        document = DomUtil.getBuilder().newDocument();
         existingEnml = enml;
         newAddedNodes = ListUtil.list();
     }

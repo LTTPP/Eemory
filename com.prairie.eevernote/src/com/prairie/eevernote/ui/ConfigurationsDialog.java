@@ -3,14 +3,17 @@ package com.prairie.eevernote.ui;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -21,6 +24,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -41,19 +45,24 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     private Map<String, String> notebooks; // <Name, Guid>
     private Map<String, String> notes; // <Name, Guid>
+    private String[] tags;
 
     private SimpleContentProposalProvider notebookProposalProvider;
     private SimpleContentProposalProvider noteProposalProvider;
     private SimpleContentProposalProvider tagsProposalProvider;
 
     private Map<String, TextField> fields;
-    private Map<String, Map<String, String>> matrix; // <Field Property, <Field Property, Field Value>>
+    // <Field Property, <Field Property, Field Value>>
+    private Map<String, Map<String, String>> matrix;
 
     private boolean shouldRefresh = false;
 
     public ConfigurationsDialog(final Shell parentShell) {
         super(parentShell);
         shell = parentShell;
+        notebooks = MapUtil.map();
+        notes = MapUtil.map();
+        tags = new String[ZERO];
     }
 
     @Override
@@ -104,23 +113,44 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
         TextField notebookField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebookField);
+        final String token = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
         try {
-            notebooks = EEClipperFactory.getInstance().getEEClipper(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN), false).listNotebooks();
-            notebookProposalProvider = enableFilteringContentAssist(notebookField.getTextControl(), notebooks.keySet().toArray(new String[notebooks.size()]));
+            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(final IProgressMonitor monitor) {
+                    monitor.beginTask("Fetching notebooks...", IProgressMonitor.UNKNOWN);
+                    try {
+                        notebooks = EEClipperFactory.getInstance().getEEClipper(token, false).listNotebooks();
+                    } catch (Throwable e) {
+                        // ignore, not fatal
+                    }
+                    monitor.done();
+                }
+            });
         } catch (Throwable e) {
-            MessageDialog.openError(shell, getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
+            // ignore, not fatal
         }
+        notebookProposalProvider = enableFilteringContentAssist(notebookField.getTextControl(), notebooks.keySet().toArray(new String[notebooks.size()]));
         notebookField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent e) {
                 try {
                     if (ConfigurationsDialog.this.shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN)) {
-                        notebooks = EEClipperFactory.getInstance().getEEClipper(ConfigurationsDialog.this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN), false).listNotebooks();
-                        notebookProposalProvider.setProposals(notebooks.keySet().toArray(new String[notebooks.size()]));
+                        BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    notebooks = EEClipperFactory.getInstance().getEEClipper(token, false).listNotebooks();
+                                } catch (Throwable e) {
+                                    // ignore, not fatal
+                                }
+                            }
+                        });
                     }
                 } catch (Throwable e1) {
-                    MessageDialog.openError(shell, getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e1.getLocalizedMessage());
+                    // ignore, not fatal
                 }
+                notebookProposalProvider.setProposals(notebooks.keySet().toArray(new String[notebooks.size()]));
             }
         });
         restoreSettings(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
@@ -129,24 +159,45 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
         TextField noteField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, noteField);
+        final String notebook = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
         try {
-            notes = EEClipperFactory.getInstance().getEEClipper(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN), false).listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK))));
-            noteProposalProvider = enableFilteringContentAssist(noteField.getTextControl(), notes.keySet().toArray(new String[notes.size()]));
+            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(final IProgressMonitor monitor) {
+                    monitor.beginTask("Fetching notes..", IProgressMonitor.UNKNOWN);
+                    try {
+                        notes = EEClipperFactory.getInstance().getEEClipper(token, false).listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(notebook)));
+                    } catch (Throwable e) {
+                        // ignore, not fatal
+                    }
+                    monitor.done();
+                }
+            });
         } catch (Throwable e) {
-            MessageDialog.openError(shell, getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
+            // ignore, not fatal
         }
+        noteProposalProvider = enableFilteringContentAssist(noteField.getTextControl(), notes.keySet().toArray(new String[notes.size()]));
         noteField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent e) {
                 try {
                     clearHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE);
                     if (ConfigurationsDialog.this.shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)) {
-                        notes = EEClipperFactory.getInstance().getEEClipper(ConfigurationsDialog.this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN), false).listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(ConfigurationsDialog.this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK))));
-                        noteProposalProvider.setProposals(notes.keySet().toArray(new String[notes.size()]));
+                        BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    notes = EEClipperFactory.getInstance().getEEClipper(token, false).listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(notebook)));
+                                } catch (Throwable e) {
+                                    // ignore, not fatal
+                                }
+                            }
+                        });
                     }
                 } catch (Throwable e1) {
-                    MessageDialog.openError(shell, getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e1.getLocalizedMessage());
+                    // ignore, not fatal
                 }
+                noteProposalProvider.setProposals(notes.keySet().toArray(new String[notes.size()]));
             }
 
             @Override
@@ -161,21 +212,43 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         TextField tagsField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, tagsField);
         try {
-            tagsProposalProvider = enableFilteringContentAssist(tagsField.getTextControl(), EEClipperFactory.getInstance().getEEClipper(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN), false).listTags(), TAGS_SEPARATOR);
+            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(final IProgressMonitor monitor) {
+                    monitor.beginTask("Fetch tags...", IProgressMonitor.UNKNOWN);
+                    try {
+                        tags = EEClipperFactory.getInstance().getEEClipper(token, false).listTags();
+                    } catch (Throwable e) {
+                        // ignore, not fatal
+                    }
+                    monitor.done();
+                }
+            });
         } catch (Throwable e) {
-            MessageDialog.openError(ConfigurationsDialog.this.shell, getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
+            // ignore, not fatal
         }
+        tagsProposalProvider = enableFilteringContentAssist(tagsField.getTextControl(), tags, TAGS_SEPARATOR);
         tagsField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent event) {
                 clearHintText(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE);
                 try {
                     if (ConfigurationsDialog.this.shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN)) {
-                        tagsProposalProvider.setProposals(EEClipperFactory.getInstance().getEEClipper(ConfigurationsDialog.this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN), false).listTags());
+                        BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    tags = EEClipperFactory.getInstance().getEEClipper(token, false).listTags();
+                                } catch (Throwable e) {
+                                    // ignore, not fatal
+                                }
+                            }
+                        });
                     }
                 } catch (Throwable e) {
-                    MessageDialog.openError(shell, getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
+                    // ignore, not fatal
                 }
+                tagsProposalProvider.setProposals(tags);
             }
 
             @Override
@@ -251,8 +324,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         super.okPressed();
     }
 
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
     private boolean shouldRefresh(final String uniqueKey, final String property) {
         if (shouldRefresh) {
             shouldRefresh = false;
@@ -276,8 +347,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         }
         return false;
     }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
     private void saveSettings() {
         IDialogSettingsUtil.set(SETTINGS_KEY_TOKEN, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN));
@@ -324,8 +393,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         IDialogSettingsUtil.set(sectionName, SETTINGS_KEY_CHECKED, isChecked);
         IDialogSettingsUtil.set(sectionName, SETTINGS_KEY_GUID, guid);
     }
-
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
     protected SimpleContentProposalProvider enableFilteringContentAssist(final Control control, final String[] proposals, final String byOperator) {
         ConfigContentProposalProvider contentProposalProvider = new ConfigContentProposalProvider(proposals);
@@ -387,8 +454,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         return new LabelTextField(text);
     }
 
-    // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
     protected boolean isFieldEditable(final String property) {
         TextField f = getField(property);
         return f != null && f.isEditable();
@@ -441,4 +506,5 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     protected String getProperty(final String key) {
         return EEProperties.getProperties().getProperty(key);
     }
+
 }

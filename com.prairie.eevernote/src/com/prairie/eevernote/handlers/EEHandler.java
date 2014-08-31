@@ -83,13 +83,12 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
 
             args.setFiles(EclipseUtil.getSelectedFiles(event));
 
-            final EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
-
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
                     monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE), IProgressMonitor.UNKNOWN);
                     try {
+                        EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
                         clipper.clipFile(args);
                         monitor.subTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_SUBTASK_MESSAGE));
                     } catch (EDAMNotFoundException e) {
@@ -131,13 +130,12 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             args.setTitle(editor.getTitle());
             args.setStyleText(EclipseUtil.getSelectedStyleText(styledText));
 
-            final EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
-
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE)) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
                     monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE), IProgressMonitor.UNKNOWN);
                     try {
+                        EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
                         clipper.clipSelection(args);
                         monitor.subTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_SUBTASK_MESSAGE));
                     } catch (EDAMNotFoundException e) {
@@ -183,14 +181,12 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             ImageIO.write(screenshot, IMG_PNG, file);
             args.setFiles(ListUtil.list(file));
 
-            final EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
-
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
                     monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE), IProgressMonitor.UNKNOWN);
                     try {
-                        monitor.subTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_SUBTASK_MESSAGE));
+                        EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
                         clipper.clipFile(args);
                     } catch (EDAMNotFoundException e) {
                         if (e.getIdentifier().equals(EvernoteDataModel.Note_notebookGuid.toString())) {
