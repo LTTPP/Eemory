@@ -1,14 +1,15 @@
 package com.prairie.eevernote;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.evernote.edam.error.EDAMNotFoundException;
-import com.prairie.eevernote.util.StringUtil;
 
 public class ErrorMessage {
 
 	public static String getMessage(Throwable t) {
 		if (t instanceof EDAMNotFoundException) {
 			EDAMNotFoundException e = (EDAMNotFoundException) t;
-			String args = StringUtil.EMPTY;
+			String args = StringUtils.EMPTY;
 			try {
 				args = EvernoteDataModel.forName(e.getIdentifier()).toReadableString();
 			} catch (IllegalArgumentException expt) {

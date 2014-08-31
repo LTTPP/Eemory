@@ -1,57 +1,84 @@
 package com.prairie.eevernote.util;
 
+import java.lang.reflect.Array;
 import java.util.List;
 
-public final class ArrayUtil {
+import org.apache.commons.lang3.ObjectUtils;
 
-	public static String[] stringArray() {
-		return new String[0];
-	}
+public class ArrayUtil implements ConstantsUtil {
 
-	public static Object[] array() {
-		return new Object[0];
-	}
+    public static boolean isEqualArray(final Object[] ones, final Object[] others) {
+        return isEqualArray(ones, others, false);
+    }
 
-	public static Object[] array(Object... a) {
-		return new Object[] { a };
-	}
+    public static boolean isEqualArray(final Object[] ones, final Object[] others, final boolean compareOrder) {
+        if (ones == others) {
+            return true;
+        }
+        if (ones == null || others == null) {
+            return false;
+        }
+        if (ones.length != others.length) {
+            return false;
+        }
+        if (compareOrder) {
+            for (int i = ZERO; i < ones.length; i++) {
+                if (!ObjectUtil.isEqualObject(ones[i], others[i])) {
+                    return false;
+                }
+            }
+        } else {
+            List<Integer> matchedIndex = ListUtil.list();
+            andContinue: for (Object o1 : ones) {
+                for (int i = ZERO; i < others.length; i++) {
+                    if (matchedIndex.contains(i)) {
+                        continue;
+                    }
+                    if (ObjectUtil.isEqualObject(o1, others[i], compareOrder)) {
+                        matchedIndex.add(i);
+                        break andContinue;
+                    }
+                }
+                return false;
+            }
+        }
+        return true;
+    }
 
-	public static Object[] array(List<?> vector) {
-		if (vector == null) {
-			return new Object[0];
-		}
-		return vector.toArray();
-	}
+    public static <T> boolean isNullArray(final T[] array) {
+        return array == null;
+    }
 
-	public static Object[] prepend(Object a, Object[] in) {
-		Object[] out = new Object[in.length + 1];
-		out[0] = a;
-		System.arraycopy(in, 0, out, 1, in.length);
-		return out;
-	}
+    public static <T> T[] cloneArray(final T[] source) {
+        return cloneArray(source, false);
+    }
 
-	public static Object[] append(Object[] in, Object a) {
-		Object[] out = new Object[in.length + 1];
-		out[in.length] = a;
-		System.arraycopy(in, 0, out, 0, in.length);
-		return out;
-	}
+    public static <T> T[] cloneArray(final T[] source, final boolean deep) {
+        if (!deep) {
+            return ObjectUtils.clone(source);
+        }
+        if (isNullArray(source)) {
+            return null;
+        }
 
-	public static boolean nullOrEmptyArray(Object[] array) {
-		return (array == null) || (array.length == 0);
-	}
+        Object clone = null;
+        final Class<?> componentType = source.getClass().getComponentType();
+        int length = Array.getLength(source);
+        clone = Array.newInstance(componentType, length);
+        if (componentType.isPrimitive() || componentType == String.class) {
+            while (length-- > ZERO) {
+                Array.set(clone, length, Array.get(source, length));
+            }
+        } else {
+            while (length-- > ZERO) {
+                Array.set(clone, length, ObjectUtil.cloneObject(Array.get(source, length), deep));
+            }
+        }
 
-	public static boolean nullOrEmptyIntArray(int[] array) {
-		return (array == null) || (array.length == 0);
-	}
+        @SuppressWarnings("unchecked")
+        // OK because input is of type T
+        final T[] checkedClone = (T[]) clone;
+        return checkedClone;
+    }
 
-	public static void reverse(Object[] objects) {
-		int midpoint = objects.length / 2;
-		for (int i = 0; i < midpoint; ++i) {
-			int oppositeIndex = objects.length - 1 - i;
-			Object temp = objects[i];
-			objects[i] = objects[oppositeIndex];
-			objects[oppositeIndex] = temp;
-		}
-	}
 }

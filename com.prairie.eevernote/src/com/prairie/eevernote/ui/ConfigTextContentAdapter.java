@@ -1,10 +1,9 @@
 package com.prairie.eevernote.ui;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
-
-import com.prairie.eevernote.util.StringUtil;
 
 public class ConfigTextContentAdapter extends TextContentAdapter {
 
@@ -12,12 +11,12 @@ public class ConfigTextContentAdapter extends TextContentAdapter {
 
 	@Override
 	public void insertControlContents(Control control, String text, int cursorPosition) {
-		if (!StringUtil.nullOrEmptyString(byOperator)) {
+		if (!StringUtils.isEmpty(byOperator)) {
 			String existingText = ((Text) control).getText();
 			if (existingText.contains(byOperator)) {
 				((Text) control).setText(existingText.substring(0, existingText.lastIndexOf(byOperator) + 1));
 			} else {
-				((Text) control).setText(StringUtil.EMPTY);
+				((Text) control).setText(StringUtils.EMPTY);
 			}
 			int newCursorPosition = ((Text) control).getText().length();
 			((Text) control).setSelection(newCursorPosition, newCursorPosition);

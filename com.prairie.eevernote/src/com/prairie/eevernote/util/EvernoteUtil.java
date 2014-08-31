@@ -23,56 +23,56 @@ import com.prairie.eevernote.EEPlugin;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.exception.OutOfDateException;
 
-public class EvernoteUtil implements Constants {
+public class EvernoteUtil implements ConstantsUtil {
 
-	public static NoteStoreClient getNoteStoreClient(String token) throws TException, OutOfDateException, EDAMUserException, EDAMSystemException {
-		ClientFactory factory = auth(token);
-		checkVersion(factory);
-		return factory.createNoteStoreClient();
-	}
+    public static NoteStoreClient getNoteStoreClient(final String token) throws TException, OutOfDateException, EDAMUserException, EDAMSystemException {
+        ClientFactory factory = auth(token);
+        checkVersion(factory);
+        return factory.createNoteStoreClient();
+    }
 
-	private static ClientFactory auth(String token) {
-		EvernoteAuth evernoteAuth = new EvernoteAuth(EvernoteService.SANDBOX, token);
-		return new ClientFactory(evernoteAuth);
-	}
+    private static ClientFactory auth(final String token) {
+        EvernoteAuth evernoteAuth = new EvernoteAuth(EvernoteService.SANDBOX, token);
+        return new ClientFactory(evernoteAuth);
+    }
 
-	private static void checkVersion(ClientFactory factory) throws TException, OutOfDateException {
-		UserStoreClient userStore = factory.createUserStoreClient();
-		boolean versionOk = userStore.checkVersion(EEPlugin.getName(), com.evernote.edam.userstore.Constants.EDAM_VERSION_MAJOR, com.evernote.edam.userstore.Constants.EDAM_VERSION_MINOR);
-		if (!versionOk) {
-			throw new OutOfDateException(EEProperties.getProperties().getProperty(Constants.EECLIPPERPLUGIN_EECLIPPERIMPL_EXCEPTION_MESSAGE));
-		}
-	}
+    private static void checkVersion(final ClientFactory factory) throws TException, OutOfDateException {
+        UserStoreClient userStore = factory.createUserStoreClient();
+        boolean versionOk = userStore.checkVersion(EEPlugin.getName(), com.evernote.edam.userstore.Constants.EDAM_VERSION_MAJOR, com.evernote.edam.userstore.Constants.EDAM_VERSION_MINOR);
+        if (!versionOk) {
+            throw new OutOfDateException(EEProperties.getProperties().getProperty(Constants.EECLIPPERPLUGIN_EECLIPPERIMPL_EXCEPTION_MESSAGE));
+        }
+    }
 
-	public static Resource createResource(File file, String mimeType) throws NoSuchAlgorithmException, IOException {
-		Resource resource = new Resource();
-		resource.setData(readFileAsData(file));
-		resource.setMime(mimeType);
-		ResourceAttributes attributes = new ResourceAttributes();
-		attributes.setFileName(file.getName());
-		resource.setAttributes(attributes);
-		return resource;
-	}
+    public static Resource createResource(final File file, final String mimeType) throws NoSuchAlgorithmException, IOException {
+        Resource resource = new Resource();
+        resource.setData(readFileAsData(file));
+        resource.setMime(mimeType);
+        ResourceAttributes attributes = new ResourceAttributes();
+        attributes.setFileName(file.getName());
+        resource.setAttributes(attributes);
+        return resource;
+    }
 
-	private static Data readFileAsData(File file) throws IOException, NoSuchAlgorithmException {
-		// Read the full binary contents of the file
-		FileInputStream in = new FileInputStream(file);
-		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-		byte[] block = new byte[10240];
-		int len;
-		while ((len = in.read(block)) >= 0) {
-			byteOut.write(block, 0, len);
-		}
-		in.close();
-		byte[] body = byteOut.toByteArray();
+    private static Data readFileAsData(final File file) throws IOException, NoSuchAlgorithmException {
+        // Read the full binary contents of the file
+        FileInputStream in = new FileInputStream(file);
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        byte[] block = new byte[10240];
+        int len;
+        while ((len = in.read(block)) >= 0) {
+            byteOut.write(block, 0, len);
+        }
+        in.close();
+        byte[] body = byteOut.toByteArray();
 
-		// Create a new Data object to contain the file contents
-		Data data = new Data();
-		data.setSize(body.length);
-		data.setBodyHash(MessageDigest.getInstance(Constants.MD5).digest(body));
-		data.setBody(body);
+        // Create a new Data object to contain the file contents
+        Data data = new Data();
+        data.setSize(body.length);
+        data.setBodyHash(MessageDigest.getInstance(MD5).digest(body));
+        data.setBody(body);
 
-		return data;
-	}
+        return data;
+    }
 
 }

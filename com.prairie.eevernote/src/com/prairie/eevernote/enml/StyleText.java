@@ -1,71 +1,72 @@
 package com.prairie.eevernote.enml;
 
-import com.prairie.eevernote.Constants;
+import org.apache.commons.lang3.StringUtils;
+
 import com.prairie.eevernote.util.ColorUtil;
-import com.prairie.eevernote.util.StringUtil;
+import com.prairie.eevernote.util.ConstantsUtil;
 
-public class StyleText implements Constants {
+public class StyleText implements ConstantsUtil {
 
-	private String text;
-	private String face;
-	private String colorHexCode;
-	private String size;
-	private FontStyle fontStyle;
+    private String text;
+    private String face;
+    private String colorHexCode;
+    private String size;
+    private FontStyle fontStyle;
 
-	public StyleText(String text) {
-		this.text = text;
-		this.face = StringUtil.EMPTY;
-		this.colorHexCode = ColorUtil.toHexCode(ZERO, ZERO, ZERO);
-		this.fontStyle = FontStyle.NORMAL;
-		this.size = String.valueOf(TEN);
-	}
+    public StyleText(final String text) {
+        this.text = text;
+        face = StringUtils.EMPTY;
+        colorHexCode = ColorUtil.toHexCode(ZERO, ZERO, ZERO);
+        fontStyle = FontStyle.NORMAL;
+        size = String.valueOf(TEN);
+    }
 
-	public StyleText(String text, String face, String colorHexCode, String size, FontStyle fontStyle) {
-		this.text = text;
-		this.face = face;
-		this.colorHexCode = colorHexCode;
-		this.fontStyle = fontStyle;
-		this.size = size;
-	}
+    public StyleText(final String text, final String face, final String colorHexCode, final String size, final FontStyle fontStyle) {
+        this.text = text;
+        this.face = face;
+        this.colorHexCode = colorHexCode;
+        this.fontStyle = fontStyle;
+        this.size = size;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(final String text) {
+        this.text = text;
+    }
 
-	public String getColorHexCode() {
-		return colorHexCode;
-	}
+    public String getColorHexCode() {
+        return colorHexCode;
+    }
 
-	public void setColorHexCode(String colorHexCode) {
-		this.colorHexCode = colorHexCode;
-	}
+    public void setColorHexCode(final String colorHexCode) {
+        this.colorHexCode = colorHexCode;
+    }
 
-	public FontStyle getFontStyle() {
-		return fontStyle;
-	}
+    public FontStyle getFontStyle() {
+        return fontStyle;
+    }
 
-	public void setFontStyle(FontStyle fontStyle) {
-		this.fontStyle = fontStyle;
-	}
+    public void setFontStyle(final FontStyle fontStyle) {
+        this.fontStyle = fontStyle;
+    }
 
-	public String getFace() {
-		return face;
-	}
+    public String getFace() {
+        return face;
+    }
 
-	public void setFace(String face) {
-		this.face = face;
-	}
+    public void setFace(final String face) {
+        this.face = face;
+    }
 
-	public String getSize() {
-		return size;
-	}
+    public String getSize() {
+        return size;
+    }
 
-	public void setSize(String size) {
-		this.size = size;
-	}
+    public void setSize(final String size) {
+        this.size = size;
+    }
 
 }

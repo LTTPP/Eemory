@@ -1,31 +1,30 @@
 package com.prairie.eevernote.util;
 
-import com.prairie.eevernote.Constants;
 
-public class NumberUtil implements Constants {
+public class NumberUtil implements ConstantsUtil {
 
-	public static int number(int single) {
-		return single;
-	}
+    public static int number(final int single) {
+        return single;
+    }
 
-	public static int number(int tens, int single) {
-		return tens * TEN + single;
-	}
+    public static int number(final int tens, final int single) {
+        return tens * TEN + single;
+    }
 
-	public static int number(int hundreds, int tens, int single) {
-		return hundreds * HUNDRED + tens * TEN + single;
-	}
+    public static int number(final int hundreds, final int tens, final int single) {
+        return hundreds * HUNDRED + tens * TEN + single;
+    }
 
-	public static int signedNumber(int single, int sign) {
-		return sign * single;
-	}
+    public static int signedNumber(final int single, final int sign) {
+        return sign * single;
+    }
 
-	public static int signedNumber(int tens, int single, int sign) {
-		return sign * (tens * TEN + single);
-	}
+    public static int signedNumber(final int tens, final int single, final int sign) {
+        return sign * (tens * TEN + single);
+    }
 
-	public static int signedNumber(int hundreds, int tens, int single, int sign) {
-		return sign * (hundreds * HUNDRED + tens * TEN + single);
-	}
+    public static int signedNumber(final int hundreds, final int tens, final int single, final int sign) {
+        return sign * (hundreds * HUNDRED + tens * TEN + single);
+    }
 
 }

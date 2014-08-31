@@ -10,10 +10,7 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.lang3.CharEncoding;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -21,189 +18,211 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
-import com.prairie.eevernote.Constants;
+import com.prairie.eevernote.dom.DOMException;
+import com.prairie.eevernote.dom.Document;
+import com.prairie.eevernote.dom.Element;
+import com.prairie.eevernote.dom.Node;
+import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.DomUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.StringUtil;
 
-public class ENML implements Constants {
+public class ENML implements ConstantsUtil {
 
-	// used to create new note
-	private Document document;
-	private Node root;
-	// used for updating existing note
-	private String existingEnml = StringUtil.EMPTY;
-	private List<Node> newAddedNodes;
+    // used to create new note
+    private Document document;
+    private Node root;
+    // used for updating existing note
+    private String existingEnml = StringUtils.EMPTY;
+    private final List<Node> newAddedNodes;
 
-	public ENML() throws DOMException, ParserConfigurationException {
-		document = DomUtil.getBuilder().newDocument();
-		document.setXmlStandalone(true);
+    public ENML() throws DOMException, ParserConfigurationException {
+        document = DomUtil.getBuilder().newDocument();
+        document.setXmlStandalone(true);
+        document.setXMLEncoding(CharEncoding.UTF_8);
+        document.setXmlVersion(XML_VERSION_1_0);
 
-		root = document.createElement("en-note");
-		document.appendChild(root);
+        document.appendChild(document.createDocumentType(ENML_TAG_EN_NOTE, null, ENML_DOCTYPE_DECLARATION_SYSTEM_ID));
 
-		newAddedNodes = ListUtil.list();
-	}
+        root = document.createElement(ENML_TAG_EN_NOTE);
+        document.appendChild(root);
 
-	public ENML(String enml) {
-		this.existingEnml = enml;
-		newAddedNodes = ListUtil.list();
-	}
+        newAddedNodes = ListUtil.list();
+    }
 
-	public void addResource(String hashHex, String mimeType) throws DOMException, ParserConfigurationException {
-		if (!StringUtil.nullOrEmptyOrBlankString(hashHex)) {
-			Element div = div();
-			div.appendChild(media(hashHex, mimeType));
-			newAddedNodes.add(div);
-		}
-	}
+    public ENML(final String enml) {
+        existingEnml = enml;
+        newAddedNodes = ListUtil.list();
+    }
 
-	public void addComment(String comments) throws DOMException, ParserConfigurationException {
-		if (!StringUtil.nullOrEmptyOrBlankString(comments)) {
-			Element div = div();
-			//div.setTextContent(comments + COLON);
-			div.appendChild (document.createCDATASection (comments + COLON));
-			newAddedNodes.add(div);
-		}
-	}
+    public void addResource(final String hashHex, final String mimeType) throws DOMException, ParserConfigurationException {
+        if (!StringUtil.isNullOrEmptyOrBlank(hashHex)) {
+            Element div = div();
+            div.appendChild(media(hashHex, mimeType));
+            newAddedNodes.add(div);
+        }
+    }
 
-	public void addContent(List<List<StyleText>> content) throws DOMException, ParserConfigurationException {
-		List<Node> list = parse(content);
-		newAddedNodes.addAll(list);
-	}
+    public void addComment(final String comments) throws DOMException, ParserConfigurationException {
+        if (!StringUtil.isNullOrEmptyOrBlank(comments)) {
+            Element div = div();
+            div.setTextContent(comments + COLON);
+            newAddedNodes.add(div);
+        }
+    }
 
-	public String get() throws ParserConfigurationException, SAXException, IOException, TransformerException {
-		if (isNewCreated()) {
-			for (Node n : newAddedNodes) {
-				root.appendChild(n);
-			}
-			String newEnml = DomUtil.toString(document);
-			validateENML(newEnml);
-			return newEnml;
-		} else {
-			String beginPart = existingEnml.substring(0, existingEnml.indexOf(NOTE_START) + NOTE_START.length());// TODO
-			existingEnml = existingEnml.replace(beginPart, beginPart + DomUtil.toString(newAddedNodes));
-			validateENML(existingEnml);
-			return existingEnml;
-		}
-	}
+    public void addContent(final List<List<StyleText>> content) throws DOMException, ParserConfigurationException {
+        List<Node> list = parseStyleText(content);
+        newAddedNodes.addAll(list);
+    }
 
-	private boolean isNewCreated() {
-		return document != null && root != null && StringUtil.nullOrEmptyOrBlankString(existingEnml);
-	}
+    /**
+     * Get the string representation of ENML.
+     *
+     * @return the string representation of ENML
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     * @throws TransformerException
+     */
+    public String get() throws ParserConfigurationException, SAXException, IOException, TransformerException {
+        if (isNewCreated()) {
+            for (Node n : newAddedNodes) {
+                root.appendChild(n);
+            }
+            String newEnml = DomUtil.toString(document);
+            validateENML(newEnml);
+            return newEnml;
+        } else {
+            String beginPart = existingEnml.substring(0, StringUtil.find(existingEnml, ENML_TAG_EN_NOTE_START_REGEX));
+            existingEnml = existingEnml.replace(beginPart, beginPart + DomUtil.toString(newAddedNodes));
+            validateENML(existingEnml);
+            return existingEnml;
+        }
+    }
 
-	private Element div() throws DOMException, ParserConfigurationException {
-		return document.createElement("div");
-	}
+    private boolean isNewCreated() {
+        return document != null && root != null && StringUtil.isNullOrEmptyOrBlank(existingEnml);
+    }
 
-	private Element media(String hashHex, String mimeType) throws DOMException, ParserConfigurationException {
-		Element media = document.createElement("en-media");
-		media.setAttribute("align", Alignment.LEFT.name());
-		media.setAttribute("type", hashHex);
-		media.setAttribute("hash", mimeType);
-		return media;
-	}
+    private Element div() throws DOMException, ParserConfigurationException {
+        return document.createElement(ENML_TAG_DIV);
+    }
 
-	private List<Node> parse(List<List<StyleText>> styleTextBlocks) throws DOMException, ParserConfigurationException {
-		List<Node> list = ListUtil.list();
-		for (List<StyleText> lineBlocks : styleTextBlocks) {
-			list.add(div(lineBlocks));
-		}
-		return list;
-	}
+    private Element media(final String hashHex, final String mimeType) throws DOMException, ParserConfigurationException {
+        Element media = document.createElement(ENML_TAG_EN_MEDIA);
+        media.setAttribute(ENML_ATTR_ALIGN, Alignment.LEFT.name());
+        media.setAttribute(ENML_ATTR_TYPE, hashHex);
+        media.setAttribute(ENML_ATTR_HASH, mimeType);
+        return media;
+    }
 
-	private Node div(List<StyleText> styleTextBlocks) throws DOMException, ParserConfigurationException {
-		Element div = document.createElement("div");
-		for (StyleText styletext : styleTextBlocks) {
-			String escapedXml = StringUtil.escapeEnml(styletext.getText());
-			div.appendChild(font(escapedXml, styletext.getFace(), styletext.getColorHexCode(), styletext.getSize(), styletext.getFontStyle()));
-		}
-		return div;
-	}
+    private List<Node> parseStyleText(final List<List<StyleText>> styleTextBlocks) throws DOMException, ParserConfigurationException {
+        List<Node> list = ListUtil.list();
+        for (List<StyleText> lineBlocks : styleTextBlocks) {
+            list.add(div(lineBlocks));
+        }
+        return list;
+    }
 
-	private Node font(String text, String face, String color, String size, FontStyle fontStyle) throws DOMException, ParserConfigurationException {
-		Element font = document.createElement("font");
-		font.appendChild(span(text, size, fontStyle));
-		font.setAttribute("face", face);
-		font.setAttribute("color", color);
-		font.setAttribute("size", String.valueOf(TWO));
-		return font;
-	}
+    private Node div(final List<StyleText> styleTextBlocks) throws DOMException, ParserConfigurationException {
+        Element div = document.createElement(ENML_TAG_DIV);
+        for (StyleText styletext : styleTextBlocks) {
+            String escapedXml = StringUtil.escapeEnml(styletext.getText());
+            div.appendChild(font(escapedXml, styletext.getFace(), styletext.getColorHexCode(), styletext.getSize(), styletext.getFontStyle()));
+        }
+        return div;
+    }
 
-	private Node span(String text, String size, FontStyle fontStyle) throws DOMException, ParserConfigurationException {
-		Element span = document.createElement("span");
-		if (StringUtil.nullOrEmptyString(text)) {
-			span.appendChild(document.createElement("br"));
-		} else {
-			if (fontStyle == FontStyle.BOLD) {
-				span.appendChild(b(text));
-			} else if (fontStyle == FontStyle.ITALIC) {
-				span.appendChild(i(text));
-			} else if (fontStyle == FontStyle.NORMAL) {
-				span.appendChild(text(text));
-			}
-		}
-		span.setAttribute("style", "font-size:" + size + "pt");
-		return span;
-	}
+    private Node font(final String text, final String face, final String color, final String size, final FontStyle fontStyle) throws DOMException, ParserConfigurationException {
+        Element font = document.createElement(ENML_ATTR_FONT);
+        font.appendChild(span(text, size, fontStyle));
+        font.setAttribute(ENML_ATTR_FACE, face);
+        font.setAttribute(ENML_ATTR_COLOR, color);
+        font.setAttribute(ENML_ATTR_SIZE, String.valueOf(TWO));
+        return font;
+    }
 
-	private Node b(String text) throws DOMException, ParserConfigurationException {
-		Node b = document.createElement("b");
-		//b.setTextContent(text);
-		b.appendChild (document.createCDATASection (text));
-		return b;
-	}
+    private Node span(final String text, final String size, final FontStyle fontStyle) throws DOMException, ParserConfigurationException {
+        Element span = document.createElement(ENML_TAG_SPAN);
+        if (StringUtils.isEmpty(text)) {
+            span.appendChild(document.createElement(ENML_TAG_BR));
+        } else {
+            if (fontStyle == FontStyle.BOLD) {
+                span.appendChild(b(text));
+            } else if (fontStyle == FontStyle.ITALIC) {
+                span.appendChild(i(text));
+            } else if (fontStyle == FontStyle.NORMAL) {
+                span.appendChild(text(text));
+            }
+        }
+        span.setAttribute(ENML_ATTR_STYLE, ENML_VALUE_FONT_SIZE + size + ENML_VALUE_PT);
+        return span;
+    }
 
-	private Node i(String text) throws DOMException, ParserConfigurationException {
-		Node b = document.createElement("i");
-		//b.setTextContent(text);
-		b.appendChild (document.createCDATASection (text));
-		return b;
-	}
+    private Node b(final String text) throws DOMException, ParserConfigurationException {
+        Node b = document.createElement(ENML_TAG_BOLD);
+        b.setTextContent(text);
+        return b;
+    }
 
-	private Node text(String text) throws DOMException, ParserConfigurationException {
-		//return document.createTextNode(text);
-		return document.createCDATASection (text);
-	}
+    private Node i(final String text) throws DOMException, ParserConfigurationException {
+        Node b = document.createElement(ENML_TAG_ITALIC);
+        b.setTextContent(text);
+        return b;
+    }
 
-	public void validateENML(String enml) throws ParserConfigurationException, SAXException, IOException {
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setValidating(true);
-		SAXParser parser = factory.newSAXParser();
-		XMLReader reader = parser.getXMLReader();
-		reader.setEntityResolver(new EntityResolver() {
-			@Override
-			public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-				if (systemId.endsWith(ENML_DTD)) {
-					return new InputSource(getClass().getResourceAsStream(ENML_DTD_LOCATION));
-				} else if (systemId.endsWith(XHTML_1_0_LATIN_1_ENT)) {
-					return new InputSource(getClass().getResourceAsStream(XHTML_1_0_LATIN_1_ENT_LOCATION));
-				} else if (systemId.endsWith(XHTML_1_0_SYMBOL_ENT)) {
-					return new InputSource(getClass().getResourceAsStream(XHTML_1_0_SYMBOL_ENT_LOCATION));
-				} else if (systemId.endsWith(XHTML_1_0_SPECIAL_ENT)) {
-					return new InputSource(getClass().getResourceAsStream(XHTML_1_0_SPECIAL_ENT_LOCATION));
-				} else {
-					return null;
-				}
-			}
-		});
-		reader.setErrorHandler(new ErrorHandler() {
-			@Override
-			public void warning(SAXParseException exception) throws SAXException {
-				throw exception;
-			}
+    private Node text(final String text) throws DOMException, ParserConfigurationException {
+        return document.createTextNode(text);
+    }
 
-			@Override
-			public void fatalError(SAXParseException exception) throws SAXException {
-				throw exception;
-			}
+    /**
+     * Validate ENML string.
+     *
+     * @param enml
+     *            ENML string to be validated
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     */
+    public static void validateENML(final String enml) throws ParserConfigurationException, SAXException, IOException {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setValidating(true);
+        SAXParser parser = factory.newSAXParser();
+        XMLReader reader = parser.getXMLReader();
+        reader.setEntityResolver(new EntityResolver() {
+            @Override
+            public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException, IOException {
+                if (systemId.endsWith(ENML_DTD)) {
+                    return new InputSource(getClass().getResourceAsStream(ENML_DTD_LOCATION));
+                } else if (systemId.endsWith(XHTML_1_0_LATIN_1_ENT)) {
+                    return new InputSource(getClass().getResourceAsStream(XHTML_1_0_LATIN_1_ENT_LOCATION));
+                } else if (systemId.endsWith(XHTML_1_0_SYMBOL_ENT)) {
+                    return new InputSource(getClass().getResourceAsStream(XHTML_1_0_SYMBOL_ENT_LOCATION));
+                } else if (systemId.endsWith(XHTML_1_0_SPECIAL_ENT)) {
+                    return new InputSource(getClass().getResourceAsStream(XHTML_1_0_SPECIAL_ENT_LOCATION));
+                } else {
+                    return null;
+                }
+            }
+        });
+        reader.setErrorHandler(new ErrorHandler() {
+            @Override
+            public void warning(final SAXParseException exception) throws SAXException {
+                throw exception;
+            }
 
-			@Override
-			public void error(SAXParseException exception) throws SAXException {
-				throw exception;
-			}
-		});
-		reader.parse(new InputSource(new ByteArrayInputStream(enml.getBytes(CharEncoding.UTF_8))));
-	}
+            @Override
+            public void fatalError(final SAXParseException exception) throws SAXException {
+                throw exception;
+            }
+
+            @Override
+            public void error(final SAXParseException exception) throws SAXException {
+                throw exception;
+            }
+        });
+        reader.parse(new InputSource(new ByteArrayInputStream(enml.getBytes(CharEncoding.UTF_8))));
+    }
 
 }

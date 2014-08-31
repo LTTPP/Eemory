@@ -1,9 +1,8 @@
 package com.prairie.eevernote.ui;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
-
-import com.prairie.eevernote.util.StringUtil;
 
 public class ConfigContentProposalProvider extends SimpleContentProposalProvider {
 
@@ -15,7 +14,7 @@ public class ConfigContentProposalProvider extends SimpleContentProposalProvider
 
 	@Override
 	public IContentProposal[] getProposals(String contents, int position) {
-		if (!StringUtil.nullOrEmptyString(byOperator)) {
+		if (!StringUtils.isEmpty(byOperator)) {
 			if (contents.contains(byOperator)) {
 				contents = contents.substring(contents.lastIndexOf(byOperator) + 1).trim();
 			}

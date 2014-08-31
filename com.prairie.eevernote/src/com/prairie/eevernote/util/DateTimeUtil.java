@@ -1,16 +1,18 @@
 package com.prairie.eevernote.util;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.prairie.eevernote.Constants;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 public class DateTimeUtil {
 
-	public static String timestamp() {
-		// 2014-02-21T18:35:32
-		SimpleDateFormat formatter = new SimpleDateFormat(Constants.SimpleDateFormat);
-		return formatter.format(new Date());
-	}
+    public static String timestamp() {
+        // 2014-02-21T18:35:32
+        return DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date());
+    }
+
+    public static String formatCurrentTime(final String pattern) {
+        return DateFormatUtils.format(new Date(), pattern);
+    }
 
 }
