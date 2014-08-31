@@ -2,6 +2,8 @@ package com.prairie.eevernote.client;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.evernote.edam.error.EDAMSystemException;
 import com.evernote.edam.error.EDAMUserException;
 import com.evernote.thrift.TException;
@@ -9,7 +11,6 @@ import com.prairie.eevernote.client.impl.EEClipperImpl;
 import com.prairie.eevernote.client.impl.EEClipperNop;
 import com.prairie.eevernote.exception.OutOfDateException;
 import com.prairie.eevernote.util.MapUtil;
-import com.prairie.eevernote.util.StringUtil;
 
 /**
  * Factory to create <code>EEclipper</code>.
@@ -61,7 +62,7 @@ public class EEClipperFactory {
      *             This plug-in is out of date
      */
     public EEClipper getEEClipper(final String token) throws TException, EDAMUserException, EDAMSystemException, OutOfDateException {
-        if (StringUtil.isNullOrEmptyOrBlank(token)) {
+        if (StringUtils.isBlank(token)) {
             return this.getEEClipper();
         } else {
             EEClipper clipper = new EEClipperImpl(token);
@@ -106,7 +107,7 @@ public class EEClipperFactory {
      */
     public EEClipper getEEClipperNop() {
         if (nopEEClipper == null) {
-            synchronized (nopEEClipper) {
+            synchronized (this) {
                 if (nopEEClipper == null) {
                     nopEEClipper = new EEClipperNop();
                 }

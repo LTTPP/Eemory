@@ -47,17 +47,23 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
 
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
-
-        if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE)) {
-            // TODO
-        } else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE)) {
-            clipSelectionClicked(event);
-        } else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE)) {
-            clipFileClicked(event);
-        } else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE)) {
-            clipScreenshotClicked(event);
-        } else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CONFIGURATIONS)) {
+        if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CONFIGURATIONS)) {
             configurationsClicked(event);
+        } else {
+            // check token
+            if (StringUtils.isBlank(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN))) {
+                MessageDialog.openWarning(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), "Token is not configured, please first configure token in Configurations dialog.");
+                return null;
+            }
+            if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE)) {
+                // TODO
+            } else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE)) {
+                clipSelectionClicked(event);
+            } else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE)) {
+                clipFileClicked(event);
+            } else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE)) {
+                clipScreenshotClicked(event);
+            }
         }
         return null;
     }
