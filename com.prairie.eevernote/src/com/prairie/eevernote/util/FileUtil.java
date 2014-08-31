@@ -16,7 +16,9 @@ public class FileUtil implements ConstantsUtil {
     public static String concatNameOfFilesWithSeparator(final List<File> files, final String separator) {
         String name = StringUtils.EMPTY;
         for (File f : files) {
-            name += separator;
+            if (!StringUtils.isBlank(name)) {
+                name += separator;
+            }
             name += f.getName();
         }
         return name;

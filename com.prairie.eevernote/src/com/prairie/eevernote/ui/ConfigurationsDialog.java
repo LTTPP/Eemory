@@ -102,15 +102,15 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
         // ----------------------
 
-        TextField notebookField = createLablCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+        TextField notebookField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebookField);
         try {
             notebooks = EEClipperFactory.getInstance().getEEClipper(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN), false).listNotebooks();
-            notebookProposalProvider = enableFilteringContentAssist(notebookField.getControl(), notebooks.keySet().toArray(new String[notebooks.size()]));
+            notebookProposalProvider = enableFilteringContentAssist(notebookField.getTextControl(), notebooks.keySet().toArray(new String[notebooks.size()]));
         } catch (Throwable e) {
             MessageDialog.openError(shell, getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
         }
-        notebookField.getControl().addFocusListener(new FocusAdapter() {
+        notebookField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent e) {
                 try {
@@ -127,15 +127,15 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
         // ----------------------
 
-        TextField noteField = createLablCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
+        TextField noteField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, noteField);
         try {
             notes = EEClipperFactory.getInstance().getEEClipper(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN), false).listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK))));
-            noteProposalProvider = enableFilteringContentAssist(noteField.getControl(), notes.keySet().toArray(new String[notes.size()]));
+            noteProposalProvider = enableFilteringContentAssist(noteField.getTextControl(), notes.keySet().toArray(new String[notes.size()]));
         } catch (Throwable e) {
             MessageDialog.openError(shell, getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
         }
-        noteField.getControl().addFocusListener(new FocusAdapter() {
+        noteField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent e) {
                 try {
@@ -158,14 +158,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
         // ----------------------
 
-        TextField tagsField = createLablCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
+        TextField tagsField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, tagsField);
         try {
-            tagsProposalProvider = enableFilteringContentAssist(tagsField.getControl(), EEClipperFactory.getInstance().getEEClipper(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN), false).listTags(), TAGS_SEPARATOR);
+            tagsProposalProvider = enableFilteringContentAssist(tagsField.getTextControl(), EEClipperFactory.getInstance().getEEClipper(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN), false).listTags(), TAGS_SEPARATOR);
         } catch (Throwable e) {
             MessageDialog.openError(ConfigurationsDialog.this.shell, getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
         }
-        tagsField.getControl().addFocusListener(new FocusAdapter() {
+        tagsField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent event) {
                 clearHintText(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE);
@@ -185,7 +185,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         });
         restoreSettings(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
 
-        TextField commentsField = createLablCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS);
+        TextField commentsField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, commentsField);
         restoreSettings(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS);
 
@@ -199,12 +199,12 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     }
 
     protected void postCreateDialogArea() {
-        showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE);
         showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE);
+        showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE);
     }
 
     private void showHintText(final String property, final String hintMsg) {
-        if (ConfigurationsDialog.this.getField(property).isEnabled() && StringUtils.isEmpty(getFieldValue(property))) {
+        if (ConfigurationsDialog.this.getField(property).isEditable() && StringUtils.isEmpty(getFieldValue(property))) {
             getField(property).setForeground(shell.getDisplay().getSystemColor(SWT.COLOR_GRAY));
             setFieldValue(property, getProperty(hintMsg));
         }
@@ -281,10 +281,10 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     private void saveSettings() {
         IDialogSettingsUtil.set(SETTINGS_KEY_TOKEN, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN));
-        addNewSection(SETTINGS_SECTION_NOTEBOOK, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
-        addNewSection(SETTINGS_SECTION_NOTE, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), notes.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
-        addNewSection(SETTINGS_SECTION_TAGS, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS).equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE)) ? StringUtils.EMPTY : getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), null);
-        addNewSection(SETTINGS_SECTION_COMMENTS, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), null);
+        addNewSection(SETTINGS_SECTION_NOTEBOOK, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
+        addNewSection(SETTINGS_SECTION_NOTE, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), notes.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
+        addNewSection(SETTINGS_SECTION_TAGS, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS).equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE)) ? StringUtils.EMPTY : getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), null);
+        addNewSection(SETTINGS_SECTION_COMMENTS, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), null);
     }
 
     private void restoreSettings(final String label) {
@@ -293,27 +293,27 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN, IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN));
             }
         } else if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)) {
-            enableField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED));
+            editableField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_NAME);
-            if (fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK) && !StringUtil.isNullOrEmptyOrBlank(value)) {
+            if (isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK) && !StringUtil.isNullOrEmptyOrBlank(value)) {
                 setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, value);
             }
         } else if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)) {
-            enableField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTE, SETTINGS_KEY_CHECKED));
+            editableField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTE, SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_NAME);
-            if (fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) && !StringUtil.isNullOrEmptyOrBlank(value)) {
+            if (isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) && !StringUtil.isNullOrEmptyOrBlank(value)) {
                 setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, value);
             }
         } else if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS)) {
-            enableField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_TAGS, SETTINGS_KEY_CHECKED));
+            editableField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_TAGS, SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(SETTINGS_SECTION_TAGS, SETTINGS_KEY_NAME);
-            if (fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS) && !StringUtil.isNullOrEmptyOrBlank(value)) {
+            if (isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS) && !StringUtil.isNullOrEmptyOrBlank(value)) {
                 setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, value);
             }
         } else if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS)) {
-            enableField(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_CHECKED));
+            editableField(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_NAME);
-            if (fieldEnabled(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS) && !StringUtil.isNullOrEmptyOrBlank(value)) {
+            if (isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS) && !StringUtil.isNullOrEmptyOrBlank(value)) {
                 setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, value);
             }
         }
@@ -352,7 +352,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         return contentProposalProvider;
     }
 
-    protected TextField createLablCheckTextField(final Composite container, final String labelText) {
+    protected LabelCheckTextField createLabelCheckTextField(final Composite container, final String labelText) {
         final Button button = new Button(container, SWT.CHECK);
         button.setText(getProperty(labelText) + COLON);
         button.setSelection(true);
@@ -389,15 +389,27 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-    protected boolean fieldEnabled(final String property) {
+    protected boolean isFieldEditable(final String property) {
         TextField f = getField(property);
-        return f != null && f.isEnabled();
+        return f != null && f.isEditable();
     }
 
-    protected void enableField(final String property, final boolean check) {
+    protected boolean isFieldEnabled(final String property) {
+        TextField f = getField(property);
+        return f instanceof LabelCheckTextField ? ((LabelCheckTextField) f).isEnabled() : f != null;
+    }
+
+    protected void editableField(final String property, final boolean check) {
         TextField f = getField(property);
         if (f != null) {
-            f.setEnabled(check);
+            f.setEditable(check);
+        }
+    }
+
+    protected void enableField(final String property, final boolean enable) {
+        TextField f = getField(property);
+        if (f instanceof LabelCheckTextField) {
+            ((LabelCheckTextField) f).setEnabled(enable);
         }
     }
 

@@ -5,55 +5,55 @@ import org.eclipse.swt.widgets.Text;
 
 public class LabelTextField extends TextField {
 
-	private Text text;
+    private final Text text;
 
-	public LabelTextField(Text text) {
-		this.text = text;
-	}
+    public LabelTextField(final Text text) {
+        this.text = text;
+    }
 
-	@Override
-	public Text getControl() {
-		return text;
-	}
+    @Override
+    public Text getTextControl() {
+        return text;
+    }
 
-	@Override
-	public String getValue() {
-		return this.text.getText().trim();
-	}
+    @Override
+    public String getValue() {
+        return text.getText().trim();
+    }
 
-	@Override
-	public void setValue(String text) {
-		this.text.setText(text);
-	}
+    @Override
+    public void setValue(final String text) {
+        this.text.setText(text);
+    }
 
-	@Override
-	public boolean isEnabled() {
-		return this.text.isEnabled();
-	}
+    @Override
+    public boolean isEditable() {
+        return text.isEnabled();
+    }
 
-	@Override
-	public void setEnabled(boolean enable) {
-		this.text.setEnabled(enable);
-	}
+    @Override
+    public void setEditable(final boolean enable) {
+        text.setEnabled(enable);
+    }
 
-	@Override
-	public void setForeground(Color foreground) {
-		this.text.setForeground(foreground);
-	}
+    @Override
+    public void setForeground(final Color foreground) {
+        text.setForeground(foreground);
+    }
 
-	@Override
-	public Color getForeground() {
-		return this.text.getForeground();
-	}
+    @Override
+    public Color getForeground() {
+        return text.getForeground();
+    }
 
-	@Override
-	public void setBackground(Color background) {
-		this.text.setBackground(background);
-	}
+    @Override
+    public void setBackground(final Color background) {
+        text.setBackground(background);
+    }
 
-	@Override
-	public Color getBackground() {
-		return this.text.getBackground();
-	}
+    @Override
+    public Color getBackground() {
+        return text.getBackground();
+    }
 
 }

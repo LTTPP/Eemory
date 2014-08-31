@@ -5,32 +5,47 @@ import org.eclipse.swt.widgets.Text;
 
 public class LabelCheckTextField extends LabelTextField {
 
-	private Button button;
+    private final Button button;
 
-	public LabelCheckTextField(Button button, Text text) {
-		super(text);
-		this.button = button;
-	}
+    public LabelCheckTextField(final Button button, final Text text) {
+        super(text);
+        this.button = button;
+    }
 
-	private boolean isChecked() {
-		return this.button == null || this.button.getSelection();
-	}
+    public Button getCheckControl() {
+        return button;
+    }
 
-	private void setChecked(boolean checked) {
-		if (this.button != null) {
-			this.button.setSelection(checked);
-		}
-	}
+    private boolean isChecked() {
+        return button == null || button.getSelection();
+    }
 
-	@Override
-	public boolean isEnabled() {
-		return this.isChecked() && super.isEnabled();
-	}
+    private void setChecked(final boolean checked) {
+        if (button != null) {
+            button.setSelection(checked);
+        }
+    }
 
-	@Override
-	public void setEnabled(boolean enable) {
-		this.setChecked(enable);
-		super.setEnabled(enable);
-	}
+    @Override
+    public boolean isEditable() {
+        return isChecked() && super.isEditable();
+    }
+
+    @Override
+    public void setEditable(final boolean enable) {
+        setChecked(enable);
+        super.setEditable(enable);
+    }
+
+    public boolean isEnabled() {
+        return button.isEnabled();
+    }
+
+    public void setEnabled(final boolean enable) {
+        button.setEnabled(enable);
+        if (!enable) {
+            setEditable(enable);
+        }
+    }
 
 }

@@ -2,6 +2,7 @@ package com.prairie.eevernote.ui;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -71,7 +72,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
         // ------------
 
-        if (!IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED)) {
+        if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID)) {
 
             Text notebookField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebookField);
@@ -85,7 +86,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
         // ------------
 
-        if (!IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTE, SETTINGS_KEY_CHECKED)) {
+        if (shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID)) {
             Text noteField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, noteField);
             try {
@@ -113,7 +114,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
         // ------------
 
-        if (!IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_TAGS, SETTINGS_KEY_CHECKED)) {
+        if (shouldShow(SETTINGS_SECTION_TAGS, SETTINGS_KEY_NAME)) {
             Text tagsField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, tagsField);
             try {
@@ -125,7 +126,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
         // ------------
 
-        if (!IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_CHECKED)) {
+        if (shouldShow(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_NAME)) {
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS));
         }
 
@@ -192,7 +193,13 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     }
 
     protected static boolean shouldShow() {
-        return !IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED) || !IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTE, SETTINGS_KEY_CHECKED) || !IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_TAGS, SETTINGS_KEY_CHECKED) || !IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_CHECKED);
+        return shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) || shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID) || shouldShow(SETTINGS_SECTION_TAGS, SETTINGS_KEY_NAME) || shouldShow(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_NAME);
+    }
+
+    private static boolean shouldShow(final String property, final String key) {
+        boolean checked = IDialogSettingsUtil.getBoolean(property, SETTINGS_KEY_CHECKED);
+        String value = IDialogSettingsUtil.get(property, key);
+        return checked && StringUtils.isBlank(value);
     }
 
     protected Text createLabelTextField(final Composite container, final String labelText) {
