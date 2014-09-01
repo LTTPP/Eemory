@@ -24,6 +24,12 @@ public final class MapUtil {
         return new HashMap<K, V>(source);
     }
 
+    public static <K, V> Map<K, V> map(final K k, final V v) {
+        Map<K, V> map = MapUtil.map();
+        map.put(k, v);
+        return map;
+    }
+
     public static <K, V> ConcurrentHashMap<K, V> concurrentMap() {
         return new ConcurrentHashMap<K, V>();
     }

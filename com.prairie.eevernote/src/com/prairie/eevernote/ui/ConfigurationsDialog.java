@@ -32,16 +32,20 @@ import org.eclipse.swt.widgets.Text;
 
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
+import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.impl.ClipperArgsImpl;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.MapUtil;
+import com.prairie.eevernote.util.NumberUtil;
 import com.prairie.eevernote.util.StringUtil;
 
 public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUtil, Constants {
 
     private final Shell shell;
+
+    private EEClipper clipper;
 
     private Map<String, String> notebooks; // <Name, Guid>
     private Map<String, String> notes; // <Name, Guid>
@@ -111,16 +115,34 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
         // ----------------------
 
+        // Auth
+        final String token = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
+        try {
+            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(final IProgressMonitor monitor) {
+                    monitor.beginTask("Authenticating...", IProgressMonitor.UNKNOWN);
+                    try {
+                        clipper = EEClipperFactory.getInstance().getEEClipper(token, false);
+                    } catch (Throwable e) {
+                        // ignore, not fatal
+                    }
+                    monitor.done();
+                }
+            });
+        } catch (Throwable e) {
+            // ignore, not fatal
+        }
+
         TextField notebookField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebookField);
-        final String token = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
         try {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask("Fetching notebooks...", IProgressMonitor.UNKNOWN);
                     try {
-                        notebooks = EEClipperFactory.getInstance().getEEClipper(token, false).listNotebooks();
+                        notebooks = clipper.listNotebooks();
                     } catch (Throwable e) {
                         // ignore, not fatal
                     }
@@ -136,11 +158,12 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
             public void focusGained(final FocusEvent e) {
                 try {
                     if (ConfigurationsDialog.this.shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN)) {
+                        final String hotoken = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
                         BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                             @Override
                             public void run() {
                                 try {
-                                    notebooks = EEClipperFactory.getInstance().getEEClipper(token, false).listNotebooks();
+                                    notebooks = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listNotebooks();
                                 } catch (Throwable e) {
                                     // ignore, not fatal
                                 }
@@ -164,9 +187,9 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Fetching notes..", IProgressMonitor.UNKNOWN);
+                    monitor.beginTask("Fetching notes...", IProgressMonitor.UNKNOWN);
                     try {
-                        notes = EEClipperFactory.getInstance().getEEClipper(token, false).listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(notebook)));
+                        notes = clipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(notebook)));
                     } catch (Throwable e) {
                         // ignore, not fatal
                     }
@@ -180,22 +203,20 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         noteField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent e) {
-                try {
-                    clearHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE);
-                    if (ConfigurationsDialog.this.shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)) {
-                        BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    notes = EEClipperFactory.getInstance().getEEClipper(token, false).listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(notebook)));
-                                } catch (Throwable e) {
-                                    // ignore, not fatal
-                                }
+                clearHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE);
+                if (ConfigurationsDialog.this.shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)) {
+                    final String hotoken = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
+                    final String hotebook = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+                    BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                notes = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(hotebook)));
+                            } catch (Throwable e) {
+                                // ignore, not fatal
                             }
-                        });
-                    }
-                } catch (Throwable e1) {
-                    // ignore, not fatal
+                        }
+                    });
                 }
                 noteProposalProvider.setProposals(notes.keySet().toArray(new String[notes.size()]));
             }
@@ -215,9 +236,9 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Fetch tags...", IProgressMonitor.UNKNOWN);
+                    monitor.beginTask("Fetching tags...", IProgressMonitor.UNKNOWN);
                     try {
-                        tags = EEClipperFactory.getInstance().getEEClipper(token, false).listTags();
+                        tags = clipper.listTags();
                     } catch (Throwable e) {
                         // ignore, not fatal
                     }
@@ -234,11 +255,12 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 clearHintText(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE);
                 try {
                     if (ConfigurationsDialog.this.shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN)) {
+                        final String hotoken = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
                         BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                             @Override
                             public void run() {
                                 try {
-                                    tags = EEClipperFactory.getInstance().getEEClipper(token, false).listTags();
+                                    tags = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listTags();
                                 } catch (Throwable e) {
                                     // ignore, not fatal
                                 }
@@ -310,7 +332,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     @Override
     protected Point getInitialSize() {
-        return new Point(550, 400);
+        return new Point(NumberUtil.number(FIVE, FIVE, ZERO), NumberUtil.number(FOUR, ZERO, ZERO));
     }
 
     public static int show(final Shell shell) {
@@ -435,8 +457,10 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                     text.setText(StringUtils.EMPTY);
                 }
                 text.setEnabled(button.getSelection());
-                // Fix Eclipse Bug 193933 – Text is not grayed out when disabled
-                // if custom foreground color is set.
+                /*
+                 * Workaround for Eclipse Bug 193933 – Text is not grayed out
+                 * when disabled if custom foreground color is set.
+                 */
                 text.setBackground(button.getSelection() ? null : shell.getDisplay().getSystemColor(SWT.COLOR_TITLE_INACTIVE_FOREGROUND));
             }
         });

@@ -7,32 +7,54 @@ import com.prairie.eevernote.enml.StyleText;
 
 public interface ClipperArgs {
 
-	public abstract String getNotebookGuid();
+    public abstract String getNotebookGuid();
 
-	public abstract void setNotebookGuid(String notebookGuid);
+    public abstract void setNotebookGuid(String notebookGuid);
 
-	public abstract String getNoteGuid();
+    public abstract void setNotebookGuidReset(boolean set);
 
-	public abstract void setNoteGuid(String noteGuid);
+    public abstract boolean getNotebookGuidReset();
 
-	public abstract String getTags();
+    public abstract boolean getNotebookGuidAdopt();
 
-	public abstract void setTags(String tags);
+    public abstract String getNotebookName();
 
-	public abstract String getComments();
+    public abstract void setNotebookName(String notebookName);
 
-	public abstract void setComments(String comments);
+    public abstract String getNoteGuid();
 
-	public abstract List<File> getFiles();
+    public abstract void setNoteGuid(String noteGuid);
 
-	public abstract void setFiles(List<File> files);
+    public abstract void setNoteGuidReset(boolean set);
 
-	public abstract String getTitle();
+    public abstract boolean getNoteGuidReset();
 
-	public abstract void setTitle(String title);
+    public abstract boolean getNoteGuidAdopt();
 
-	public abstract List<List<StyleText>> getStyleText();
+    public abstract String getNoteName();
 
-	public abstract void setStyleText(List<List<StyleText>> styleText);
+    public abstract void setNoteName(String noteName);
+
+    public abstract String getTags();
+
+    public abstract void setTags(String tags);
+
+    public abstract String getComments();
+
+    public abstract void setComments(String comments);
+
+    public abstract List<File> getFiles();
+
+    public abstract void setFiles(List<File> files);
+
+    public abstract String getTitle();
+
+    public abstract void setTitle(String title);
+
+    public abstract List<List<StyleText>> getStyleText();
+
+    public abstract void setStyleText(List<List<StyleText>> styleText);
+
+    public abstract void adopt(final ClipperArgs args);
 
 }

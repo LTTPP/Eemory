@@ -3,13 +3,17 @@ package com.prairie.eevernote.ui;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.graphics.Point;
@@ -17,12 +21,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
+import com.prairie.eevernote.client.ClipperArgs;
+import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.impl.ClipperArgsImpl;
 import com.prairie.eevernote.util.ConstantsUtil;
@@ -37,18 +44,25 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     private final Shell shell;
     private static HotTextDialog thisDialog;
 
+    private EEClipper clipper;
+
     private Map<String, String> notebooks; // <Name, Guid>
     private Map<String, String> notes; // <Name, Guid>
+    private String[] tags;
 
     private SimpleContentProposalProvider noteProposalProvider;
 
     private Map<String, Text> fields;
-    private Map<String, String> quickSettings; // <Field Property, Field Value>
-    private Map<String, Map<String, String>> matrix; // <Field Property, <Field Property, Field Value>>
+    private ClipperArgs quickSettings;
+    // <Field Property, <Field Property, Field Value>>
+    private Map<String, Map<String, String>> matrix;
 
     public HotTextDialog(final Shell parentShell) {
         super(parentShell);
         shell = parentShell;
+        notebooks = MapUtil.map();
+        notes = MapUtil.map();
+        tags = new String[ZERO];
     }
 
     @Override
@@ -72,12 +86,41 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
         // ------------
 
+        // Auth
+        try {
+            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(final IProgressMonitor monitor) {
+                    monitor.beginTask("Authenticating...", IProgressMonitor.UNKNOWN);
+                    try {
+                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false);
+                    } catch (Throwable e) {
+                        // ignore, not fatal
+                    }
+                    monitor.done();
+                }
+            });
+        } catch (Throwable e) {
+            // ignore, not fatal
+        }
+
         if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID)) {
 
             Text notebookField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebookField);
             try {
-                notebooks = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false).listNotebooks();
+                new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                    @Override
+                    public void run(final IProgressMonitor monitor) {
+                        monitor.beginTask("Fetching notebooks...", IProgressMonitor.UNKNOWN);
+                        try {
+                            notebooks = clipper.listNotebooks();
+                        } catch (Throwable e) {
+                            // ignore, not fatal
+                        }
+                        monitor.done();
+                    }
+                });
                 this.enableFilteringContentAssist(notebookField, notebooks.keySet().toArray(new String[notebooks.size()]));
             } catch (Throwable e) {
                 MessageDialog.openError(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
@@ -89,8 +132,20 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
         if (shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID)) {
             Text noteField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, noteField);
+            final String notebook = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
             try {
-                notes = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false).listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED) ? IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) : notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK))));
+                new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                    @Override
+                    public void run(final IProgressMonitor monitor) {
+                        monitor.beginTask("Fetching notes...", IProgressMonitor.UNKNOWN);
+                        try {
+                            notes = clipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED) ? IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) : notebooks.get(notebook)));
+                        } catch (Throwable e) {
+                            // ignore, not fatal
+                        }
+                        monitor.done();
+                    }
+                });
                 noteProposalProvider = this.enableFilteringContentAssist(noteField, notes.keySet().toArray(new String[notes.size()]));
             } catch (Throwable e) {
                 MessageDialog.openError(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
@@ -99,13 +154,19 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                 noteField.addFocusListener(new FocusAdapter() {
                     @Override
                     public void focusGained(final FocusEvent e) {
-                        try {
-                            if (HotTextDialog.this.shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)) {
-                                notes = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false).listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(HotTextDialog.this.getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK))));
-                                noteProposalProvider.setProposals(notes.keySet().toArray(new String[notes.size()]));
-                            }
-                        } catch (Throwable e1) {
-                            MessageDialog.openError(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e1.getLocalizedMessage());
+                        if (shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)) {
+                            final String hotebook = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+                            BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        notes = clipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(hotebook)));
+                                    } catch (Throwable e) {
+                                        // ignore, not fatal
+                                    }
+                                }
+                            });
+                            noteProposalProvider.setProposals(notes.keySet().toArray(new String[notes.size()]));
                         }
                     }
                 });
@@ -118,9 +179,21 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
             Text tagsField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, tagsField);
             try {
-                this.enableFilteringContentAssist(tagsField, EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false).listTags(), TAGS_SEPARATOR);
+                new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                    @Override
+                    public void run(final IProgressMonitor monitor) {
+                        monitor.beginTask("Fetching tags...", IProgressMonitor.UNKNOWN);
+                        try {
+                            tags = clipper.listTags();
+                        } catch (Throwable e) {
+                            // ignore, not fatal
+                        }
+                        monitor.done();
+                    }
+                });
+                this.enableFilteringContentAssist(tagsField, tags, TAGS_SEPARATOR);
             } catch (Throwable e) {
-                MessageDialog.openError(HotTextDialog.this.shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
+                MessageDialog.openError(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
             }
         }
 
@@ -151,16 +224,19 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     }
 
     private void saveQuickSettings() {
-        if (quickSettings == null) {
-            quickSettings = MapUtil.map();
-        }
-        quickSettings.put(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebooks == null ? null : notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
-        quickSettings.put(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, notes == null ? null : notes.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
-        quickSettings.put(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS));
-        quickSettings.put(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS));
+        quickSettings = new ClipperArgsImpl();
+
+        quickSettings.setNotebookName(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK));
+        quickSettings.setNotebookGuid(notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
+
+        quickSettings.setNoteName(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE));
+        quickSettings.setNoteGuid(notes.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
+
+        quickSettings.setTags(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS));
+        quickSettings.setComments(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS));
     }
 
-    public Map<String, String> getQuickSettings() {
+    public ClipperArgs getQuickSettings() {
         return quickSettings;
     }
 

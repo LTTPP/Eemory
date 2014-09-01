@@ -22,6 +22,18 @@ public class ErrorMessage {
 
     public enum EvernoteDataModel {
 
+        Note_noteGuid {
+            @Override
+            public String toString() {
+                return "Note.Guid";
+            }
+
+            @Override
+            public String toReadableString() {
+                return "Note";
+            }
+        },
+
         Note_notebookGuid {
             @Override
             public String toString() {

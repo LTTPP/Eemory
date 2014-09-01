@@ -2,7 +2,6 @@ package com.prairie.eevernote.handlers;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -28,7 +27,6 @@ import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEPlugin;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.ErrorMessage;
-import com.prairie.eevernote.ErrorMessage.EvernoteDataModel;
 import com.prairie.eevernote.client.ClipperArgs;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
@@ -42,7 +40,6 @@ import com.prairie.eevernote.util.DateTimeUtil;
 import com.prairie.eevernote.util.EclipseUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
-import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.StringUtil;
 
 public class EEHandler extends AbstractHandler implements ConstantsUtil, Constants {
@@ -76,7 +73,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
 
             int option = HotTextDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
             if (option == HotTextDialog.OK) {
-                hotsetClipperArgs(args, HotTextDialog.getThis().getQuickSettings());
+                args.adopt(HotTextDialog.getThis().getQuickSettings());
             } else if (option == HotTextDialog.CANCEL) {
                 return;
             }
@@ -90,13 +87,19 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                     try {
                         EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
                         clipper.clipFile(args);
-                        monitor.subTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_SUBTASK_MESSAGE));
                     } catch (EDAMNotFoundException e) {
-                        if (e.getIdentifier().equals(EvernoteDataModel.Note_notebookGuid.toString())) {
-                            return autoFixEDAMNotFoundNotebookGuidException(args);
-                        } else {
-                            return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
+                        // try to auto fix EDAMNotFoundException
+                        boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
+                        if (fixed) {
+                            try {
+                                EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false).clipFile(args);
+                            } catch (Throwable e1) {
+                                return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e1.getLocalizedMessage());
+                            }
+                            saveIfNeed(args);
+                            return Status.OK_STATUS;
                         }
+                        return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
                     } catch (Throwable e) {
                         return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
                     }
@@ -120,7 +123,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
 
             int option = HotTextDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
             if (option == HotTextDialog.OK) {
-                hotsetClipperArgs(args, HotTextDialog.getThis().getQuickSettings());
+                args.adopt(HotTextDialog.getThis().getQuickSettings());
             } else if (option == HotTextDialog.CANCEL) {
                 return;
             }
@@ -137,13 +140,18 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                     try {
                         EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
                         clipper.clipSelection(args);
-                        monitor.subTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_SUBTASK_MESSAGE));
                     } catch (EDAMNotFoundException e) {
-                        if (e.getIdentifier().equals(EvernoteDataModel.Note_notebookGuid.toString())) {
-                            return autoFixEDAMNotFoundNotebookGuidException(args);
-                        } else {
-                            return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
+                        boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
+                        if (fixed) {
+                            try {
+                                EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false).clipFile(args);
+                            } catch (Throwable e1) {
+                                return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e1.getLocalizedMessage());
+                            }
+                            saveIfNeed(args);
+                            return Status.OK_STATUS;
                         }
+                        return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
                     } catch (final Throwable e) {
                         return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
                     }
@@ -167,7 +175,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
 
             int option = HotTextDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
             if (option == HotTextDialog.OK) {
-                hotsetClipperArgs(args, HotTextDialog.getThis().getQuickSettings());
+                args.adopt(HotTextDialog.getThis().getQuickSettings());
             } else if (option == HotTextDialog.CANCEL) {
                 return;
             }
@@ -189,11 +197,17 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                         EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
                         clipper.clipFile(args);
                     } catch (EDAMNotFoundException e) {
-                        if (e.getIdentifier().equals(EvernoteDataModel.Note_notebookGuid.toString())) {
-                            return autoFixEDAMNotFoundNotebookGuidException(args);
-                        } else {
-                            return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
+                        boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
+                        if (fixed) {
+                            try {
+                                EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false).clipFile(args);
+                            } catch (Throwable e1) {
+                                return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e1.getLocalizedMessage());
+                            }
+                            saveIfNeed(args);
+                            return Status.OK_STATUS;
                         }
+                        return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
                     } catch (Throwable e) {
                         return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, ErrorMessage.getMessage(e));
                     }
@@ -225,10 +239,20 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
         if (!StringUtil.isNullOrEmptyOrBlank(value)) {
             args.setNotebookGuid(value);
         }
+        value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_NAME);
+        if (!StringUtil.isNullOrEmptyOrBlank(value)) {
+            args.setNotebookName(value);
+        }
+
         value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID);
         if (!StringUtil.isNullOrEmptyOrBlank(value)) {
             args.setNoteGuid(value);
         }
+        value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_NAME);
+        if (!StringUtil.isNullOrEmptyOrBlank(value)) {
+            args.setNoteName(value);
+        }
+
         value = IDialogSettingsUtil.get(SETTINGS_SECTION_TAGS, SETTINGS_KEY_NAME);
         if (!StringUtil.isNullOrEmptyOrBlank(value)) {
             args.setTags(value);
@@ -241,54 +265,13 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
         return args;
     }
 
-    private void hotsetClipperArgs(final ClipperArgs args, final Map<String, String> values) {
-        if (!MapUtil.isNullOrEmptyMap(values)) {
-            if (!StringUtil.isNullOrEmptyOrBlank(values.get(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK))) {
-                args.setNotebookGuid(values.get(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK));
-            }
-            if (!StringUtil.isNullOrEmptyOrBlank(values.get(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE))) {
-                args.setNoteGuid(values.get(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE));
-            }
-            if (!StringUtil.isNullOrEmptyOrBlank(values.get(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS))) {
-                args.setTags(values.get(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS));
-            }
-            if (!StringUtil.isNullOrEmptyOrBlank(values.get(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS))) {
-                args.setComments(values.get(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS));
-            }
+    private void saveIfNeed(final ClipperArgs args) {
+        if (args.getNotebookGuidReset() && !args.getNotebookGuidAdopt()) {
+            IDialogSettingsUtil.set(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID, args.getNotebookGuid());
         }
-    }
-
-    private IStatus autoFixEDAMNotFoundNotebookGuidException(final ClipperArgs args) {
-        boolean fixed = fixNotebookGuid();
-        if (fixed) {
-            try {
-                String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID);
-                if (!StringUtil.isNullOrEmptyOrBlank(value)) {
-                    args.setNotebookGuid(value);
-                }
-                EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false).clipFile(args);
-            } catch (Throwable e) {
-                return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, e.getLocalizedMessage());
-            }
-            return Status.OK_STATUS;
-        } else {
-            return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, "notebook not found");
+        if (args.getNoteGuidReset() && !args.getNoteGuidAdopt()) {
+            IDialogSettingsUtil.set(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID, args.getNoteGuid());
         }
-    }
-
-    private boolean fixNotebookGuid() {
-        try {
-            EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
-            Map<String, String> map = clipper.listNotebooks();
-            String guid = map.get(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_NAME));
-            if (!StringUtils.isBlank(guid)) {
-                IDialogSettingsUtil.set(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID, guid);
-                return true;
-            }
-        } catch (Exception e) {
-            // ignore and give up failure recovery
-        }
-        return false;
     }
 
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.DOMException;
 import org.xml.sax.SAXException;
 
@@ -30,7 +31,6 @@ import com.prairie.eevernote.util.EvernoteUtil;
 import com.prairie.eevernote.util.ListStringizer;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapStringizer;
-import com.prairie.eevernote.util.StringUtil;
 
 public class EEClipperImpl extends EEClipper {
 
@@ -163,14 +163,18 @@ public class EEClipperImpl extends EEClipper {
         NotesMetadataList notesMetadataList = new NotesMetadataList();
 
         NoteFilter filter = new NoteFilter();
-        if (!StringUtil.isNullOrEmptyOrBlank(args.getNotebookGuid())) {
+        if (!StringUtils.isBlank(args.getNotebookGuid())) {
             filter.setNotebookGuid(args.getNotebookGuid());
+        }
+        if (!StringUtils.isBlank(args.getNoteName())) {
+            filter.setWords("intitle:\"" + args.getNoteName() + "\"");// TODO
+                                                                      // debug
         }
 
         NotesMetadataResultSpec resultSpec = new NotesMetadataResultSpec();
         resultSpec.setIncludeTitle(true);
 
-        notesMetadataList = noteStoreClient.findNotesMetadata(filter, 0, com.evernote.edam.limits.Constants.EDAM_USER_NOTES_MAX, resultSpec);
+        notesMetadataList = noteStoreClient.findNotesMetadata(filter, ConstantsUtil.ZERO, com.evernote.edam.limits.Constants.EDAM_USER_NOTES_MAX, resultSpec);
 
         return ListUtil.toStringMap(notesMetadataList.getNotes(), new MapStringizer() {
             @Override

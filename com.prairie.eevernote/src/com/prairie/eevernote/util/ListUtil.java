@@ -3,7 +3,6 @@ package com.prairie.eevernote.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,7 @@ public final class ListUtil implements ConstantsUtil {
         if (list == null) {
             return null;
         }
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = MapUtil.map();
         for (int i = ZERO; i < list.size(); i++) {
             map.put(stringizer.key(list.get(i)), stringizer.value(list.get(i)));
         }
