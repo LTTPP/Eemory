@@ -15,6 +15,7 @@ import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.impl.ClipperArgsImpl;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.ListUtil;
+import com.prairie.eevernote.util.LogUtil;
 
 public class EDAMNotFoundHandler implements Constants {
 
@@ -41,6 +42,7 @@ public class EDAMNotFoundHandler implements Constants {
             guid = map.get(name);
         } catch (Exception e) {
             // ignore and give up failure recovery
+            LogUtil.logCancel(e);
         }
         return guid;
     }
@@ -54,7 +56,7 @@ public class EDAMNotFoundHandler implements Constants {
             Map<String, String> map = clipper.listNotesWithinNotebook(args);
             List<String> titles = ListUtil.list();
             for (Entry<String, String> e : map.entrySet()) {
-                String title = e.getKey().substring(ConstantsUtil.ZERO, e.getKey().indexOf(ConstantsUtil.LEFT_PARENTHESIS));
+                String title = StringUtils.substringBefore(e.getKey(), ConstantsUtil.LEFT_PARENTHESIS);
                 if (title.equals(name)) {
                     if (titles.size() != ConstantsUtil.ZERO) {
                         return null;
@@ -67,6 +69,7 @@ public class EDAMNotFoundHandler implements Constants {
             }
         } catch (Exception e) {
             // ignore and give up failure recovery
+            LogUtil.logCancel(e);
         }
         return guid;
     }

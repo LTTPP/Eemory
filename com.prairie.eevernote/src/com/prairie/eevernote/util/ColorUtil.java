@@ -1,10 +1,14 @@
 package com.prairie.eevernote.util;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+
 
 public class ColorUtil implements ConstantsUtil {
 
     public final static java.awt.Color AWT_EVERNOTE_GREEN = new java.awt.Color(ONE * HUNDRED + ONE * TEN + ONE, ONE * HUNDRED + EIGHT * TEN + ONE, FIVE * TEN + FOUR);
-    public final static org.eclipse.swt.graphics.Color SWT_DEFAULT_COLOR = new org.eclipse.swt.graphics.Color(null, ZERO,ZERO,ZERO);
+    public final static org.eclipse.swt.graphics.Color SWT_COLOR_DEFAULT = new org.eclipse.swt.graphics.Color(null, ZERO,ZERO,ZERO);
+    public final static org.eclipse.swt.graphics.Color SWT_COLOR_GRAY = Display.getDefault().getSystemColor(SWT.COLOR_GRAY);
 
     public static String toHexCode(final int r, final int g, final int b) {
         return POUND + toHexString(r) + toHexString(g) + toHexString(b);

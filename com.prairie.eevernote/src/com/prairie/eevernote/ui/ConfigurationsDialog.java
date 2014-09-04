@@ -35,8 +35,10 @@ import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.impl.ClipperArgsImpl;
+import com.prairie.eevernote.util.ColorUtil;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
+import com.prairie.eevernote.util.LogUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.NumberUtil;
 import com.prairie.eevernote.util.StringUtil;
@@ -92,14 +94,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         Composite area = (Composite) super.createDialogArea(parent);
         Composite container = new Composite(area, SWT.NONE);
         // container.setLayoutData(new GridData(GridData.FILL_BOTH));
-        container.setLayout(new GridLayout(1, false));
+        container.setLayout(new GridLayout(ONE, false));
         container.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
 
         // ----------------------
 
         Group groupAuth = new Group(container, SWT.NONE);
         groupAuth.setText(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_OAUTH));
-        groupAuth.setLayout(new GridLayout(2, false));
+        groupAuth.setLayout(new GridLayout(TWO, false));
         groupAuth.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
 
         TextField tokenField = createLabelTextField(groupAuth, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
@@ -110,7 +112,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
         Group groupPref = new Group(container, SWT.NONE);
         groupPref.setText(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_EVERNOTEPREFERENCES));
-        groupPref.setLayout(new GridLayout(2, false));
+        groupPref.setLayout(new GridLayout(TWO, false));
         groupPref.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 
         // ----------------------
@@ -126,12 +128,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                         clipper = EEClipperFactory.getInstance().getEEClipper(token, false);
                     } catch (Throwable e) {
                         // ignore, not fatal
+                        LogUtil.logWarning(e);
                     }
                     monitor.done();
                 }
             });
         } catch (Throwable e) {
             // ignore, not fatal
+            LogUtil.logWarning(e);
         }
 
         TextField notebookField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
@@ -145,19 +149,22 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                         notebooks = clipper.listNotebooks();
                     } catch (Throwable e) {
                         // ignore, not fatal
+                        LogUtil.logCancel(e);
                     }
                     monitor.done();
                 }
             });
         } catch (Throwable e) {
             // ignore, not fatal
+            LogUtil.logCancel(e);
         }
         notebookProposalProvider = enableFilteringContentAssist(notebookField.getTextControl(), notebooks.keySet().toArray(new String[notebooks.size()]));
         notebookField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
-            public void focusGained(final FocusEvent e) {
+            public void focusGained(final FocusEvent event) {
+                clearHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE);
                 try {
-                    if (ConfigurationsDialog.this.shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN)) {
+                    if (shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN)) {
                         final String hotoken = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
                         BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                             @Override
@@ -166,14 +173,21 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                                     notebooks = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listNotebooks();
                                 } catch (Throwable e) {
                                     // ignore, not fatal
+                                    LogUtil.logCancel(e);
                                 }
                             }
                         });
                     }
-                } catch (Throwable e1) {
+                } catch (Throwable e) {
                     // ignore, not fatal
+                    LogUtil.logCancel(e);
                 }
                 notebookProposalProvider.setProposals(notebooks.keySet().toArray(new String[notebooks.size()]));
+            }
+
+            @Override
+            public void focusLost(final FocusEvent e) {
+                showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE);
             }
         });
         restoreSettings(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
@@ -192,19 +206,21 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                         notes = clipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(notebook)));
                     } catch (Throwable e) {
                         // ignore, not fatal
+                        LogUtil.logCancel(e);
                     }
                     monitor.done();
                 }
             });
         } catch (Throwable e) {
             // ignore, not fatal
+            LogUtil.logCancel(e);
         }
         noteProposalProvider = enableFilteringContentAssist(noteField.getTextControl(), notes.keySet().toArray(new String[notes.size()]));
         noteField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent e) {
                 clearHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE);
-                if (ConfigurationsDialog.this.shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)) {
+                if (shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)) {
                     final String hotoken = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
                     final String hotebook = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
                     BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
@@ -214,6 +230,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                                 notes = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(hotebook)));
                             } catch (Throwable e) {
                                 // ignore, not fatal
+                                LogUtil.logCancel(e);
                             }
                         }
                     });
@@ -241,12 +258,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                         tags = clipper.listTags();
                     } catch (Throwable e) {
                         // ignore, not fatal
+                        LogUtil.logCancel(e);
                     }
                     monitor.done();
                 }
             });
         } catch (Throwable e) {
             // ignore, not fatal
+            LogUtil.logCancel(e);
         }
         tagsProposalProvider = enableFilteringContentAssist(tagsField.getTextControl(), tags, TAGS_SEPARATOR);
         tagsField.getTextControl().addFocusListener(new FocusAdapter() {
@@ -254,7 +273,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
             public void focusGained(final FocusEvent event) {
                 clearHintText(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE);
                 try {
-                    if (ConfigurationsDialog.this.shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN)) {
+                    if (shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN)) {
                         final String hotoken = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
                         BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                             @Override
@@ -263,12 +282,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                                     tags = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listTags();
                                 } catch (Throwable e) {
                                     // ignore, not fatal
+                                    LogUtil.logCancel(e);
                                 }
                             }
                         });
                     }
                 } catch (Throwable e) {
                     // ignore, not fatal
+                    LogUtil.logCancel(e);
                 }
                 tagsProposalProvider.setProposals(tags);
             }
@@ -294,23 +315,24 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     }
 
     protected void postCreateDialogArea() {
+        showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE);
         showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE);
         showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE);
     }
 
     private void showHintText(final String property, final String hintMsg) {
-        if (ConfigurationsDialog.this.getField(property).isEditable() && StringUtils.isEmpty(getFieldValue(property))) {
-            getField(property).setForeground(shell.getDisplay().getSystemColor(SWT.COLOR_GRAY));
+        if (getField(property).isEditable() && StringUtils.isBlank(getFieldValue(property))) {
+            getField(property).setForeground(ColorUtil.SWT_COLOR_GRAY);
             setFieldValue(property, getProperty(hintMsg));
         }
     }
 
     private void clearHintText(final String property, final String hintMsg) {
-        if (ConfigurationsDialog.this.getFieldValue(property).equals(getProperty(hintMsg))) {
-            ConfigurationsDialog.this.setFieldValue(property, StringUtils.EMPTY);
+        if (getFieldValue(property).equals(getProperty(hintMsg))) {
+            setFieldValue(property, StringUtils.EMPTY);
             // Sets foreground color to the default system color for this
             // control.
-            ConfigurationsDialog.this.getField(property).setForeground(null);
+            getField(property).setForeground(null);
         }
     }
 
@@ -372,9 +394,19 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     private void saveSettings() {
         IDialogSettingsUtil.set(SETTINGS_KEY_TOKEN, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN));
-        setSection(SETTINGS_SECTION_NOTEBOOK, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
-        setSection(SETTINGS_SECTION_NOTE, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), notes.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
-        setSection(SETTINGS_SECTION_TAGS, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS).equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE)) ? StringUtils.EMPTY : getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), null);
+
+        String notebookValue = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+        notebookValue = notebookValue.equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE)) ? StringUtils.EMPTY : notebookValue;
+        setSection(SETTINGS_SECTION_NOTEBOOK, notebookValue, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), notebooks.get(notebookValue));
+
+        String noteValue = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
+        noteValue = noteValue.equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE)) ? StringUtils.EMPTY : noteValue;
+        setSection(SETTINGS_SECTION_NOTE, noteValue, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), notes.get(noteValue));
+
+        String tagsValue = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
+        tagsValue = tagsValue.equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE)) ? StringUtils.EMPTY : tagsValue;
+        setSection(SETTINGS_SECTION_TAGS, tagsValue, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), null);
+
         setSection(SETTINGS_SECTION_COMMENTS, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), null);
     }
 

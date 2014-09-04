@@ -34,6 +34,7 @@ import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.impl.ClipperArgsImpl;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
+import com.prairie.eevernote.util.LogUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.StringUtil;
 
@@ -96,12 +97,14 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                         clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false);
                     } catch (Throwable e) {
                         // ignore, not fatal
+                        LogUtil.logWarning(e);
                     }
                     monitor.done();
                 }
             });
         } catch (Throwable e) {
             // ignore, not fatal
+            LogUtil.logWarning(e);
         }
 
         if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID)) {
@@ -117,6 +120,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                             notebooks = clipper.listNotebooks();
                         } catch (Throwable e) {
                             // ignore, not fatal
+                            LogUtil.logCancel(e);
                         }
                         monitor.done();
                     }
@@ -142,6 +146,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                             notes = clipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED) ? IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) : notebooks.get(notebook)));
                         } catch (Throwable e) {
                             // ignore, not fatal
+                            LogUtil.logCancel(e);
                         }
                         monitor.done();
                     }
@@ -163,6 +168,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                                         notes = clipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(hotebook)));
                                     } catch (Throwable e) {
                                         // ignore, not fatal
+                                        LogUtil.logCancel(e);
                                     }
                                 }
                             });
@@ -187,6 +193,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                             tags = clipper.listTags();
                         } catch (Throwable e) {
                             // ignore, not fatal
+                            LogUtil.logCancel(e);
                         }
                         monitor.done();
                     }

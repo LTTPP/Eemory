@@ -54,6 +54,7 @@ public interface Constants {
     public static final String EECLIPPERPLUGIN_CONFIGURATIONS_TAGS = "EEClipperPlugin.Configurations.Tags";
     public static final String EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE = "EEClipperPlugin.Configurations.Tags.HintMessage";
     public static final String EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE = "EEClipperPlugin.Configurations.Note.HintMessage";
+    public static final String EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE = "EEClipperPlugin.Configurations.Notebook.HintMessage";
     public static final String EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS = "EEClipperPlugin.Configurations.Comments";
     public static final String EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED = "EEClipperPlugin.Configurations.ErrorOccurred";
 

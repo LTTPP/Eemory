@@ -58,9 +58,9 @@ public interface ConstantsUtil {
     public static final String XHTML_1_0_SPECIAL_ENT = "xhtml-special.ent";
 
     public static final String ENML_DTD_LOCATION = "dtd/enml2.dtd";
-    public static final String XHTML_1_0_LATIN_1_ENT_LOCATION = "../enml/dtd/xhtml-lat1.ent";
-    public static final String XHTML_1_0_SYMBOL_ENT_LOCATION = "../enml/dtd/xhtml-symbol.ent";
-    public static final String XHTML_1_0_SPECIAL_ENT_LOCATION = "../enml/dtd/xhtml-special.ent";
+    public static final String XHTML_1_0_LATIN_1_ENT_LOCATION = "dtd/xhtml-lat1.ent";
+    public static final String XHTML_1_0_SYMBOL_ENT_LOCATION = "dtd/xhtml-symbol.ent";
+    public static final String XHTML_1_0_SPECIAL_ENT_LOCATION = "dtd/xhtml-special.ent";
 
     public static final String ENML_TAG_EN_NOTE_START_REGEX = "<en-note[^>]*>";
 

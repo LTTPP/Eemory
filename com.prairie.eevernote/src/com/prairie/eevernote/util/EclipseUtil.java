@@ -117,7 +117,7 @@ public class EclipseUtil implements ConstantsUtil {
 
             // // [StyledText]
             part = text.substring(start, start + styleRange.length);
-            Color foreground = styleRange.foreground != null ? styleRange.foreground : ColorUtil.SWT_DEFAULT_COLOR;
+            Color foreground = styleRange.foreground != null ? styleRange.foreground : ColorUtil.SWT_COLOR_DEFAULT;
             StyleText textRange = new StyleText(part, face, ColorUtil.toHexCode(foreground.getRed(), foreground.getGreen(), foreground.getBlue()), size, FontStyle.forNumber(styleRange.fontStyle));
             textRanges.add(textRange);
             count += part.length();
