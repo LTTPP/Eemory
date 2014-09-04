@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 
 import com.evernote.edam.error.EDAMNotFoundException;
-import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.ErrorMessage.EvernoteDataModel;
 import com.prairie.eevernote.client.ClipperArgs;
 import com.prairie.eevernote.client.EEClipper;
@@ -17,7 +16,7 @@ import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.LogUtil;
 
-public class EDAMNotFoundHandler implements Constants {
+public class EDAMNotFoundHandler implements ConstantsUtil {
 
     private final String token;
 
@@ -47,31 +46,39 @@ public class EDAMNotFoundHandler implements Constants {
         return guid;
     }
 
-    public String findNoteGuidByName(final String name) {
+    public String findNoteGuidByName(final String notebookGuid, final String name) {
         String guid = null;
         try {
             EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(token, false);
             ClipperArgs args = new ClipperArgsImpl();
-            args.setNoteName(name);
+            args.setNotebookGuid(notebookGuid);
+            String realName = StringUtils.substringBeforeLast(name, LEFT_PARENTHESIS);
+            args.setNoteName(realName);
             Map<String, String> map = clipper.listNotesWithinNotebook(args);
-            List<String> titles = ListUtil.list();
-            for (Entry<String, String> e : map.entrySet()) {
-                String title = StringUtils.substringBefore(e.getKey(), ConstantsUtil.LEFT_PARENTHESIS);
-                if (title.equals(name)) {
-                    if (titles.size() != ConstantsUtil.ZERO) {
-                        return null;
-                    }
-                    titles.add(e.getKey());
-                }
-            }
-            if (titles.size() == ConstantsUtil.ONE) {
-                guid = map.get(titles.get(ConstantsUtil.ZERO));
-            }
+            guid = findNoteGuid(map, name);
         } catch (Exception e) {
             // ignore and give up failure recovery
             LogUtil.logCancel(e);
         }
         return guid;
+    }
+
+    public static String findNoteGuid(final Map<String, String> noteMap, final String name) {
+        List<String> titles = ListUtil.list();
+        String realName = StringUtils.substringBeforeLast(name, LEFT_PARENTHESIS);
+        for (Entry<String, String> e : noteMap.entrySet()) {
+            String title = StringUtils.substringBeforeLast(e.getKey(), LEFT_PARENTHESIS);
+            if (title.equals(realName)) {
+                if (titles.size() != ZERO) {
+                    return null;
+                }
+                titles.add(e.getKey());
+            }
+        }
+        if (titles.size() == ONE) {
+            return noteMap.get(titles.get(ZERO));
+        }
+        return null;
     }
 
     private boolean fixNotFoundNotebookGuid(final ClipperArgs args) {
@@ -85,7 +92,7 @@ public class EDAMNotFoundHandler implements Constants {
     }
 
     private boolean fixNotFoundNoteGuid(final ClipperArgs args) {
-        String found = findNoteGuidByName(args.getNoteName());
+        String found = findNoteGuidByName(args.getNotebookGuid(), args.getNoteName());
         if (!StringUtils.isBlank(found)) {
             args.setNoteGuid(found);
             args.setNoteGuidReset(true);

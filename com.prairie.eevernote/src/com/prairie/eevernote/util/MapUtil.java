@@ -90,4 +90,17 @@ public final class MapUtil {
         return map;
     }
 
+    /**
+     * The first key that value is matched, preffered to be used when value is
+     * unique.
+     */
+    public static <K, V> K getKey(final Map<K, V> map, final V value) {
+        for (K k : map.keySet()) {
+            if (map.get(k).equals(value)) {
+                return k;
+            }
+        }
+        return null;
+    }
+
 }

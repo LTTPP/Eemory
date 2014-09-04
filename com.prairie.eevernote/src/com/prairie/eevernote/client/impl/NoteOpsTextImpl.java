@@ -15,6 +15,7 @@ import com.evernote.edam.error.EDAMSystemException;
 import com.evernote.edam.error.EDAMUserException;
 import com.evernote.edam.type.Note;
 import com.evernote.thrift.TException;
+import com.prairie.eevernote.ErrorMessage.EvernoteDataModel;
 import com.prairie.eevernote.client.ClipperArgs;
 import com.prairie.eevernote.client.EDAMLimits;
 import com.prairie.eevernote.client.NoteOps;
@@ -65,6 +66,12 @@ public class NoteOpsTextImpl extends NoteOps {
 
     private void update(final ClipperArgs args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, DOMException, ParserConfigurationException, SAXException, IOException, TransformerException, OutOfDateException {
         Note note = noteStoreClient.getNote(args.getNoteGuid(), true, false, false, false);
+        if (!note.isActive()) {
+            EDAMNotFoundException e = new EDAMNotFoundException();
+            e.setIdentifier(EvernoteDataModel.Note_noteGuid.toString());
+            e.setKey(args.getNoteGuid());
+            throw e;
+        }
         note.unsetResources();
 
         // update content

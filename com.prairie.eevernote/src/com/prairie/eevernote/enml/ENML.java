@@ -112,7 +112,7 @@ public class ENML implements ConstantsUtil {
 
     private Element media(final String hashHex, final String mimeType) throws DOMException, ParserConfigurationException {
         Element media = document.createElement(ENML_TAG_EN_MEDIA);
-        media.setAttribute(ENML_ATTR_ALIGN, Alignment.LEFT.name());
+        media.setAttribute(ENML_ATTR_ALIGN, Alignment.LEFT.toString());
         media.setAttribute(ENML_ATTR_TYPE, mimeType);
         media.setAttribute(ENML_ATTR_HASH, hashHex);
         return media;

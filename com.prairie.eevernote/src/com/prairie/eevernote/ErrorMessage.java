@@ -25,7 +25,7 @@ public class ErrorMessage {
         Note_noteGuid {
             @Override
             public String toString() {
-                return "Note.Guid";
+                return "Note.guid";
             }
 
             @Override

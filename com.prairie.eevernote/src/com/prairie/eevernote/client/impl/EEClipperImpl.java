@@ -163,12 +163,12 @@ public class EEClipperImpl extends EEClipper {
         NotesMetadataList notesMetadataList = new NotesMetadataList();
 
         NoteFilter filter = new NoteFilter();
+        filter.setInactive(false);
         if (!StringUtils.isBlank(args.getNotebookGuid())) {
             filter.setNotebookGuid(args.getNotebookGuid());
         }
         if (!StringUtils.isBlank(args.getNoteName())) {
-            filter.setWords("intitle:\"" + args.getNoteName() + "\"");// TODO
-                                                                      // debug
+            filter.setWords("intitle" + ConstantsUtil.COLON + ConstantsUtil.DOUBLE_QUOTATION_MARK + args.getNoteName() + ConstantsUtil.DOUBLE_QUOTATION_MARK);
         }
 
         NotesMetadataResultSpec resultSpec = new NotesMetadataResultSpec();

@@ -35,6 +35,7 @@ import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.impl.ClipperArgsImpl;
+import com.prairie.eevernote.handlers.EDAMNotFoundHandler;
 import com.prairie.eevernote.util.ColorUtil;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
@@ -47,7 +48,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     private final Shell shell;
 
-    private EEClipper clipper;
+    private EEClipper globalClipper;
 
     private Map<String, String> notebooks; // <Name, Guid>
     private Map<String, String> notes; // <Name, Guid>
@@ -60,8 +61,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     private Map<String, TextField> fields;
     // <Field Property, <Field Property, Field Value>>
     private Map<String, Map<String, String>> matrix;
-
-    private boolean shouldRefresh = false;
 
     public ConfigurationsDialog(final Shell parentShell) {
         super(parentShell);
@@ -125,7 +124,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask("Authenticating...", IProgressMonitor.UNKNOWN);
                     try {
-                        clipper = EEClipperFactory.getInstance().getEEClipper(token, false);
+                        globalClipper = EEClipperFactory.getInstance().getEEClipper(token, false);
                     } catch (Throwable e) {
                         // ignore, not fatal
                         LogUtil.logWarning(e);
@@ -146,7 +145,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask("Fetching notebooks...", IProgressMonitor.UNKNOWN);
                     try {
-                        notebooks = clipper.listNotebooks();
+                        notebooks = globalClipper.listNotebooks();
                     } catch (Throwable e) {
                         // ignore, not fatal
                         LogUtil.logCancel(e);
@@ -203,7 +202,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask("Fetching notes...", IProgressMonitor.UNKNOWN);
                     try {
-                        notes = clipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(notebook)));
+                        notes = globalClipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(notebook)));
                     } catch (Throwable e) {
                         // ignore, not fatal
                         LogUtil.logCancel(e);
@@ -255,7 +254,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask("Fetching tags...", IProgressMonitor.UNKNOWN);
                     try {
-                        tags = clipper.listTags();
+                        tags = globalClipper.listTags();
                     } catch (Throwable e) {
                         // ignore, not fatal
                         LogUtil.logCancel(e);
@@ -322,7 +321,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     private void showHintText(final String property, final String hintMsg) {
         if (getField(property).isEditable() && StringUtils.isBlank(getFieldValue(property))) {
-            getField(property).setForeground(ColorUtil.SWT_COLOR_GRAY);
+            getField(property).setForeground(shell.getDisplay().getSystemColor(ColorUtil.SWT_COLOR_GRAY));
             setFieldValue(property, getProperty(hintMsg));
         }
     }
@@ -346,10 +345,57 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     @Override
     protected void buttonPressed(final int buttonId) {
         if (buttonId == EECLIPPERPLUGIN_CONFIGURATIONS_REFRESH_ID) {
-            shouldRefresh = true;
+            refreshPressed();
         } else {
             super.buttonPressed(buttonId);
         }
+    }
+
+    protected void refreshPressed() {
+        BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final String token = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
+                    EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(token, false);
+
+                    // refresh notebook
+                    notebooks = clipper.listNotebooks();
+                    String nbName = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+                    if (notebooks.containsValue(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID))) {
+                        // rename case
+                        String key = MapUtil.getKey(notebooks, IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID));
+                        if (!StringUtils.isBlank(nbName) && !nbName.equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE)) && !nbName.equals(key)) {
+                            setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, key);
+                        }
+                    } else if (notebooks.containsKey(nbName)) {
+                        // recreate, delete cases
+                        String guid = notebooks.get(nbName);
+                        IDialogSettingsUtil.set(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID, guid);
+                    }
+                    // refresh note
+                    nbName = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+                    String nName = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
+                    notes = clipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(nbName)));
+                    if (notes.containsValue(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID))) {
+                        // rename case
+                        String key = MapUtil.getKey(notes, IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID));
+                        if (!StringUtils.isBlank(nName) && !nName.equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE)) && !nName.equals(key)) {
+                            setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, key);
+                        }
+                    } else {
+                        // recreate, delete cases
+                        String guid = EDAMNotFoundHandler.findNoteGuid(notes, nName);
+                        IDialogSettingsUtil.set(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID, guid);
+                    }
+                    // refresh tags
+                    tags = clipper.listTags();
+                } catch (Throwable e) {
+                    // ignore, not fatal
+                    LogUtil.logCancel(e);
+                }
+            }
+        });
     }
 
     @Override
@@ -369,10 +415,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     }
 
     private boolean shouldRefresh(final String uniqueKey, final String property) {
-        if (shouldRefresh) {
-            shouldRefresh = false;
-            return true;
-        }
         return fieldValueChanged(uniqueKey, property);
     }
 
@@ -490,7 +532,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 }
                 text.setEnabled(button.getSelection());
                 /*
-                 * Workaround for Eclipse Bug 193933 – Text is not grayed out
+                 * Workaround for Eclipse Bug 193933 ï¿½ Text is not grayed out
                  * when disabled if custom foreground color is set.
                  */
                 text.setBackground(button.getSelection() ? null : shell.getDisplay().getSystemColor(SWT.COLOR_TITLE_INACTIVE_FOREGROUND));
