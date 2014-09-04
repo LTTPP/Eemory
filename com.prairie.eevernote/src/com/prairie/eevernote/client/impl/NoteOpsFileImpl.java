@@ -18,6 +18,7 @@ import com.evernote.edam.type.Note;
 import com.evernote.edam.type.Resource;
 import com.evernote.thrift.TException;
 import com.prairie.eevernote.client.ClipperArgs;
+import com.prairie.eevernote.client.EDAMLimits;
 import com.prairie.eevernote.client.NoteOps;
 import com.prairie.eevernote.enml.ENML;
 import com.prairie.eevernote.exception.OutOfDateException;
@@ -49,7 +50,7 @@ public class NoteOpsFileImpl extends NoteOps {
 
     private void create(final ClipperArgs args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
         Note note = new Note();
-        note.setTitle(FileUtil.concatNameOfFiles(args.getFiles()));
+        note.setTitle(FileUtil.concatNameOfFiles(args.getFiles(), EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX));
         if (!StringUtil.isNullOrEmptyOrBlank(args.getNotebookGuid())) {
             note.setNotebookGuid(args.getNotebookGuid());
         }
