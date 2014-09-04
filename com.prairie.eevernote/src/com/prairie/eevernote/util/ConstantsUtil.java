@@ -35,6 +35,7 @@ public interface ConstantsUtil {
     public static final int NEGATIVE = -1;
 
     public static final String PLUS = "+";
+    public static final String MINUS = "-";
     public static final String EQUAL = "=";
     public static final String EXCLAMATION_MARK = "!";
     public static final String DOUBLE_QUOTATION_MARK = "\"";

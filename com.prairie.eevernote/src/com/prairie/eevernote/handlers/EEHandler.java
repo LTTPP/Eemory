@@ -132,7 +132,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
 
             IEditorPart editor = HandlerUtil.getActiveEditor(event);
             StyledText styledText = (StyledText) editor.getAdapter(Control.class);
-            args.setTitle(editor.getTitle());
+            args.setTitle(editor.getTitle() + MINUS + DateTimeUtil.timestamp());
             args.setStyleText(EclipseUtil.getSelectedStyleText(styledText));
 
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE)) {
