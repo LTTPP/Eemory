@@ -96,7 +96,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                             } catch (Throwable e1) {
                                 return LogUtil.error(e1);
                             }
-                            saveIfNeed(args);
+                            saveIfNeeded(args);
                             return LogUtil.ok();
                         }
                         return LogUtil.error(e);
@@ -150,7 +150,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                             } catch (Throwable e1) {
                                 return LogUtil.error(e1);
                             }
-                            saveIfNeed(args);
+                            saveIfNeeded(args);
                             return LogUtil.ok();
                         }
                         return LogUtil.error(e);
@@ -208,7 +208,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                             } catch (Throwable e1) {
                                 return LogUtil.error(e1);
                             }
-                            saveIfNeed(args);
+                            saveIfNeeded(args);
                             return LogUtil.ok();
                         }
                         return LogUtil.error(e);
@@ -271,7 +271,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
         return args;
     }
 
-    private void saveIfNeed(final ClipperArgs args) {
+    private void saveIfNeeded(final ClipperArgs args) {
         if (args.getNotebookGuidReset() && !args.getNotebookGuidAdopt()) {
             IDialogSettingsUtil.set(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID, args.getNotebookGuid());
         }
