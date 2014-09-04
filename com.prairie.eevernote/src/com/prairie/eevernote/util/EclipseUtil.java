@@ -103,7 +103,7 @@ public class EclipseUtil implements ConstantsUtil {
             return textRanges;
         }
 
-        int count = 0;
+        int count = ZERO;
         for (StyleRange styleRange : styleRanges) {
             int start = styleRange.start - offset;
 

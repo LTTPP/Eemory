@@ -155,6 +155,8 @@ public class ENML implements ConstantsUtil {
                 span.appendChild(i(text));
             } else if (fontStyle == FontStyle.NORMAL) {
                 span.appendChild(text(text));
+            } else if (fontStyle == FontStyle.BOLD_ITALIC) {
+                span.appendChild(bi(text));
             }
         }
         span.setAttribute(ENML_ATTR_STYLE, ENML_VALUE_FONT_SIZE + size + ENML_VALUE_PT);
@@ -168,8 +170,18 @@ public class ENML implements ConstantsUtil {
     }
 
     private Node i(final String text) throws DOMException, ParserConfigurationException {
-        Node b = document.createElement(ENML_TAG_ITALIC);
-        b.setTextContent(text);
+        Node i = document.createElement(ENML_TAG_ITALIC);
+        i.setTextContent(text);
+        return i;
+    }
+
+    private Node bi(final String text) throws DOMException, ParserConfigurationException {
+        Node i = document.createElement(ENML_TAG_ITALIC);
+        i.setTextContent(text);
+
+        Node b = document.createElement(ENML_TAG_BOLD);
+        b.appendChild(i);
+
         return b;
     }
 

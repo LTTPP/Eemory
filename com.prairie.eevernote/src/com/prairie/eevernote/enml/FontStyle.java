@@ -2,52 +2,65 @@ package com.prairie.eevernote.enml;
 
 public enum FontStyle {
 
-	NORMAL {
-		@Override
-		public String toString() {
-			return "normal";
-		}
+    NORMAL {
+        @Override
+        public String toString() {
+            return "normal";
+        }
 
-		@Override
-		public int toNumber() {
-			return 0;
-		}
+        @Override
+        public int toNumber() {
+            return 0;
+        }
 
-	},
-	BOLD {
-		@Override
-		public String toString() {
-			return "bold";
-		}
+    },
+    BOLD {
+        @Override
+        public String toString() {
+            return "bold";
+        }
 
-		@Override
-		public int toNumber() {
-			return 1;
-		}
+        @Override
+        public int toNumber() {
+            return 1;
+        }
 
-	},
-	ITALIC {
-		@Override
-		public String toString() {
-			return "italic";
-		}
+    },
+    ITALIC {
+        @Override
+        public String toString() {
+            return "italic";
+        }
 
-		@Override
-		public int toNumber() {
-			return 2;
-		}
+        @Override
+        public int toNumber() {
+            return 2;
+        }
 
-	};
+    },
+    BOLD_ITALIC {
+        @Override
+        public String toString() {
+            return "bold-italic";
+        }
 
-	public abstract int toNumber();
+        @Override
+        public int toNumber() {
+            return 3;
+        }
 
-	public static FontStyle forNumber(int code) throws IllegalArgumentException {
-		FontStyle[] values = FontStyle.values();
-		for (FontStyle value : values) {
-			if (value.toNumber() == code) {
-				return value;
-			}
-		}
-		throw new IllegalArgumentException("Illegal font style code: " + code);
-	}
+    };
+
+    public abstract int toNumber();
+
+    public static FontStyle forNumber(final int code) throws IllegalArgumentException {
+        FontStyle[] values = FontStyle.values();
+        for (FontStyle value : values) {
+            if (value.toNumber() == code) {
+                return value;
+            }
+        }
+        // TODO remove later on, maybe just return NORMAL by default
+        throw new IllegalArgumentException("Illegal font style code: " + code);
+    }
 }
