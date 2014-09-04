@@ -227,7 +227,17 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     @Override
     protected void okPressed() {
         saveQuickSettings();
+        if (!confirmDefault()) {
+            return;
+        }
         super.okPressed();
+    }
+
+    private boolean confirmDefault() {
+        if (StringUtils.isBlank(quickSettings.getNotebookGuid())) {
+            return MessageDialog.openQuestion(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_HOTINPUTDIALOG_SHELL_TITLE), "No existing notebook found, clip to default notebook?");
+        }
+        return true;
     }
 
     private void saveQuickSettings() {
