@@ -37,15 +37,4 @@ public class LabelCheckTextField extends LabelTextField {
         super.setEditable(enable);
     }
 
-    public boolean isEnabled() {
-        return button.isEnabled();
-    }
-
-    public void setEnabled(final boolean enable) {
-        button.setEnabled(enable);
-        if (!enable) {
-            setEditable(enable);
-        }
-    }
-
 }

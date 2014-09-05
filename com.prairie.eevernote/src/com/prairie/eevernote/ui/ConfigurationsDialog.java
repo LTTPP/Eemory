@@ -119,7 +119,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         // Auth
         authInProgress();
 
-        TextField notebookField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+        final LabelCheckTextField notebookField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebookField);
         fetchNotebooksInProgres();
         notebookProposalProvider = enableFilteringContentAssist(notebookField.getTextControl(), notebooks.keySet().toArray(new String[notebooks.size()]));
@@ -154,11 +154,19 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE);
             }
         });
+        notebookField.getCheckControl().addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+                if (notebookField.isEditable()) {
+                    showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE);
+                }
+            }
+        });
         restoreSettings(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
 
         // ----------------------
 
-        TextField noteField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
+        final LabelCheckTextField noteField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, noteField);
         fetchNotesInProgres();
         noteProposalProvider = enableFilteringContentAssist(noteField.getTextControl(), notes.keySet().toArray(new String[notes.size()]));
@@ -189,11 +197,19 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE);
             }
         });
+        noteField.getCheckControl().addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+                if (noteField.isEditable()) {
+                    showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE);
+                }
+            }
+        });
         restoreSettings(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
 
         // ----------------------
 
-        TextField tagsField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
+        final LabelCheckTextField tagsField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, tagsField);
         fetchTagsInProgres();
         tagsProposalProvider = enableFilteringContentAssist(tagsField.getTextControl(), tags, TAGS_SEPARATOR);
@@ -226,6 +242,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
             @Override
             public void focusLost(final FocusEvent e) {
                 showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE);
+            }
+        });
+        tagsField.getCheckControl().addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+                if (tagsField.isEditable()) {
+                    showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE);
+                }
             }
         });
         restoreSettings(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
@@ -547,7 +571,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 }
                 text.setEnabled(button.getSelection());
                 /*
-                 * Workaround for Eclipse Bug 193933 � Text is not grayed out
+                 * Workaround for Eclipse Bug 193933: Text is not grayed out
                  * when disabled if custom foreground color is set.
                  */
                 text.setBackground(button.getSelection() ? null : shell.getDisplay().getSystemColor(SWT.COLOR_TITLE_INACTIVE_FOREGROUND));
@@ -572,22 +596,10 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         return f != null && f.isEditable();
     }
 
-    protected boolean isFieldEnabled(final String property) {
-        TextField f = getField(property);
-        return f instanceof LabelCheckTextField ? ((LabelCheckTextField) f).isEnabled() : f != null;
-    }
-
     protected void editableField(final String property, final boolean check) {
         TextField f = getField(property);
         if (f != null) {
             f.setEditable(check);
-        }
-    }
-
-    protected void enableField(final String property, final boolean enable) {
-        TextField f = getField(property);
-        if (f instanceof LabelCheckTextField) {
-            ((LabelCheckTextField) f).setEnabled(enable);
         }
     }
 
