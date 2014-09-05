@@ -62,6 +62,8 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     private Map<String, TextField> fields;
     // <Field Property, <Field Property, Field Value>>
     private Map<String, Map<String, String>> matrix;
+    // <Field Property, User Input>
+    private Map<String, Boolean> inputMatrix;
 
     public ConfigurationsDialog(final Shell parentShell) {
         super(parentShell);
@@ -369,11 +371,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         if (getField(property).isEditable() && StringUtils.isBlank(getFieldValue(property))) {
             getField(property).setForeground(shell.getDisplay().getSystemColor(ColorUtil.SWT_COLOR_GRAY));
             setFieldValue(property, getProperty(hintMsg));
+            setHasInput(property, false);
+        } else {
+            setHasInput(property, true);
         }
     }
 
     private void clearHintText(final String property, final String hintMsg) {
-        if (getFieldValue(property).equals(getProperty(hintMsg))) {
+        if (!isHasInput(property)) {
             setFieldValue(property, StringUtils.EMPTY);
             // Sets foreground color to the default system color for this
             // control.
@@ -411,7 +416,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
             } else if (notebooks.containsValue(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID))) {
                 // rename case
                 String key = MapUtil.getKey(notebooks, IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID));
-                if (!StringUtils.isBlank(nbName) && !nbName.equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE)) && !nbName.equals(key)) {
+                if (!StringUtils.isBlank(nbName) && isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK) && !nbName.equals(key)) {
                     setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, key);
                 }
             }
@@ -432,7 +437,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 } else if (notes.containsValue(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID))) {
                     // rename case
                     String key = MapUtil.getKey(notes, IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID));
-                    if (!nName.equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE)) && !nName.equals(key)) {
+                    if (isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) && !nName.equals(key)) {
                         setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, key);
                     }
                 }
@@ -482,16 +487,13 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     private void saveSettings() {
         IDialogSettingsUtil.set(SETTINGS_KEY_TOKEN, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN));
 
-        String notebookValue = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
-        notebookValue = notebookValue.equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE)) ? StringUtils.EMPTY : notebookValue;
+        String notebookValue = isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK) ? getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK) : StringUtils.EMPTY;
         setSection(SETTINGS_SECTION_NOTEBOOK, notebookValue, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), notebooks.get(notebookValue));
 
-        String noteValue = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
-        noteValue = noteValue.equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE)) ? StringUtils.EMPTY : noteValue;
+        String noteValue = isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) ? getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) : StringUtils.EMPTY;
         setSection(SETTINGS_SECTION_NOTE, noteValue, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), notes.get(noteValue));
 
-        String tagsValue = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
-        tagsValue = tagsValue.equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE)) ? StringUtils.EMPTY : tagsValue;
+        String tagsValue = isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS) ? getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS) : StringUtils.EMPTY;
         setSection(SETTINGS_SECTION_TAGS, tagsValue, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), null);
 
         setSection(SETTINGS_SECTION_COMMENTS, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), null);
@@ -634,6 +636,21 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
             fields = MapUtil.map();
         }
         fields.put(property, field);
+    }
+
+    protected boolean isHasInput(final String property) {
+        if (inputMatrix == null) {
+            return false;
+        }
+        Boolean has = inputMatrix.get(property);
+        return has == null ? false : has;
+    }
+
+    protected void setHasInput(final String property, final boolean inputed) {
+        if (inputMatrix == null) {
+            inputMatrix = MapUtil.map();
+        }
+        inputMatrix.put(property, inputed);
     }
 
     protected String getProperty(final String key) {
