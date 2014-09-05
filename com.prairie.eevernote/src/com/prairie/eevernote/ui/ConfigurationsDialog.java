@@ -117,46 +117,11 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         // ----------------------
 
         // Auth
-        final String token = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
-        try {
-            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
-                @Override
-                public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Authenticating...", IProgressMonitor.UNKNOWN);
-                    try {
-                        globalClipper = EEClipperFactory.getInstance().getEEClipper(token, false);
-                    } catch (Throwable e) {
-                        // ignore, not fatal
-                        LogUtil.logWarning(e);
-                    }
-                    monitor.done();
-                }
-            });
-        } catch (Throwable e) {
-            // ignore, not fatal
-            LogUtil.logWarning(e);
-        }
+        authInProgress();
 
         TextField notebookField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebookField);
-        try {
-            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
-                @Override
-                public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Fetching notebooks...", IProgressMonitor.UNKNOWN);
-                    try {
-                        notebooks = globalClipper.listNotebooks();
-                    } catch (Throwable e) {
-                        // ignore, not fatal
-                        LogUtil.logCancel(e);
-                    }
-                    monitor.done();
-                }
-            });
-        } catch (Throwable e) {
-            // ignore, not fatal
-            LogUtil.logCancel(e);
-        }
+        fetchNotebooksInProgres();
         notebookProposalProvider = enableFilteringContentAssist(notebookField.getTextControl(), notebooks.keySet().toArray(new String[notebooks.size()]));
         notebookField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
@@ -195,25 +160,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
         TextField noteField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, noteField);
-        final String notebook = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
-        try {
-            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
-                @Override
-                public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Fetching notes...", IProgressMonitor.UNKNOWN);
-                    try {
-                        notes = globalClipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(notebook)));
-                    } catch (Throwable e) {
-                        // ignore, not fatal
-                        LogUtil.logCancel(e);
-                    }
-                    monitor.done();
-                }
-            });
-        } catch (Throwable e) {
-            // ignore, not fatal
-            LogUtil.logCancel(e);
-        }
+        fetchNotesInProgres();
         noteProposalProvider = enableFilteringContentAssist(noteField.getTextControl(), notes.keySet().toArray(new String[notes.size()]));
         noteField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
@@ -248,24 +195,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
         TextField tagsField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, tagsField);
-        try {
-            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
-                @Override
-                public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Fetching tags...", IProgressMonitor.UNKNOWN);
-                    try {
-                        tags = globalClipper.listTags();
-                    } catch (Throwable e) {
-                        // ignore, not fatal
-                        LogUtil.logCancel(e);
-                    }
-                    monitor.done();
-                }
-            });
-        } catch (Throwable e) {
-            // ignore, not fatal
-            LogUtil.logCancel(e);
-        }
+        fetchTagsInProgres();
         tagsProposalProvider = enableFilteringContentAssist(tagsField.getTextControl(), tags, TAGS_SEPARATOR);
         tagsField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
@@ -313,6 +243,92 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         return area;
     }
 
+    private void authInProgress() {
+        final String token = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
+        try {
+            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(final IProgressMonitor monitor) {
+                    monitor.beginTask("Authenticating...", IProgressMonitor.UNKNOWN);
+                    try {
+                        globalClipper = EEClipperFactory.getInstance().getEEClipper(token, false);
+                    } catch (Throwable e) {
+                        // ignore, not fatal
+                        LogUtil.logWarning(e);
+                    }
+                    monitor.done();
+                }
+            });
+        } catch (Throwable e) {
+            // ignore, not fatal
+            LogUtil.logWarning(e);
+        }
+    }
+
+    private void fetchNotebooksInProgres() {
+        try {
+            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(final IProgressMonitor monitor) {
+                    monitor.beginTask("Fetching notebooks...", IProgressMonitor.UNKNOWN);
+                    try {
+                        notebooks = globalClipper.listNotebooks();
+                    } catch (Throwable e) {
+                        // ignore, not fatal
+                        LogUtil.logCancel(e);
+                    }
+                    monitor.done();
+                }
+            });
+        } catch (Throwable e) {
+            // ignore, not fatal
+            LogUtil.logCancel(e);
+        }
+    }
+
+    private void fetchNotesInProgres() {
+        final String notebook = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+        try {
+            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(final IProgressMonitor monitor) {
+                    monitor.beginTask("Fetching notes...", IProgressMonitor.UNKNOWN);
+                    try {
+                        notes = globalClipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(notebook)));
+                    } catch (Throwable e) {
+                        // ignore, not fatal
+                        LogUtil.logCancel(e);
+                    }
+                    monitor.done();
+                }
+            });
+        } catch (Throwable e) {
+            // ignore, not fatal
+            LogUtil.logCancel(e);
+        }
+    }
+
+    private void fetchTagsInProgres() {
+        try {
+            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(final IProgressMonitor monitor) {
+                    monitor.beginTask("Fetching tags...", IProgressMonitor.UNKNOWN);
+                    try {
+                        tags = globalClipper.listTags();
+                    } catch (Throwable e) {
+                        // ignore, not fatal
+                        LogUtil.logCancel(e);
+                    }
+                    monitor.done();
+                }
+            });
+        } catch (Throwable e) {
+            // ignore, not fatal
+            LogUtil.logCancel(e);
+        }
+    }
+
     protected void postCreateDialogArea() {
         showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE);
         showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE);
@@ -352,50 +368,49 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     }
 
     protected void refreshPressed() {
-        BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final String token = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
-                    EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(token, false);
+        authInProgress();
 
-                    // refresh notebook
-                    notebooks = clipper.listNotebooks();
-                    String nbName = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
-                    if (notebooks.containsValue(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID))) {
-                        // rename case
-                        String key = MapUtil.getKey(notebooks, IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID));
-                        if (!StringUtils.isBlank(nbName) && !nbName.equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE)) && !nbName.equals(key)) {
-                            setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, key);
-                        }
-                    } else if (notebooks.containsKey(nbName)) {
-                        // recreate, delete cases
-                        String guid = notebooks.get(nbName);
-                        IDialogSettingsUtil.set(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID, guid);
-                    }
-                    // refresh note
-                    nbName = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
-                    String nName = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
-                    notes = clipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(nbName)));
-                    if (notes.containsValue(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID))) {
-                        // rename case
-                        String key = MapUtil.getKey(notes, IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID));
-                        if (!StringUtils.isBlank(nName) && !nName.equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE)) && !nName.equals(key)) {
-                            setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, key);
-                        }
-                    } else {
-                        // recreate, delete cases
-                        String guid = EDAMNotFoundHandler.findNoteGuid(notes, nName);
-                        IDialogSettingsUtil.set(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID, guid);
-                    }
-                    // refresh tags
-                    tags = clipper.listTags();
-                } catch (Throwable e) {
-                    // ignore, not fatal
-                    LogUtil.logCancel(e);
+        // refresh notebook
+        fetchNotebooksInProgres();
+        String nbName = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+        if (!StringUtils.isBlank(nbName)) {
+            if (notebooks.containsKey(nbName)) {
+                // recreate, delete cases
+                String guid = notebooks.get(nbName);
+                IDialogSettingsUtil.set(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID, guid);
+            } else if (notebooks.containsValue(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID))) {
+                // rename case
+                String key = MapUtil.getKey(notebooks, IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID));
+                if (!StringUtils.isBlank(nbName) && !nbName.equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE)) && !nbName.equals(key)) {
+                    setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, key);
                 }
             }
-        });
+        }
+
+        // refresh note
+        nbName = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+        fetchNotesInProgres();
+        String nName = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
+        if (!StringUtils.isBlank(nName)) {
+            if (notes.containsKey(nName)) {
+                IDialogSettingsUtil.set(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID, notes.get(nName));
+            } else {
+                String guid = EDAMNotFoundHandler.findNoteGuid(notes, nName);
+                if (!StringUtils.isBlank(guid)) {
+                    // recreate, delete cases
+                    IDialogSettingsUtil.set(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID, guid);
+                } else if (notes.containsValue(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID))) {
+                    // rename case
+                    String key = MapUtil.getKey(notes, IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID));
+                    if (!nName.equals(getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE)) && !nName.equals(key)) {
+                        setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, key);
+                    }
+                }
+            }
+        }
+
+        // refresh tags
+        fetchTagsInProgres();
     }
 
     @Override

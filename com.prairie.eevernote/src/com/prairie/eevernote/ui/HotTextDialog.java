@@ -234,10 +234,18 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     }
 
     private boolean confirmDefault() {
-        if (StringUtils.isBlank(quickSettings.getNotebookGuid())) {
-            return MessageDialog.openQuestion(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_HOTINPUTDIALOG_SHELL_TITLE), "No existing notebook found, clip to default notebook?");
+        boolean confirm = false;
+        String msg = StringUtils.EMPTY;
+        if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getNotebookGuid())) {
+            msg += "notebook";
+            confirm = true;
         }
-        return true;
+        if (shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getNoteGuid())) {
+            msg += COMMA + StringUtils.SPACE + "note";
+            confirm = true;
+        }
+        msg = "No existing " + msg + " found, default will be used?";
+        return confirm ? MessageDialog.openQuestion(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_HOTINPUTDIALOG_SHELL_TITLE), msg) : true;
     }
 
     private void saveQuickSettings() {
