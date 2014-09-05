@@ -1,5 +1,6 @@
 package com.prairie.eevernote.ui;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -172,7 +173,9 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                                     }
                                 }
                             });
-                            noteProposalProvider.setProposals(notes.keySet().toArray(new String[notes.size()]));
+                            String[] ns = notes.keySet().toArray(new String[notes.size()]);
+                            Arrays.sort(ns);
+                            noteProposalProvider.setProposals(ns);
                         }
                     }
                 });
@@ -314,6 +317,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     }
 
     protected SimpleContentProposalProvider enableFilteringContentAssist(final Control control, final String[] proposals, final String byOperator) {
+        Arrays.sort(proposals);
         ConfigContentProposalProvider contentProposalProvider = new ConfigContentProposalProvider(proposals);
         contentProposalProvider.setFiltering(true);
         contentProposalProvider.setByOperator(byOperator);
@@ -327,6 +331,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     }
 
     protected SimpleContentProposalProvider enableFilteringContentAssist(final Control control, final String[] proposals) {
+        Arrays.sort(proposals);
         SimpleContentProposalProvider contentProposalProvider = new SimpleContentProposalProvider(proposals);
         contentProposalProvider.setFiltering(true);
 
