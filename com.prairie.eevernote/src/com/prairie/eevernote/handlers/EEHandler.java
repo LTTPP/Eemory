@@ -192,6 +192,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             final File file = File.createTempFile(DateTimeUtil.formatCurrentTime(FileNamePartSimpleDateFormat), FILENAME_DELIMITER + IMG_PNG);
             ImageIO.write(screenshot, IMG_PNG, file);
             args.setFiles(ListUtil.list(file));
+            args.setTitle(DateTimeUtil.timestamp() + FILENAME_DELIMITER + IMG_PNG);
 
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
                 @Override

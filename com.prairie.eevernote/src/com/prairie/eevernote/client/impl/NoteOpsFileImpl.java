@@ -8,6 +8,7 @@ import java.util.Iterator;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
 
 import com.evernote.clients.NoteStoreClient;
@@ -51,7 +52,7 @@ public class NoteOpsFileImpl extends NoteOps {
 
     private void create(final ClipperArgs args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
         Note note = new Note();
-        note.setTitle(FileUtil.concatNameOfFiles(args.getFiles(), EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX));
+        note.setTitle(!StringUtils.isBlank(args.getTitle()) ? args.getTitle() : FileUtil.concatNameOfFiles(args.getFiles(), EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX));
         if (!StringUtil.isNullOrEmptyOrBlank(args.getNotebookGuid())) {
             note.setNotebookGuid(args.getNotebookGuid());
         }
