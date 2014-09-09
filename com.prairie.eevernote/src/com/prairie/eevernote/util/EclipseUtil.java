@@ -1,6 +1,7 @@
 package com.prairie.eevernote.util;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,6 +13,9 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -21,12 +25,15 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.w3c.dom.DOMException;
 
 import com.prairie.eevernote.enml.FontStyle;
 import com.prairie.eevernote.enml.StyleText;
+import com.prairie.eevernote.ui.ConfigContentProposalProvider;
+import com.prairie.eevernote.ui.ConfigTextContentAdapter;
 
 public class EclipseUtil implements ConstantsUtil {
 
@@ -130,6 +137,33 @@ public class EclipseUtil implements ConstantsUtil {
         }
 
         return textRanges;
+    }
+
+    public static SimpleContentProposalProvider enableFilteringContentAssist(final Control control, final String[] proposals, final String byOperator) {
+        Arrays.sort(proposals);
+        ConfigContentProposalProvider contentProposalProvider = new ConfigContentProposalProvider(proposals);
+        contentProposalProvider.setFiltering(true);
+        contentProposalProvider.setByOperator(byOperator);
+
+        ConfigTextContentAdapter textContentAdapter = new ConfigTextContentAdapter();
+        textContentAdapter.setByOperator(byOperator);
+
+        new ContentProposalAdapter(control, textContentAdapter, contentProposalProvider, null, null);
+
+        return contentProposalProvider;
+    }
+
+    public static SimpleContentProposalProvider enableFilteringContentAssist(final Control control, final String[] proposals) {
+        Arrays.sort(proposals);
+        SimpleContentProposalProvider contentProposalProvider = new SimpleContentProposalProvider(proposals);
+        contentProposalProvider.setFiltering(true);
+
+        TextContentAdapter textContentAdapter = new TextContentAdapter();
+
+        ContentProposalAdapter contentProposalAdapter = new ContentProposalAdapter(control, textContentAdapter, contentProposalProvider, null, null);
+        contentProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+
+        return contentProposalProvider;
     }
 
 }

@@ -9,9 +9,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
-import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -34,6 +32,7 @@ import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.impl.ClipperArgsImpl;
 import com.prairie.eevernote.util.ConstantsUtil;
+import com.prairie.eevernote.util.EclipseUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.LogUtil;
 import com.prairie.eevernote.util.MapUtil;
@@ -126,7 +125,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                         monitor.done();
                     }
                 });
-                this.enableFilteringContentAssist(notebookField, notebooks.keySet().toArray(new String[notebooks.size()]));
+                EclipseUtil.enableFilteringContentAssist(notebookField, notebooks.keySet().toArray(new String[notebooks.size()]));
             } catch (Throwable e) {
                 MessageDialog.openError(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
             }
@@ -152,7 +151,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                         monitor.done();
                     }
                 });
-                noteProposalProvider = this.enableFilteringContentAssist(noteField, notes.keySet().toArray(new String[notes.size()]));
+                noteProposalProvider = EclipseUtil.enableFilteringContentAssist(noteField, notes.keySet().toArray(new String[notes.size()]));
             } catch (Throwable e) {
                 MessageDialog.openError(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
             }
@@ -201,7 +200,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                         monitor.done();
                     }
                 });
-                this.enableFilteringContentAssist(tagsField, tags, TAGS_SEPARATOR);
+                EclipseUtil.enableFilteringContentAssist(tagsField, tags, TAGS_SEPARATOR);
             } catch (Throwable e) {
                 MessageDialog.openError(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
             }
@@ -314,33 +313,6 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
         text.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
 
         return text;
-    }
-
-    protected SimpleContentProposalProvider enableFilteringContentAssist(final Control control, final String[] proposals, final String byOperator) {
-        Arrays.sort(proposals);
-        ConfigContentProposalProvider contentProposalProvider = new ConfigContentProposalProvider(proposals);
-        contentProposalProvider.setFiltering(true);
-        contentProposalProvider.setByOperator(byOperator);
-
-        ConfigTextContentAdapter textContentAdapter = new ConfigTextContentAdapter();
-        textContentAdapter.setByOperator(byOperator);
-
-        new ContentProposalAdapter(control, textContentAdapter, contentProposalProvider, null, null);
-
-        return contentProposalProvider;
-    }
-
-    protected SimpleContentProposalProvider enableFilteringContentAssist(final Control control, final String[] proposals) {
-        Arrays.sort(proposals);
-        SimpleContentProposalProvider contentProposalProvider = new SimpleContentProposalProvider(proposals);
-        contentProposalProvider.setFiltering(true);
-
-        TextContentAdapter textContentAdapter = new TextContentAdapter();
-
-        ContentProposalAdapter contentProposalAdapter = new ContentProposalAdapter(control, textContentAdapter, contentProposalProvider, null, null);
-        contentProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
-
-        return contentProposalProvider;
     }
 
     protected String getFieldValue(final String property) {

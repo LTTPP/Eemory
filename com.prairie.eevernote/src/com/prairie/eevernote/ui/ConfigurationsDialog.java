@@ -9,9 +9,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
-import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -39,6 +37,7 @@ import com.prairie.eevernote.client.impl.ClipperArgsImpl;
 import com.prairie.eevernote.handlers.EDAMNotFoundHandler;
 import com.prairie.eevernote.util.ColorUtil;
 import com.prairie.eevernote.util.ConstantsUtil;
+import com.prairie.eevernote.util.EclipseUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.LogUtil;
 import com.prairie.eevernote.util.MapUtil;
@@ -125,7 +124,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         final LabelCheckTextField notebookField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebookField);
         fetchNotebooksInProgres();
-        notebookProposalProvider = enableFilteringContentAssist(notebookField.getTextControl(), notebooks.keySet().toArray(new String[notebooks.size()]));
+        notebookProposalProvider = EclipseUtil.enableFilteringContentAssist(notebookField.getTextControl(), notebooks.keySet().toArray(new String[notebooks.size()]));
         notebookField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent event) {
@@ -174,7 +173,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         final LabelCheckTextField noteField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, noteField);
         fetchNotesInProgres();
-        noteProposalProvider = enableFilteringContentAssist(noteField.getTextControl(), notes.keySet().toArray(new String[notes.size()]));
+        noteProposalProvider = EclipseUtil.enableFilteringContentAssist(noteField.getTextControl(), notes.keySet().toArray(new String[notes.size()]));
         noteField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent e) {
@@ -219,7 +218,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         final LabelCheckTextField tagsField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, tagsField);
         fetchTagsInProgres();
-        tagsProposalProvider = enableFilteringContentAssist(tagsField.getTextControl(), tags, TAGS_SEPARATOR);
+        tagsProposalProvider = EclipseUtil.enableFilteringContentAssist(tagsField.getTextControl(), tags, TAGS_SEPARATOR);
         tagsField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent event) {
@@ -535,33 +534,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         IDialogSettingsUtil.set(sectionName, SETTINGS_KEY_NAME, name);
         IDialogSettingsUtil.set(sectionName, SETTINGS_KEY_CHECKED, isChecked);
         IDialogSettingsUtil.set(sectionName, SETTINGS_KEY_GUID, guid);
-    }
-
-    protected SimpleContentProposalProvider enableFilteringContentAssist(final Control control, final String[] proposals, final String byOperator) {
-        Arrays.sort(proposals);
-        ConfigContentProposalProvider contentProposalProvider = new ConfigContentProposalProvider(proposals);
-        contentProposalProvider.setFiltering(true);
-        contentProposalProvider.setByOperator(byOperator);
-
-        ConfigTextContentAdapter textContentAdapter = new ConfigTextContentAdapter();
-        textContentAdapter.setByOperator(byOperator);
-
-        new ContentProposalAdapter(control, textContentAdapter, contentProposalProvider, null, null);
-
-        return contentProposalProvider;
-    }
-
-    protected SimpleContentProposalProvider enableFilteringContentAssist(final Control control, final String[] proposals) {
-        Arrays.sort(proposals);
-        SimpleContentProposalProvider contentProposalProvider = new SimpleContentProposalProvider(proposals);
-        contentProposalProvider.setFiltering(true);
-
-        TextContentAdapter textContentAdapter = new TextContentAdapter();
-
-        ContentProposalAdapter contentProposalAdapter = new ContentProposalAdapter(control, textContentAdapter, contentProposalProvider, null, null);
-        contentProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
-
-        return contentProposalProvider;
     }
 
     protected LabelCheckTextField createLabelCheckTextField(final Composite container, final String labelText) {
