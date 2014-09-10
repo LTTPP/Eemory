@@ -8,10 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.evernote.edam.error.EDAMNotFoundException;
 import com.prairie.eevernote.ErrorMessage.EvernoteDataModel;
-import com.prairie.eevernote.client.ClipperArgs;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
-import com.prairie.eevernote.client.impl.ClipperArgsImpl;
+import com.prairie.eevernote.client.ENNote;
+import com.prairie.eevernote.client.impl.ENNoteImpl;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.LogUtil;
@@ -24,7 +24,7 @@ public class EDAMNotFoundHandler implements ConstantsUtil {
         this.token = token;
     }
 
-    public boolean fixNotFoundException(final EDAMNotFoundException e, final ClipperArgs args) {
+    public boolean fixNotFoundException(final EDAMNotFoundException e, final ENNote args) {
         if (e.getIdentifier().equals(EvernoteDataModel.Note_notebookGuid.toString())) {
             return fixNotFoundNotebookGuid(args);
         } else if (e.getIdentifier().equals(EvernoteDataModel.Note_noteGuid.toString())) {
@@ -50,10 +50,10 @@ public class EDAMNotFoundHandler implements ConstantsUtil {
         String guid = null;
         try {
             EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(token, false);
-            ClipperArgs args = new ClipperArgsImpl();
-            args.setNotebookGuid(notebookGuid);
+            ENNote args = new ENNoteImpl();
+            args.getNotebook().setGuid(notebookGuid);
             String realName = StringUtils.substringBeforeLast(name, LEFT_PARENTHESIS);
-            args.setNoteName(realName);
+            args.setName(realName);
             Map<String, String> map = clipper.listNotesWithinNotebook(args);
             guid = findNoteGuid(map, name);
         } catch (Exception e) {
@@ -81,21 +81,21 @@ public class EDAMNotFoundHandler implements ConstantsUtil {
         return null;
     }
 
-    private boolean fixNotFoundNotebookGuid(final ClipperArgs args) {
-        String found = findNotebookGuidByName(args.getNotebookName());
+    private boolean fixNotFoundNotebookGuid(final ENNote args) {
+        String found = findNotebookGuidByName(args.getNotebook().getName());
         if (!StringUtils.isBlank(found)) {
-            args.setNotebookGuid(found);
-            args.setNotebookGuidReset(true);
+            args.getNotebook().setGuid(found);
+            args.getNotebook().setGuidReset(true);
             return true;
         }
         return false;
     }
 
-    private boolean fixNotFoundNoteGuid(final ClipperArgs args) {
-        String found = findNoteGuidByName(args.getNotebookGuid(), args.getNoteName());
+    private boolean fixNotFoundNoteGuid(final ENNote args) {
+        String found = findNoteGuidByName(args.getNotebook().getGuid(), args.getName());
         if (!StringUtils.isBlank(found)) {
-            args.setNoteGuid(found);
-            args.setNoteGuidReset(true);
+            args.setGuid(found);
+            args.setGuidReset(true);
             return true;
         }
         return false;

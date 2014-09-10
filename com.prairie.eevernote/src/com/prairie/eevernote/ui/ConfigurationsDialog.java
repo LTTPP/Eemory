@@ -1,6 +1,7 @@
 package com.prairie.eevernote.ui;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,12 +34,13 @@ import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
-import com.prairie.eevernote.client.impl.ClipperArgsImpl;
+import com.prairie.eevernote.client.impl.ENNoteImpl;
 import com.prairie.eevernote.handlers.EDAMNotFoundHandler;
 import com.prairie.eevernote.util.ColorUtil;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.EclipseUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
+import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.LogUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.NumberUtil;
@@ -52,7 +54,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     private Map<String, String> notebooks; // <Name, Guid>
     private Map<String, String> notes; // <Name, Guid>
-    private String[] tags;
+    private List<String> tags;
 
     private SimpleContentProposalProvider notebookProposalProvider;
     private SimpleContentProposalProvider noteProposalProvider;
@@ -69,7 +71,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         shell = parentShell;
         notebooks = MapUtil.map();
         notes = MapUtil.map();
-        tags = new String[ZERO];
+        tags = ListUtil.list();
     }
 
     @Override
@@ -185,7 +187,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                         @Override
                         public void run() {
                             try {
-                                notes = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(hotebook)));
+                                notes = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
                             } catch (Throwable e) {
                                 // ignore, not fatal
                                 LogUtil.logCancel(e);
@@ -218,7 +220,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         final LabelCheckTextField tagsField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, tagsField);
         fetchTagsInProgres();
-        tagsProposalProvider = EclipseUtil.enableFilteringContentAssist(tagsField.getTextControl(), tags, TAGS_SEPARATOR);
+        tagsProposalProvider = EclipseUtil.enableFilteringContentAssist(tagsField.getTextControl(), tags.toArray(new String[tags.size()]), TAGS_SEPARATOR);
         tagsField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent event) {
@@ -242,8 +244,9 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                     // ignore, not fatal
                     LogUtil.logCancel(e);
                 }
-                Arrays.sort(tags);
-                tagsProposalProvider.setProposals(tags);
+                String[] tagArray = tags.toArray(new String[tags.size()]);
+                Arrays.sort(tagArray);
+                tagsProposalProvider.setProposals(tagArray);
             }
 
             @Override
@@ -325,7 +328,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask("Fetching notes...", IProgressMonitor.UNKNOWN);
                     try {
-                        notes = globalClipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(notebook)));
+                        notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(notebook)));
                     } catch (Throwable e) {
                         // ignore, not fatal
                         LogUtil.logCancel(e);

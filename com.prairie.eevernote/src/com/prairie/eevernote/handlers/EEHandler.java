@@ -26,10 +26,10 @@ import com.evernote.thrift.TException;
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEPlugin;
 import com.prairie.eevernote.EEProperties;
-import com.prairie.eevernote.client.ClipperArgs;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
-import com.prairie.eevernote.client.impl.ClipperArgsImpl;
+import com.prairie.eevernote.client.ENNote;
+import com.prairie.eevernote.client.impl.ENNoteImpl;
 import com.prairie.eevernote.exception.OutOfDateException;
 import com.prairie.eevernote.ui.CaptureView;
 import com.prairie.eevernote.ui.ConfigurationsDialog;
@@ -69,7 +69,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
 
     public void clipFileClicked(final ExecutionEvent event) throws ExecutionException {
         try {
-            final ClipperArgs args = createClipperArgs();
+            final ENNote args = createENNote();
 
             int option = HotTextDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
             if (option == HotTextDialog.OK) {
@@ -78,7 +78,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                 return;
             }
 
-            args.setFiles(EclipseUtil.getSelectedFiles(event));
+            args.setAttachments(EclipseUtil.getSelectedFiles(event));
 
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
                 @Override
@@ -121,7 +121,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
 
     public void clipSelectionClicked(final ExecutionEvent event) throws ExecutionException {
         try {
-            final ClipperArgs args = createClipperArgs();
+            final ENNote args = createENNote();
 
             int option = HotTextDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
             if (option == HotTextDialog.OK) {
@@ -132,8 +132,8 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
 
             IEditorPart editor = HandlerUtil.getActiveEditor(event);
             StyledText styledText = (StyledText) editor.getAdapter(Control.class);
-            args.setTitle(editor.getTitle() + MINUS + DateTimeUtil.timestamp());
-            args.setStyleText(EclipseUtil.getSelectedStyleText(styledText));
+            args.setName(editor.getTitle() + MINUS + DateTimeUtil.timestamp());
+            args.setContent(EclipseUtil.getSelectedStyleText(styledText));
 
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE)) {
                 @Override
@@ -175,7 +175,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
 
     public void clipScreenshotClicked(final ExecutionEvent event) throws ExecutionException {
         try {
-            final ClipperArgs args = createClipperArgs();
+            final ENNote args = createENNote();
 
             int option = HotTextDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
             if (option == HotTextDialog.OK) {
@@ -191,8 +191,8 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             // 2014-02-21T18-35-32
             final File file = File.createTempFile(DateTimeUtil.formatCurrentTime(FileNamePartSimpleDateFormat), FILENAME_DELIMITER + IMG_PNG);
             ImageIO.write(screenshot, IMG_PNG, file);
-            args.setFiles(ListUtil.list(file));
-            args.setTitle(DateTimeUtil.timestamp() + FILENAME_DELIMITER + IMG_PNG);
+            args.setAttachments(ListUtil.list(file));
+            args.setName(DateTimeUtil.timestamp() + FILENAME_DELIMITER + IMG_PNG);
 
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
                 @Override
@@ -239,30 +239,30 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
         ConfigurationsDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
     }
 
-    private ClipperArgs createClipperArgs() throws TException, EDAMUserException, EDAMSystemException, OutOfDateException {
-        ClipperArgs args = new ClipperArgsImpl();
+    private ENNote createENNote() throws TException, EDAMUserException, EDAMSystemException, OutOfDateException {
+        ENNote args = new ENNoteImpl();
 
         String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID);
         if (!StringUtil.isNullOrEmptyOrBlank(value)) {
-            args.setNotebookGuid(value);
+            args.getNotebook().setGuid(value);
         }
         value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_NAME);
         if (!StringUtil.isNullOrEmptyOrBlank(value)) {
-            args.setNotebookName(value);
+            args.getNotebook().setName(value);
         }
 
         value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID);
         if (!StringUtil.isNullOrEmptyOrBlank(value)) {
-            args.setNoteGuid(value);
+            args.setGuid(value);
         }
         value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_NAME);
         if (!StringUtil.isNullOrEmptyOrBlank(value)) {
-            args.setNoteName(value);
+            args.setName(value);
         }
 
         value = IDialogSettingsUtil.get(SETTINGS_SECTION_TAGS, SETTINGS_KEY_NAME);
         if (!StringUtil.isNullOrEmptyOrBlank(value)) {
-            args.setTags(value);
+            args.setTags(ListUtil.toList(value.split(ConstantsUtil.TAGS_SEPARATOR)));
         }
         value = IDialogSettingsUtil.get(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_NAME);
         if (!StringUtil.isNullOrEmptyOrBlank(value)) {
@@ -272,12 +272,12 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
         return args;
     }
 
-    private void saveIfNeeded(final ClipperArgs args) {
-        if (args.getNotebookGuidReset() && !args.getNotebookGuidAdopt()) {
-            IDialogSettingsUtil.set(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID, args.getNotebookGuid());
+    private void saveIfNeeded(final ENNote args) {
+        if (args.getNotebook().isGuidReset() && !args.getNotebook().isGuidAdopt()) {
+            IDialogSettingsUtil.set(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID, args.getNotebook().getGuid());
         }
-        if (args.getNoteGuidReset() && !args.getNoteGuidAdopt()) {
-            IDialogSettingsUtil.set(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID, args.getNoteGuid());
+        if (args.isGuidReset() && !args.isGuidAdopt()) {
+            IDialogSettingsUtil.set(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID, args.getGuid());
         }
     }
 

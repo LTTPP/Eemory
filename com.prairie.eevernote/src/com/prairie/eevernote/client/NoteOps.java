@@ -16,6 +16,6 @@ import com.prairie.eevernote.exception.OutOfDateException;
 
 public abstract class NoteOps {
 
-	public abstract void updateOrCreate(ClipperArgs args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException;
+    public abstract void updateOrCreate(ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException;
 
 }

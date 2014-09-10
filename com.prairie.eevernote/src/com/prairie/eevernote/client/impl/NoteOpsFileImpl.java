@@ -19,12 +19,11 @@ import com.evernote.edam.type.Note;
 import com.evernote.edam.type.Resource;
 import com.evernote.thrift.TException;
 import com.prairie.eevernote.ErrorMessage.EvernoteDataModel;
-import com.prairie.eevernote.client.ClipperArgs;
 import com.prairie.eevernote.client.EDAMLimits;
+import com.prairie.eevernote.client.ENNote;
 import com.prairie.eevernote.client.NoteOps;
 import com.prairie.eevernote.enml.ENML;
 import com.prairie.eevernote.exception.OutOfDateException;
-import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.EvernoteUtil;
 import com.prairie.eevernote.util.FileUtil;
 import com.prairie.eevernote.util.ListUtil;
@@ -39,8 +38,8 @@ public class NoteOpsFileImpl extends NoteOps {
     }
 
     @Override
-    public void updateOrCreate(final ClipperArgs args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
-        if (ListUtil.isNullOrEmptyList(args.getFiles())) {
+    public void updateOrCreate(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
+        if (ListUtil.isNullOrEmptyList(args.getAttachments())) {
             return;
         }
         if (shouldUpdate(args)) {
@@ -50,17 +49,17 @@ public class NoteOpsFileImpl extends NoteOps {
         }
     }
 
-    private void create(final ClipperArgs args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
+    private void create(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
         Note note = new Note();
-        note.setTitle(!StringUtils.isBlank(args.getTitle()) ? args.getTitle() : FileUtil.concatNameOfFiles(args.getFiles(), EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX));
-        if (!StringUtil.isNullOrEmptyOrBlank(args.getNotebookGuid())) {
-            note.setNotebookGuid(args.getNotebookGuid());
+        note.setTitle(!StringUtils.isBlank(args.getName()) ? args.getName() : FileUtil.concatNameOfFiles(args.getAttachments(), EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX));
+        if (!StringUtil.isNullOrEmptyOrBlank(args.getNotebook().getGuid())) {
+            note.setNotebookGuid(args.getNotebook().getGuid());
         }
 
         ENML enml = new ENML();
         enml.addComment(args.getComments());
 
-        for (File f : args.getFiles()) {
+        for (File f : args.getAttachments()) {
             // create resource
             String mimeType = FileUtil.mimeType(f); // E.g "image/png"
             Resource resource = EvernoteUtil.createResource(f, mimeType);
@@ -74,19 +73,19 @@ public class NoteOpsFileImpl extends NoteOps {
         note.setContent(enml.get());
 
         // create tags
-        if (!StringUtil.isNullOrEmptyOrBlank(args.getTags())) {
-            note.setTagNames(ListUtil.toList(args.getTags().split(ConstantsUtil.TAGS_SEPARATOR)));
+        if (!ListUtil.isNullOrEmptyList(args.getTags())) {
+            note.setTagNames(args.getTags());
         }
 
         noteStoreClient.createNote(note);
     }
 
-    private void update(final ClipperArgs args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
-        Note note = noteStoreClient.getNote(args.getNoteGuid(), true, false, false, false);
+    private void update(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
+        Note note = noteStoreClient.getNote(args.getGuid(), true, false, false, false);
         if (!note.isActive()) {
             EDAMNotFoundException e = new EDAMNotFoundException();
             e.setIdentifier(EvernoteDataModel.Note_noteGuid.toString());
-            e.setKey(args.getNoteGuid());
+            e.setKey(args.getGuid());
             throw e;
         }
 
@@ -95,7 +94,7 @@ public class NoteOpsFileImpl extends NoteOps {
         enml.addComment(args.getComments());
 
         // update resource
-        Iterator<File> iter = args.getFiles().iterator();
+        Iterator<File> iter = args.getAttachments().iterator();
         while (iter.hasNext()) {
             File file = iter.next();
             String mimeType = FileUtil.mimeType(file); // E.g "image/png"
@@ -109,18 +108,15 @@ public class NoteOpsFileImpl extends NoteOps {
         note.setContent(enml.get());
 
         // update tags
-        if (!StringUtil.isNullOrEmptyOrBlank(args.getTags())) {
-            String[] tagNames = args.getTags().split(ConstantsUtil.TAGS_SEPARATOR);
-            for (String tagName : tagNames) {
-                note.addToTagNames(tagName);
-            }
+        for (String tagName : args.getTags()) {
+            note.addToTagNames(tagName);
         }
 
         noteStoreClient.updateNote(note);
     }
 
-    private boolean shouldUpdate(final ClipperArgs args) {
-        return !StringUtil.isNullOrEmptyOrBlank(args.getNoteGuid());
+    private boolean shouldUpdate(final ENNote args) {
+        return !StringUtil.isNullOrEmptyOrBlank(args.getGuid());
     }
 
 }

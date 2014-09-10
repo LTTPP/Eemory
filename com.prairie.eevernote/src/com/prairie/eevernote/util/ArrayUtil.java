@@ -49,6 +49,10 @@ public class ArrayUtil implements ConstantsUtil {
         return array == null;
     }
 
+    public static <T> boolean isNullOrEmptyArray(final T[] array) {
+        return array == null || array.length == 0;
+    }
+
     public static <T> T[] cloneArray(final T[] source) {
         return cloneArray(source, false);
     }

@@ -30,6 +30,17 @@ public final class ListUtil implements ConstantsUtil {
         return array;
     }
 
+    public static List<String> toStringList(final List<?> list, final ListStringizer stringizer) {
+        if (list == null) {
+            return null;
+        }
+        List<String> strList = list();
+        for (int i = ZERO; i < list.size(); i++) {
+            strList.add(stringizer.element(list.get(i)));
+        }
+        return strList;
+    }
+
     public static Map<String, String> toStringMap(final List<?> list, final MapStringizer stringizer) {
         if (list == null) {
             return null;

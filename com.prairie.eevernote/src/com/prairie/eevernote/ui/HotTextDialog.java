@@ -1,6 +1,7 @@
 package com.prairie.eevernote.ui;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,13 +28,14 @@ import org.eclipse.swt.widgets.Text;
 
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
-import com.prairie.eevernote.client.ClipperArgs;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
-import com.prairie.eevernote.client.impl.ClipperArgsImpl;
+import com.prairie.eevernote.client.ENNote;
+import com.prairie.eevernote.client.impl.ENNoteImpl;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.EclipseUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
+import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.LogUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.StringUtil;
@@ -49,12 +51,12 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
     private Map<String, String> notebooks; // <Name, Guid>
     private Map<String, String> notes; // <Name, Guid>
-    private String[] tags;
+    private List<String> tags;
 
     private SimpleContentProposalProvider noteProposalProvider;
 
     private Map<String, Text> fields;
-    private ClipperArgs quickSettings;
+    private ENNote quickSettings;
     // <Field Property, <Field Property, Field Value>>
     private Map<String, Map<String, String>> matrix;
 
@@ -63,7 +65,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
         shell = parentShell;
         notebooks = MapUtil.map();
         notes = MapUtil.map();
-        tags = new String[ZERO];
+        tags = ListUtil.list();
     }
 
     @Override
@@ -143,7 +145,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                     public void run(final IProgressMonitor monitor) {
                         monitor.beginTask("Fetching notes...", IProgressMonitor.UNKNOWN);
                         try {
-                            notes = clipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED) ? IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) : notebooks.get(notebook)));
+                            notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED) ? IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) : notebooks.get(notebook)));
                         } catch (Throwable e) {
                             // ignore, not fatal
                             LogUtil.logCancel(e);
@@ -165,7 +167,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                                 @Override
                                 public void run() {
                                     try {
-                                        notes = clipper.listNotesWithinNotebook(ClipperArgsImpl.forNotebookGuid(notebooks.get(hotebook)));
+                                        notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
                                     } catch (Throwable e) {
                                         // ignore, not fatal
                                         LogUtil.logCancel(e);
@@ -200,7 +202,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                         monitor.done();
                     }
                 });
-                EclipseUtil.enableFilteringContentAssist(tagsField, tags, TAGS_SEPARATOR);
+                EclipseUtil.enableFilteringContentAssist(tagsField, tags.toArray(new String[tags.size()]), TAGS_SEPARATOR);
             } catch (Throwable e) {
                 MessageDialog.openError(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
             }
@@ -238,11 +240,11 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     private boolean confirmDefault() {
         boolean confirm = false;
         String msg = StringUtils.EMPTY;
-        if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getNotebookGuid())) {
+        if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getNotebook().getGuid())) {
             msg += "notebook";
             confirm = true;
         }
-        if (shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getNoteGuid())) {
+        if (shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getGuid())) {
             msg += COMMA + StringUtils.SPACE + "note";
             confirm = true;
         }
@@ -251,19 +253,19 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     }
 
     private void saveQuickSettings() {
-        quickSettings = new ClipperArgsImpl();
+        quickSettings = new ENNoteImpl();
 
-        quickSettings.setNotebookName(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK));
-        quickSettings.setNotebookGuid(notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
+        quickSettings.getNotebook().setName(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK));
+        quickSettings.getNotebook().setGuid(notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
 
-        quickSettings.setNoteName(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE));
-        quickSettings.setNoteGuid(notes.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
+        quickSettings.setName(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE));
+        quickSettings.setGuid(notes.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
 
-        quickSettings.setTags(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS));
+        quickSettings.setTags(ListUtil.toList(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS).split(ConstantsUtil.TAGS_SEPARATOR)));
         quickSettings.setComments(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS));
     }
 
-    public ClipperArgs getQuickSettings() {
+    public ENNote getQuickSettings() {
         return quickSettings;
     }
 

@@ -16,12 +16,11 @@ import com.evernote.edam.error.EDAMUserException;
 import com.evernote.edam.type.Note;
 import com.evernote.thrift.TException;
 import com.prairie.eevernote.ErrorMessage.EvernoteDataModel;
-import com.prairie.eevernote.client.ClipperArgs;
 import com.prairie.eevernote.client.EDAMLimits;
+import com.prairie.eevernote.client.ENNote;
 import com.prairie.eevernote.client.NoteOps;
 import com.prairie.eevernote.enml.ENML;
 import com.prairie.eevernote.exception.OutOfDateException;
-import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.ListUtil;
 
 public class NoteOpsTextImpl extends NoteOps {
@@ -33,8 +32,8 @@ public class NoteOpsTextImpl extends NoteOps {
     }
 
     @Override
-    public void updateOrCreate(final ClipperArgs args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, TransformerException, DOMException, OutOfDateException {
-        if (ListUtil.isNullOrEmptyList(args.getStyleText())) {
+    public void updateOrCreate(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, TransformerException, DOMException, OutOfDateException {
+        if (ListUtil.isNullOrEmptyList(args.getContent())) {
             return;
         }
         if (shouldUpdate(args)) {
@@ -44,32 +43,32 @@ public class NoteOpsTextImpl extends NoteOps {
         }
     }
 
-    private void create(final ClipperArgs args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, TransformerException, OutOfDateException {
+    private void create(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, TransformerException, OutOfDateException {
         Note note = new Note();
-        note.setTitle(StringUtils.abbreviate(args.getTitle(), EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX));
-        if (!StringUtils.isBlank(args.getNotebookGuid())) {
-            note.setNotebookGuid(args.getNotebookGuid());
+        note.setTitle(StringUtils.abbreviate(args.getName(), EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX));
+        if (!StringUtils.isBlank(args.getNotebook().getGuid())) {
+            note.setNotebookGuid(args.getNotebook().getGuid());
         }
 
         ENML enml = new ENML();
         enml.addComment(args.getComments());
-        enml.addContent(args.getStyleText());
+        enml.addContent(args.getContent());
 
         note.setContent(enml.get());
 
-        if (!StringUtils.isBlank(args.getTags())) {
-            note.setTagNames(ListUtil.toList(args.getTags().split(ConstantsUtil.TAGS_SEPARATOR)));
+        if (!ListUtil.isNullOrEmptyList(args.getTags())) {
+            note.setTagNames(args.getTags());
         }
 
         noteStoreClient.createNote(note);
     }
 
-    private void update(final ClipperArgs args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, DOMException, ParserConfigurationException, SAXException, IOException, TransformerException, OutOfDateException {
-        Note note = noteStoreClient.getNote(args.getNoteGuid(), true, false, false, false);
+    private void update(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, DOMException, ParserConfigurationException, SAXException, IOException, TransformerException, OutOfDateException {
+        Note note = noteStoreClient.getNote(args.getGuid(), true, false, false, false);
         if (!note.isActive()) {
             EDAMNotFoundException e = new EDAMNotFoundException();
             e.setIdentifier(EvernoteDataModel.Note_noteGuid.toString());
-            e.setKey(args.getNoteGuid());
+            e.setKey(args.getGuid());
             throw e;
         }
         note.unsetResources();
@@ -77,23 +76,20 @@ public class NoteOpsTextImpl extends NoteOps {
         // update content
         ENML enml = new ENML(note.getContent());
         enml.addComment(args.getComments());
-        enml.addContent(args.getStyleText());
+        enml.addContent(args.getContent());
 
         note.setContent(enml.get());
 
         // update tags
-        if (!StringUtils.isBlank(args.getTags())) {
-            String[] tagNames = args.getTags().split(ConstantsUtil.TAGS_SEPARATOR);
-            for (String tagName : tagNames) {
-                note.addToTagNames(tagName);
-            }
+        for (String tagName : args.getTags()) {
+            note.addToTagNames(tagName);
         }
 
         noteStoreClient.updateNote(note);
     }
 
-    private boolean shouldUpdate(final ClipperArgs args) {
-        return !StringUtils.isBlank(args.getNoteGuid());
+    private boolean shouldUpdate(final ENNote args) {
+        return !StringUtils.isBlank(args.getGuid());
     }
 
 }

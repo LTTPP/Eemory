@@ -1,21 +1,22 @@
 package com.prairie.eevernote.client.impl;
 
+import java.util.List;
 import java.util.Map;
 
-import com.prairie.eevernote.client.ClipperArgs;
 import com.prairie.eevernote.client.EEClipper;
-import com.prairie.eevernote.util.ConstantsUtil;
+import com.prairie.eevernote.client.ENNote;
+import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapUtil;
 
 public class EEClipperNop extends EEClipper {
 
     @Override
-    public void clipFile(final ClipperArgs args) throws Exception {
+    public void clipFile(final ENNote args) throws Exception {
 
     }
 
     @Override
-    public void clipSelection(final ClipperArgs args) throws Exception {
+    public void clipSelection(final ENNote args) throws Exception {
 
     }
 
@@ -25,13 +26,13 @@ public class EEClipperNop extends EEClipper {
     }
 
     @Override
-    public Map<String, String> listNotesWithinNotebook(final ClipperArgs args) throws Exception {
+    public Map<String, String> listNotesWithinNotebook(final ENNote args) throws Exception {
         return MapUtil.map();
     }
 
     @Override
-    public String[] listTags() throws Exception {
-        return new String[ConstantsUtil.ZERO];
+    public List<String> listTags() throws Exception {
+        return ListUtil.list();
     }
 
 }

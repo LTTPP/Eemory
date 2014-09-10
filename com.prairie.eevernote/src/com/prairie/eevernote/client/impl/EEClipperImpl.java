@@ -23,8 +23,8 @@ import com.evernote.edam.notestore.NotesMetadataResultSpec;
 import com.evernote.edam.type.Notebook;
 import com.evernote.edam.type.Tag;
 import com.evernote.thrift.TException;
-import com.prairie.eevernote.client.ClipperArgs;
 import com.prairie.eevernote.client.EEClipper;
+import com.prairie.eevernote.client.ENNote;
 import com.prairie.eevernote.exception.OutOfDateException;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.EvernoteUtil;
@@ -77,7 +77,7 @@ public class EEClipperImpl extends EEClipper {
      * @throws NoSuchAlgorithmException
      */
     @Override
-    public void clipFile(final ClipperArgs args) throws NoSuchAlgorithmException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
+    public void clipFile(final ENNote args) throws NoSuchAlgorithmException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
         new NoteOpsFileImpl(noteStoreClient).updateOrCreate(args);
     }
 
@@ -105,7 +105,7 @@ public class EEClipperImpl extends EEClipper {
      *
      */
     @Override
-    public void clipSelection(final ClipperArgs args) throws DOMException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, TransformerException, OutOfDateException {
+    public void clipSelection(final ENNote args) throws DOMException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, TransformerException, OutOfDateException {
         new NoteOpsTextImpl(noteStoreClient).updateOrCreate(args);
     }
 
@@ -159,16 +159,16 @@ public class EEClipperImpl extends EEClipper {
      *             This plug-in is out of date
      */
     @Override
-    public Map<String, String> listNotesWithinNotebook(final ClipperArgs args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, OutOfDateException {
+    public Map<String, String> listNotesWithinNotebook(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, OutOfDateException {
         NotesMetadataList notesMetadataList = new NotesMetadataList();
 
         NoteFilter filter = new NoteFilter();
         filter.setInactive(false);
-        if (!StringUtils.isBlank(args.getNotebookGuid())) {
-            filter.setNotebookGuid(args.getNotebookGuid());
+        if (!StringUtils.isBlank(args.getNotebook().getGuid())) {
+            filter.setNotebookGuid(args.getNotebook().getGuid());
         }
-        if (!StringUtils.isBlank(args.getNoteName())) {
-            filter.setWords("intitle" + ConstantsUtil.COLON + ConstantsUtil.DOUBLE_QUOTATION_MARK + args.getNoteName() + ConstantsUtil.DOUBLE_QUOTATION_MARK);
+        if (!StringUtils.isBlank(args.getName())) {
+            filter.setWords("intitle" + ConstantsUtil.COLON + ConstantsUtil.DOUBLE_QUOTATION_MARK + args.getName() + ConstantsUtil.DOUBLE_QUOTATION_MARK);
         }
 
         NotesMetadataResultSpec resultSpec = new NotesMetadataResultSpec();
@@ -201,8 +201,8 @@ public class EEClipperImpl extends EEClipper {
      *             Please refer to Evernote SDK
      */
     @Override
-    public String[] listTags() throws EDAMUserException, EDAMSystemException, TException {
-        return ListUtil.toStringArray(noteStoreClient.listTags(), new ListStringizer() {
+    public List<String> listTags() throws EDAMUserException, EDAMSystemException, TException {
+        return ListUtil.toStringList(noteStoreClient.listTags(), new ListStringizer() {
             @Override
             public String element(final Object o) {
                 return ((Tag) o).getName();
