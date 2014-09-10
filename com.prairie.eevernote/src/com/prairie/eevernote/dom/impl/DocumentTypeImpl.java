@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.prairie.eevernote.dom.DocumentType;
 import com.prairie.eevernote.dom.Node;
 import com.prairie.eevernote.util.ConstantsUtil;
-import com.prairie.eevernote.util.StringUtil;
 
 public class DocumentTypeImpl extends NodeImpl implements DocumentType, ConstantsUtil {
 
@@ -64,7 +63,7 @@ public class DocumentTypeImpl extends NodeImpl implements DocumentType, Constant
 
     @Override
     public String toString() {
-        if (StringUtil.isNullOrEmptyOrBlank(publicId)) {
+        if (StringUtils.isBlank(publicId)) {
             return LEFT_ANGLE_BRACKET + EXCLAMATION_MARK + ENML_DOCTYPE + StringUtils.SPACE + name + StringUtils.SPACE + ENML_DOCTYPE_SYSTEM + StringUtils.SPACE + DOUBLE_QUOTATION_MARK + systemId + DOUBLE_QUOTATION_MARK + RIGHT_ANGLE_BRACKET;
         } else {
             return LEFT_ANGLE_BRACKET + EXCLAMATION_MARK + ENML_DOCTYPE + StringUtils.SPACE + name + StringUtils.SPACE + ENML_DOCTYPE_PUBLIC + StringUtils.SPACE + DOUBLE_QUOTATION_MARK + publicId + DOUBLE_QUOTATION_MARK + StringUtils.SPACE + DOUBLE_QUOTATION_MARK + systemId + DOUBLE_QUOTATION_MARK + RIGHT_ANGLE_BRACKET;

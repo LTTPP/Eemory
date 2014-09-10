@@ -40,7 +40,6 @@ import com.prairie.eevernote.util.EclipseUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.LogUtil;
-import com.prairie.eevernote.util.StringUtil;
 
 public class EEHandler extends AbstractHandler implements ConstantsUtil, Constants {
 
@@ -243,29 +242,29 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
         ENNote args = new ENNoteImpl();
 
         String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID);
-        if (!StringUtil.isNullOrEmptyOrBlank(value)) {
+        if (!StringUtils.isBlank(value)) {
             args.getNotebook().setGuid(value);
         }
         value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_NAME);
-        if (!StringUtil.isNullOrEmptyOrBlank(value)) {
+        if (!StringUtils.isBlank(value)) {
             args.getNotebook().setName(value);
         }
 
         value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID);
-        if (!StringUtil.isNullOrEmptyOrBlank(value)) {
+        if (!StringUtils.isBlank(value)) {
             args.setGuid(value);
         }
         value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_NAME);
-        if (!StringUtil.isNullOrEmptyOrBlank(value)) {
+        if (!StringUtils.isBlank(value)) {
             args.setName(value);
         }
 
         value = IDialogSettingsUtil.get(SETTINGS_SECTION_TAGS, SETTINGS_KEY_NAME);
-        if (!StringUtil.isNullOrEmptyOrBlank(value)) {
+        if (!StringUtils.isBlank(value)) {
             args.setTags(ListUtil.toList(value.split(ConstantsUtil.TAGS_SEPARATOR)));
         }
         value = IDialogSettingsUtil.get(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_NAME);
-        if (!StringUtil.isNullOrEmptyOrBlank(value)) {
+        if (!StringUtils.isBlank(value)) {
             args.setComments(value);
         }
 

@@ -27,7 +27,6 @@ import com.prairie.eevernote.exception.OutOfDateException;
 import com.prairie.eevernote.util.EvernoteUtil;
 import com.prairie.eevernote.util.FileUtil;
 import com.prairie.eevernote.util.ListUtil;
-import com.prairie.eevernote.util.StringUtil;
 
 public class NoteOpsFileImpl extends NoteOps {
 
@@ -52,7 +51,7 @@ public class NoteOpsFileImpl extends NoteOps {
     private void create(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
         Note note = new Note();
         note.setTitle(!StringUtils.isBlank(args.getName()) ? args.getName() : FileUtil.concatNameOfFiles(args.getAttachments(), EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX));
-        if (!StringUtil.isNullOrEmptyOrBlank(args.getNotebook().getGuid())) {
+        if (!StringUtils.isBlank(args.getNotebook().getGuid())) {
             note.setNotebookGuid(args.getNotebook().getGuid());
         }
 
@@ -116,7 +115,7 @@ public class NoteOpsFileImpl extends NoteOps {
     }
 
     private boolean shouldUpdate(final ENNote args) {
-        return !StringUtil.isNullOrEmptyOrBlank(args.getGuid());
+        return !StringUtils.isBlank(args.getGuid());
     }
 
 }

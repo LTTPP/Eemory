@@ -503,31 +503,31 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     private void restoreSettings(final String label) {
         if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN)) {
-            if (!StringUtil.isNullOrEmptyOrBlank(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN))) {
+            if (!StringUtils.isBlank(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN))) {
                 setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN, IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN));
             }
         } else if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)) {
             editableField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_NAME);
-            if (isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK) && !StringUtil.isNullOrEmptyOrBlank(value)) {
+            if (isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK) && !StringUtils.isBlank(value)) {
                 setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, value);
             }
         } else if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)) {
             editableField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTE, SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_NAME);
-            if (isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) && !StringUtil.isNullOrEmptyOrBlank(value)) {
+            if (isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) && !StringUtils.isBlank(value)) {
                 setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, value);
             }
         } else if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS)) {
             editableField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_TAGS, SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(SETTINGS_SECTION_TAGS, SETTINGS_KEY_NAME);
-            if (isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS) && !StringUtil.isNullOrEmptyOrBlank(value)) {
+            if (isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS) && !StringUtils.isBlank(value)) {
                 setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, value);
             }
         } else if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS)) {
             editableField(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_NAME);
-            if (isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS) && !StringUtil.isNullOrEmptyOrBlank(value)) {
+            if (isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS) && !StringUtils.isBlank(value)) {
                 setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, value);
             }
         }

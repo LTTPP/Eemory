@@ -36,7 +36,7 @@ public class EEProperties implements ConstantsUtil, Constants {
     }
 
     public String getProperty(final String key) {
-        return StringUtil.isNullOrEmptyOrBlank(errorOccurred) ? properties.getProperty(key) : errorOccurred;
+        return StringUtils.isBlank(errorOccurred) ? properties.getProperty(key) : errorOccurred;
     }
 
     public String getProperty(final String key, final String... replaces) {
@@ -47,7 +47,7 @@ public class EEProperties implements ConstantsUtil, Constants {
         for (int i = ZERO; i < replaces.length; i++) {
             value = value.replace(LEFT_BRACE + (i + ONE) + RIGHT_BRACE, replaces[i]);
         }
-        return StringUtil.isNullOrEmptyOrBlank(errorOccurred) ? value : errorOccurred;
+        return StringUtils.isBlank(errorOccurred) ? value : errorOccurred;
     }
 
 }

@@ -40,36 +40,6 @@ public final class StringUtil implements ConstantsUtil {
 
     /**
      * <p>
-     * Checks if a String is blank (whitespace only), empty ("") or null.
-     * </p>
-     *
-     * <pre>
-     * StringUtil.isNullOrEmptyOrBlank(null)      = true
-     * StringUtil.isNullOrEmptyOrBlank("")        = true
-     * StringUtil.isNullOrEmptyOrBlank(" ")       = false
-     * StringUtil.isNullOrEmptyOrBlank("   ")       = false
-     * StringUtil.isNullOrEmptyOrBlank("abc")     = false
-     * StringUtil.isNullOrEmptyOrBlank("  abc  ") = false
-     * </pre>
-     *
-     * @param string
-     *            the String to check, may be null
-     * @return {@code true} if the String is blank, empty or null
-     */
-    public static boolean isNullOrEmptyOrBlank(final String string) {
-        int length = string != null ? string.length() : 0;
-        if (length > 0) {
-            for (int i = 0; i < length; ++i) {
-                if (!Character.isWhitespace(string.charAt(i))) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * <p>
      * Compares two strings given. The result is true if the two strings are
      * both null, empty or blank, or two strings that represent the same
      * sequence of characters, i.e. {@code str1.equals(str2)}.
@@ -92,7 +62,7 @@ public final class StringUtil implements ConstantsUtil {
      *         otherwise
      */
     public static boolean equalsInLogic(final String str1, final String str2) {
-        return isNullOrEmptyOrBlank(str1) ? isNullOrEmptyOrBlank(str2) : str1.equals(str2);
+        return StringUtils.isBlank(str1) ? StringUtils.isBlank(str2) : str1.equals(str2);
     }
 
     /**
