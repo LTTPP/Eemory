@@ -72,8 +72,10 @@ public class NoteOpsFileImpl extends NoteOps {
         note.setContent(enml.get());
 
         // create tags
-        if (!ListUtil.isNullOrEmptyList(args.getTags())) {
-            note.setTagNames(args.getTags());
+        for (String tagName : args.getTags()) {
+            if (!StringUtils.isBlank(tagName)) {
+                note.addToTagNames(tagName);
+            }
         }
 
         noteStoreClient.createNote(note);
@@ -108,7 +110,9 @@ public class NoteOpsFileImpl extends NoteOps {
 
         // update tags
         for (String tagName : args.getTags()) {
-            note.addToTagNames(tagName);
+            if (!StringUtils.isBlank(tagName)) {
+                note.addToTagNames(tagName);
+            }
         }
 
         noteStoreClient.updateNote(note);
