@@ -3,6 +3,7 @@ package com.prairie.eevernote;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.StringUtil;
@@ -20,7 +21,7 @@ public class EEProperties implements ConstantsUtil, Constants {
             properties.load(EEProperties.class.getResourceAsStream(PropertiesFile));
             properties.load(EEProperties.class.getResourceAsStream(ErrorMessageFile));
         } catch (Throwable e) {
-            errorOccurred = e.getLocalizedMessage();
+            errorOccurred = ExceptionUtils.getRootCauseMessage(e);
         }
     }
 

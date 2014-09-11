@@ -26,19 +26,17 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.evernote.edam.error.EDAMUserException;
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.ENNote;
 import com.prairie.eevernote.client.impl.ENNoteImpl;
-import com.prairie.eevernote.exception.EDAMUserExceptionHandler;
+import com.prairie.eevernote.exception.ThrowableHandler;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.EclipseUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
-import com.prairie.eevernote.util.LogUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.StringUtil;
 
@@ -62,7 +60,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     // <Field Property, <Field Property, Field Value>>
     private Map<String, Map<String, String>> matrix;
 
-    private boolean fatal = false;
+    private boolean fatal = false;// TODO may remove
 
     public HotTextDialog(final Shell parentShell) {
         super(parentShell);
@@ -106,15 +104,14 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                         try {
                             notebooks = clipper.listNotebooks();
                         } catch (Throwable e) {
-                            // ignore, not fatal
-                            LogUtil.logCancel(e);
+                            ThrowableHandler.handleDesignTimeErr(shell, e);
                         }
                         monitor.done();
                     }
                 });
                 EclipseUtil.enableFilteringContentAssist(notebookField, notebooks.keySet().toArray(new String[notebooks.size()]));
             } catch (Throwable e) {
-                MessageDialog.openError(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
+                ThrowableHandler.handleDesignTimeErr(shell, e);
             }
         }
 
@@ -132,15 +129,14 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                         try {
                             notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED) ? IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) : notebooks.get(notebook)));
                         } catch (Throwable e) {
-                            // ignore, not fatal
-                            LogUtil.logCancel(e);
+                            ThrowableHandler.handleDesignTimeErr(shell, e);
                         }
                         monitor.done();
                     }
                 });
                 noteProposalProvider = EclipseUtil.enableFilteringContentAssist(noteField, notes.keySet().toArray(new String[notes.size()]));
             } catch (Throwable e) {
-                MessageDialog.openError(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
+                ThrowableHandler.handleDesignTimeErr(shell, e);
             }
             if (IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED)) {
                 noteField.addFocusListener(new FocusAdapter() {
@@ -154,8 +150,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                                     try {
                                         notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
                                     } catch (Throwable e) {
-                                        // ignore, not fatal
-                                        LogUtil.logCancel(e);
+                                        ThrowableHandler.handleDesignTimeErr(shell, e);
                                     }
                                 }
                             });
@@ -181,15 +176,14 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                         try {
                             tags = clipper.listTags();
                         } catch (Throwable e) {
-                            // ignore, not fatal
-                            LogUtil.logCancel(e);
+                            ThrowableHandler.handleDesignTimeErr(shell, e);
                         }
                         monitor.done();
                     }
                 });
                 EclipseUtil.enableFilteringContentAssist(tagsField, tags.toArray(new String[tags.size()]), TAGS_SEPARATOR);
             } catch (Throwable e) {
-                MessageDialog.openError(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), e.getLocalizedMessage());
+                ThrowableHandler.handleDesignTimeErr(shell, e);
             }
         }
 
@@ -203,7 +197,6 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     }
 
     private void authInProgress() {
-        // Auth
         try {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
@@ -211,19 +204,16 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                     monitor.beginTask("Authenticating...", IProgressMonitor.UNKNOWN);
                     try {
                         clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false);
-                    } catch (EDAMUserException e) {
-                        fatal = true;
-                        new EDAMUserExceptionHandler().handleDesingTime(shell, e);
                     } catch (Throwable e) {
-                        // ignore, not fatal
-                        LogUtil.logWarning(e);
+                        fatal = true;
+                        ThrowableHandler.handleDesignTimeErr(shell, e, true);
                     }
                     monitor.done();
                 }
             });
         } catch (Throwable e) {
-            // ignore, not fatal
-            LogUtil.logWarning(e);
+            fatal = true;
+            ThrowableHandler.handleDesignTimeErr(shell, e, true);
         }
     }
 

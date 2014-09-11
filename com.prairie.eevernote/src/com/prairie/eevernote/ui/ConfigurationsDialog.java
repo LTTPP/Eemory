@@ -30,20 +30,18 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.evernote.edam.error.EDAMUserException;
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.impl.ENNoteImpl;
 import com.prairie.eevernote.exception.EDAMNotFoundHandler;
-import com.prairie.eevernote.exception.EDAMUserExceptionHandler;
+import com.prairie.eevernote.exception.ThrowableHandler;
 import com.prairie.eevernote.util.ColorUtil;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.EclipseUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
-import com.prairie.eevernote.util.LogUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.NumberUtil;
 import com.prairie.eevernote.util.StringUtil;
@@ -142,18 +140,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                             public void run() {
                                 try {
                                     notebooks = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listNotebooks();
-                                } catch (EDAMUserException e) {
-                                    new EDAMUserExceptionHandler().handleDesingTime(shell, e);
                                 } catch (Throwable e) {
-                                    // ignore, not fatal
-                                    LogUtil.logCancel(e);
+                                    ThrowableHandler.handleDesignTimeErr(shell, e);
                                 }
                             }
                         });
                     }
                 } catch (Throwable e) {
-                    // ignore, not fatal
-                    LogUtil.logCancel(e);
+                    ThrowableHandler.handleDesignTimeErr(shell, e);
                 }
                 String[] nbs = notebooks.keySet().toArray(new String[notebooks.size()]);
                 Arrays.sort(nbs);
@@ -193,11 +187,8 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                         public void run() {
                             try {
                                 notes = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
-                            } catch (EDAMUserException e) {
-                                new EDAMUserExceptionHandler().handleDesingTime(shell, e);
                             } catch (Throwable e) {
-                                // ignore, not fatal
-                                LogUtil.logCancel(e);
+                                ThrowableHandler.handleDesignTimeErr(shell, e);
                             }
                         }
                     });
@@ -240,18 +231,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                             public void run() {
                                 try {
                                     tags = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listTags();
-                                } catch (EDAMUserException e) {
-                                    new EDAMUserExceptionHandler().handleDesingTime(shell, e);
                                 } catch (Throwable e) {
-                                    // ignore, not fatal
-                                    LogUtil.logCancel(e);
+                                    ThrowableHandler.handleDesignTimeErr(shell, e);
                                 }
                             }
                         });
                     }
                 } catch (Throwable e) {
-                    // ignore, not fatal
-                    LogUtil.logCancel(e);
+                    ThrowableHandler.handleDesignTimeErr(shell, e);
                 }
                 String[] tagArray = tags.toArray(new String[tags.size()]);
                 Arrays.sort(tagArray);
@@ -295,18 +282,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                     monitor.beginTask("Authenticating...", IProgressMonitor.UNKNOWN);
                     try {
                         globalClipper = EEClipperFactory.getInstance().getEEClipper(token, false);
-                    } catch (EDAMUserException e) {
-                        new EDAMUserExceptionHandler().handleDesingTime(shell, e);
                     } catch (Throwable e) {
-                        // ignore, not fatal
-                        LogUtil.logWarning(e);
+                        ThrowableHandler.handleDesignTimeErr(shell, e);
                     }
                     monitor.done();
                 }
             });
         } catch (Throwable e) {
-            // ignore, not fatal
-            LogUtil.logWarning(e);
+            ThrowableHandler.handleDesignTimeErr(shell, e);
         }
     }
 
@@ -319,15 +302,13 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                     try {
                         notebooks = globalClipper.listNotebooks();
                     } catch (Throwable e) {
-                        // ignore, not fatal
-                        LogUtil.logCancel(e);
+                        ThrowableHandler.handleDesignTimeErr(shell, e);
                     }
                     monitor.done();
                 }
             });
         } catch (Throwable e) {
-            // ignore, not fatal
-            LogUtil.logCancel(e);
+            ThrowableHandler.handleDesignTimeErr(shell, e);
         }
     }
 
@@ -341,15 +322,13 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                     try {
                         notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(notebook)));
                     } catch (Throwable e) {
-                        // ignore, not fatal
-                        LogUtil.logCancel(e);
+                        ThrowableHandler.handleDesignTimeErr(shell, e);
                     }
                     monitor.done();
                 }
             });
         } catch (Throwable e) {
-            // ignore, not fatal
-            LogUtil.logCancel(e);
+            ThrowableHandler.handleDesignTimeErr(shell, e);
         }
     }
 
@@ -362,15 +341,13 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                     try {
                         tags = globalClipper.listTags();
                     } catch (Throwable e) {
-                        // ignore, not fatal
-                        LogUtil.logCancel(e);
+                        ThrowableHandler.handleDesignTimeErr(shell, e);
                     }
                     monitor.done();
                 }
             });
         } catch (Throwable e) {
-            // ignore, not fatal
-            LogUtil.logCancel(e);
+            ThrowableHandler.handleDesignTimeErr(shell, e);
         }
     }
 

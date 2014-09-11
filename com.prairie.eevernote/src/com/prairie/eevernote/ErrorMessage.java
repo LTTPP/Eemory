@@ -7,6 +7,8 @@ import com.prairie.eevernote.exception.EDAMDataModel;
 
 public class ErrorMessage {
 
+    // TODO handle message universally: e.toString() and
+    // ExceptionUtils.getRootCauseMessage()....
     public static String getMessage(final Throwable t) {
         if (t instanceof EDAMNotFoundException) {
             EDAMNotFoundException e = (EDAMNotFoundException) t;

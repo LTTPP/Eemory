@@ -17,7 +17,7 @@ public class EDAMUserExceptionHandler {
         if (e.getErrorCode() == EDAMErrorCode.AUTH_EXPIRED) {
             return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, "EEvernote is no longer authorized to access your Evernote account. (Click/Tap) below to re-authorize EEvernote");
         }
-        return LogUtil.error(e);
+        return LogUtil.error(e);// TODO maybe e.toString()
     }
 
     public void handleDesingTime(final Shell shell, final EDAMUserException e) {

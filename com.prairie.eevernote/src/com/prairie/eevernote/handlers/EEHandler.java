@@ -6,7 +6,6 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -20,19 +19,14 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.evernote.edam.error.EDAMNotFoundException;
-import com.evernote.edam.error.EDAMSystemException;
-import com.evernote.edam.error.EDAMUserException;
-import com.evernote.thrift.TException;
 import com.prairie.eevernote.Constants;
-import com.prairie.eevernote.EEPlugin;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.ENNote;
 import com.prairie.eevernote.client.impl.ENNoteImpl;
 import com.prairie.eevernote.exception.EDAMNotFoundHandler;
-import com.prairie.eevernote.exception.EDAMUserExceptionHandler;
-import com.prairie.eevernote.exception.OutOfDateException;
+import com.prairie.eevernote.exception.ThrowableHandler;
 import com.prairie.eevernote.ui.CaptureView;
 import com.prairie.eevernote.ui.ConfigurationsDialog;
 import com.prairie.eevernote.ui.HotTextDialog;
@@ -95,16 +89,14 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                             try {
                                 EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false).clipFile(args);
                             } catch (Throwable e1) {
-                                return LogUtil.error(e1);
+                                return ThrowableHandler.handleJobErr(e1);
                             }
                             saveIfNeeded(args);
                             return LogUtil.ok();
                         }
-                        return LogUtil.error(e);
-                    } catch (EDAMUserException e) {
-                        return new EDAMUserExceptionHandler().handleRuntime(e);
+                        return ThrowableHandler.handleJobErr(e);
                     } catch (Throwable e) {
-                        return LogUtil.error(e);
+                        return ThrowableHandler.handleJobErr(e);
                     }
                     monitor.done();
                     return LogUtil.ok();
@@ -113,12 +105,8 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             job.setUser(true);
             job.schedule();
 
-        } catch (OutOfDateException e) {
-            LogUtil.logError(e);
-            MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE));
         } catch (Throwable e) {
-            LogUtil.logError(e);
-            MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), ExceptionUtils.getRootCauseMessage(e));
+            throw ThrowableHandler.handleExecErr(e);
         }
     }
 
@@ -151,16 +139,14 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                             try {
                                 EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false).clipFile(args);
                             } catch (Throwable e1) {
-                                return LogUtil.error(e1);
+                                return ThrowableHandler.handleJobErr(e1);
                             }
                             saveIfNeeded(args);
                             return LogUtil.ok();
                         }
-                        return LogUtil.error(e);
-                    } catch (EDAMUserException e) {
-                        return new EDAMUserExceptionHandler().handleRuntime(e);
+                        return ThrowableHandler.handleJobErr(e);
                     } catch (final Throwable e) {
-                        return LogUtil.error(e);
+                        return ThrowableHandler.handleJobErr(e);
                     }
                     monitor.done();
                     return LogUtil.ok();
@@ -169,12 +155,8 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             job.setUser(true);
             job.schedule();
 
-        } catch (OutOfDateException e) {
-            LogUtil.logError(e);
-            MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + EEPlugin.getVersion() + EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_OUTOFDATEMESSAGE));
         } catch (Throwable e) {
-            LogUtil.logError(e);
-            MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), ExceptionUtils.getRootCauseMessage(e));
+            throw ThrowableHandler.handleExecErr(e);
         }
     }
 
@@ -212,16 +194,14 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                             try {
                                 EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false).clipFile(args);
                             } catch (Throwable e1) {
-                                return LogUtil.error(e1);
+                                return ThrowableHandler.handleJobErr(e1);
                             }
                             saveIfNeeded(args);
                             return LogUtil.ok();
                         }
-                        return LogUtil.error(e);
-                    } catch (EDAMUserException e) {
-                        return new EDAMUserExceptionHandler().handleRuntime(e);
+                        return ThrowableHandler.handleJobErr(e);
                     } catch (Throwable e) {
-                        return LogUtil.error(e);
+                        return ThrowableHandler.handleJobErr(e);
                     }
                     monitor.done();
                     if (file != null && file.exists()) {
@@ -233,12 +213,8 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             job.setUser(true);
             job.schedule();
 
-        } catch (OutOfDateException e) {
-            LogUtil.logError(e);
-            MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE));
         } catch (Throwable e) {
-            LogUtil.logError(e);
-            MessageDialog.openError(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), ExceptionUtils.getRootCauseMessage(e));
+            throw ThrowableHandler.handleExecErr(e);
         }
     }
 
@@ -246,7 +222,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
         ConfigurationsDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
     }
 
-    private ENNote createENNote() throws TException, EDAMUserException, EDAMSystemException, OutOfDateException {
+    private ENNote createENNote() {
         ENNote args = new ENNoteImpl();
 
         String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID);

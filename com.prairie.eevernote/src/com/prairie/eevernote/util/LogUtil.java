@@ -43,6 +43,21 @@ public class LogUtil {
         return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, ExceptionUtils.getRootCauseMessage(exception), exception);
     }
 
+    public static IStatus info(final String message) {
+        return new Status(Status.INFO, EEPlugin.PLUGIN_ID, message);
+    }
+
+    public static IStatus warning(final String message) {
+        return new Status(Status.WARNING, EEPlugin.PLUGIN_ID, message);
+    }
+
+    public static IStatus cancel(final String message) {
+        return new Status(Status.CANCEL, EEPlugin.PLUGIN_ID, message);
+    }
+    public static IStatus error(final String message) {
+        return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, message);
+    }
+
     public static IStatus ok() {
         return Status.OK_STATUS;
     }
