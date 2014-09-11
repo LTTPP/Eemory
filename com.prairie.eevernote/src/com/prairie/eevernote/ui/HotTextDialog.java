@@ -26,12 +26,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.evernote.edam.error.EDAMUserException;
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.ENNote;
 import com.prairie.eevernote.client.impl.ENNoteImpl;
+import com.prairie.eevernote.exception.EDAMUserExceptionHandler;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.EclipseUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
@@ -60,12 +62,15 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     // <Field Property, <Field Property, Field Value>>
     private Map<String, Map<String, String>> matrix;
 
+    private boolean fatal = false;
+
     public HotTextDialog(final Shell parentShell) {
         super(parentShell);
         shell = parentShell;
         notebooks = MapUtil.map();
         notes = MapUtil.map();
         tags = ListUtil.list();
+        clipper = EEClipperFactory.getInstance().getEEClipper();
     }
 
     @Override
@@ -88,26 +93,6 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
         container.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
 
         // ------------
-
-        // Auth
-        try {
-            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
-                @Override
-                public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Authenticating...", IProgressMonitor.UNKNOWN);
-                    try {
-                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false);
-                    } catch (Throwable e) {
-                        // ignore, not fatal
-                        LogUtil.logWarning(e);
-                    }
-                    monitor.done();
-                }
-            });
-        } catch (Throwable e) {
-            // ignore, not fatal
-            LogUtil.logWarning(e);
-        }
 
         if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID)) {
 
@@ -217,6 +202,31 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
         return container;
     }
 
+    private void authInProgress() {
+        // Auth
+        try {
+            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(final IProgressMonitor monitor) {
+                    monitor.beginTask("Authenticating...", IProgressMonitor.UNKNOWN);
+                    try {
+                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false);
+                    } catch (EDAMUserException e) {
+                        fatal = true;
+                        new EDAMUserExceptionHandler().handleDesingTime(shell, e);
+                    } catch (Throwable e) {
+                        // ignore, not fatal
+                        LogUtil.logWarning(e);
+                    }
+                    monitor.done();
+                }
+            });
+        } catch (Throwable e) {
+            // ignore, not fatal
+            LogUtil.logWarning(e);
+        }
+    }
+
     @Override
     protected void createButtonsForButtonBar(final Composite parent) {
         createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
@@ -292,7 +302,8 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     public static int show(final Shell shell) {
         if (shouldShow()) {
             thisDialog = new HotTextDialog(shell);
-            return thisDialog.open();
+            thisDialog.authInProgress();
+            return thisDialog.fatal ? CANCEL : thisDialog.open();
         }
         return HotTextDialog.SHOULD_NOT_SHOW;
     }

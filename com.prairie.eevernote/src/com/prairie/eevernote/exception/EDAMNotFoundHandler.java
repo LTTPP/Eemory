@@ -1,4 +1,4 @@
-package com.prairie.eevernote.handlers;
+package com.prairie.eevernote.exception;
 
 import java.util.List;
 import java.util.Map;
@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 
 import com.evernote.edam.error.EDAMNotFoundException;
-import com.prairie.eevernote.ErrorMessage.EvernoteDataModel;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.ENNote;
@@ -39,7 +38,7 @@ public class EDAMNotFoundHandler implements ConstantsUtil {
             EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(token, false);
             Map<String, String> map = clipper.listNotebooks();
             guid = map.get(name);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             // ignore and give up failure recovery
             LogUtil.logCancel(e);
         }
@@ -56,7 +55,7 @@ public class EDAMNotFoundHandler implements ConstantsUtil {
             args.setName(realName);
             Map<String, String> map = clipper.listNotesWithinNotebook(args);
             guid = findNoteGuid(map, name);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             // ignore and give up failure recovery
             LogUtil.logCancel(e);
         }

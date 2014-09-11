@@ -30,12 +30,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.evernote.edam.error.EDAMUserException;
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.impl.ENNoteImpl;
-import com.prairie.eevernote.handlers.EDAMNotFoundHandler;
+import com.prairie.eevernote.exception.EDAMNotFoundHandler;
+import com.prairie.eevernote.exception.EDAMUserExceptionHandler;
 import com.prairie.eevernote.util.ColorUtil;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.EclipseUtil;
@@ -72,6 +74,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         notebooks = MapUtil.map();
         notes = MapUtil.map();
         tags = ListUtil.list();
+        globalClipper = EEClipperFactory.getInstance().getEEClipper();
     }
 
     @Override
@@ -139,6 +142,8 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                             public void run() {
                                 try {
                                     notebooks = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listNotebooks();
+                                } catch (EDAMUserException e) {
+                                    new EDAMUserExceptionHandler().handleDesingTime(shell, e);
                                 } catch (Throwable e) {
                                     // ignore, not fatal
                                     LogUtil.logCancel(e);
@@ -188,6 +193,8 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                         public void run() {
                             try {
                                 notes = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
+                            } catch (EDAMUserException e) {
+                                new EDAMUserExceptionHandler().handleDesingTime(shell, e);
                             } catch (Throwable e) {
                                 // ignore, not fatal
                                 LogUtil.logCancel(e);
@@ -233,6 +240,8 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                             public void run() {
                                 try {
                                     tags = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listTags();
+                                } catch (EDAMUserException e) {
+                                    new EDAMUserExceptionHandler().handleDesingTime(shell, e);
                                 } catch (Throwable e) {
                                     // ignore, not fatal
                                     LogUtil.logCancel(e);
@@ -286,6 +295,8 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                     monitor.beginTask("Authenticating...", IProgressMonitor.UNKNOWN);
                     try {
                         globalClipper = EEClipperFactory.getInstance().getEEClipper(token, false);
+                    } catch (EDAMUserException e) {
+                        new EDAMUserExceptionHandler().handleDesingTime(shell, e);
                     } catch (Throwable e) {
                         // ignore, not fatal
                         LogUtil.logWarning(e);

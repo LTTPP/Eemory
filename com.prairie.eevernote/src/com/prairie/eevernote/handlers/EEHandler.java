@@ -30,6 +30,8 @@ import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.ENNote;
 import com.prairie.eevernote.client.impl.ENNoteImpl;
+import com.prairie.eevernote.exception.EDAMNotFoundHandler;
+import com.prairie.eevernote.exception.EDAMUserExceptionHandler;
 import com.prairie.eevernote.exception.OutOfDateException;
 import com.prairie.eevernote.ui.CaptureView;
 import com.prairie.eevernote.ui.ConfigurationsDialog;
@@ -99,6 +101,8 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                             return LogUtil.ok();
                         }
                         return LogUtil.error(e);
+                    } catch (EDAMUserException e) {
+                        return new EDAMUserExceptionHandler().handleRuntime(e);
                     } catch (Throwable e) {
                         return LogUtil.error(e);
                     }
@@ -153,6 +157,8 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                             return LogUtil.ok();
                         }
                         return LogUtil.error(e);
+                    } catch (EDAMUserException e) {
+                        return new EDAMUserExceptionHandler().handleRuntime(e);
                     } catch (final Throwable e) {
                         return LogUtil.error(e);
                     }
@@ -212,6 +218,8 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                             return LogUtil.ok();
                         }
                         return LogUtil.error(e);
+                    } catch (EDAMUserException e) {
+                        return new EDAMUserExceptionHandler().handleRuntime(e);
                     } catch (Throwable e) {
                         return LogUtil.error(e);
                     }
