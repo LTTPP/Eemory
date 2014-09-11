@@ -24,9 +24,9 @@ public class EDAMNotFoundHandler implements ConstantsUtil {
     }
 
     public boolean fixNotFoundException(final EDAMNotFoundException e, final ENNote args) {
-        if (e.getIdentifier().equals(EvernoteDataModel.Note_notebookGuid.toString())) {
+        if (e.getIdentifier().equals(EDAMDataModel.Note_notebookGuid.toString())) {
             return fixNotFoundNotebookGuid(args);
-        } else if (e.getIdentifier().equals(EvernoteDataModel.Note_noteGuid.toString())) {
+        } else if (e.getIdentifier().equals(EDAMDataModel.Note_noteGuid.toString())) {
             return fixNotFoundNoteGuid(args);
         }
         return false;

@@ -1,6 +1,6 @@
 package com.prairie.eevernote.exception;
 
-public enum EvernoteDataModel {
+public enum EDAMDataModel {
 
     Note_noteGuid {
         @Override
@@ -28,9 +28,9 @@ public enum EvernoteDataModel {
 
     public abstract String toReadableString();
 
-    public static EvernoteDataModel forName(final String name) throws IllegalArgumentException {
-        EvernoteDataModel[] values = EvernoteDataModel.values();
-        for (EvernoteDataModel value : values) {
+    public static EDAMDataModel forName(final String name) throws IllegalArgumentException {
+        EDAMDataModel[] values = EDAMDataModel.values();
+        for (EDAMDataModel value : values) {
             if (value.toString().equalsIgnoreCase(name)) {
                 return value;
             }

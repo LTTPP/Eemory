@@ -3,7 +3,7 @@ package com.prairie.eevernote;
 import org.apache.commons.lang3.StringUtils;
 
 import com.evernote.edam.error.EDAMNotFoundException;
-import com.prairie.eevernote.exception.EvernoteDataModel;
+import com.prairie.eevernote.exception.EDAMDataModel;
 
 public class ErrorMessage {
 
@@ -12,7 +12,7 @@ public class ErrorMessage {
             EDAMNotFoundException e = (EDAMNotFoundException) t;
             String args = StringUtils.EMPTY;
             try {
-                args = EvernoteDataModel.forName(e.getIdentifier()).toReadableString();
+                args = EDAMDataModel.forName(e.getIdentifier()).toReadableString();
             } catch (IllegalArgumentException expt) {
                 // Ignore
             }

@@ -22,7 +22,7 @@ import com.prairie.eevernote.client.EDAMLimits;
 import com.prairie.eevernote.client.ENNote;
 import com.prairie.eevernote.client.NoteOps;
 import com.prairie.eevernote.enml.ENML;
-import com.prairie.eevernote.exception.EvernoteDataModel;
+import com.prairie.eevernote.exception.EDAMDataModel;
 import com.prairie.eevernote.exception.OutOfDateException;
 import com.prairie.eevernote.util.EvernoteUtil;
 import com.prairie.eevernote.util.FileUtil;
@@ -85,7 +85,7 @@ public class NoteOpsFileImpl extends NoteOps {
         Note note = noteStoreClient.getNote(args.getGuid(), true, false, false, false);
         if (!note.isActive()) {
             EDAMNotFoundException e = new EDAMNotFoundException();
-            e.setIdentifier(EvernoteDataModel.Note_noteGuid.toString());
+            e.setIdentifier(EDAMDataModel.Note_noteGuid.toString());
             e.setKey(args.getGuid());
             throw e;
         }

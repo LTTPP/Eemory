@@ -22,14 +22,20 @@ public class EDAMUserExceptionHandler {
 
     public void handleDesingTime(final Shell shell, final EDAMUserException e) {
         if (e.getErrorCode() == EDAMErrorCode.AUTH_EXPIRED) {
-            Display.getDefault().asyncExec(new Runnable() {
+            Display.getDefault().syncExec(new Runnable() {
                 @Override
                 public void run() {
                     MessageDialog.openError(shell, "Auth Expired", "EEvernote is no longer authorized to access your Evernote account. (Click/Tap) below to re-authorize EEvernote");
                 }
             });
+        } else {
+            Display.getDefault().syncExec(new Runnable() {
+                @Override
+                public void run() {
+                    MessageDialog.openError(shell, "Error Occurred", e.toString());
+                }
+            });
         }
-        LogUtil.logCancel(e);
     }
 
 }
