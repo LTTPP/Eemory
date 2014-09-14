@@ -3,6 +3,7 @@ package com.prairie.eevernote.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Platform;
@@ -110,4 +111,19 @@ public final class StringUtil implements ConstantsUtil {
 
         return find ? matcher.end() : NEGATIVE;
     }
+
+    public static String[] splitByMultipleSeparatorsPreserveAllTokens(final String str, final String[] separators) {
+        String[] transition = ArrayUtils.EMPTY_STRING_ARRAY;
+        String[] splits = { str };
+        for (String sep : separators) {
+            for (String s : splits) {
+                String[] r = StringUtils.splitByWholeSeparatorPreserveAllTokens(s, sep);
+                transition = ArrayUtils.addAll(transition, r);
+            }
+            splits = transition;
+            transition = ArrayUtils.EMPTY_STRING_ARRAY;
+        }
+        return splits;
+    }
+
 }
