@@ -21,7 +21,7 @@ public class FileUtil implements ConstantsUtil {
             }
             name += f.getName();
         }
-        StringUtils.abbreviate(name, maxLength);
+        name = StringUtils.abbreviate(name, maxLength);
         return name;
     }
 
