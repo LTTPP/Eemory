@@ -67,7 +67,7 @@ public class ENML implements ConstantsUtil {
     public void addComment(final String comments) throws DOMException, ParserConfigurationException {
         if (!StringUtils.isBlank(comments)) {
             Element div = div();
-            div.setTextContent(comments + COLON);
+            div.setTextContent(StringUtil.escapeEnml(comments) + COLON);
             newAddedNodes.add(div);
         }
     }
