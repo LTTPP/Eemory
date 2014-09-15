@@ -50,7 +50,7 @@ public class NoteOpsFileImpl extends NoteOps {
 
     private void create(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
         Note note = new Note();
-        note.setTitle(!StringUtils.isBlank(args.getName()) ? args.getName() : FileUtil.concatNameOfFiles(args.getAttachments(), EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX));
+        note.setTitle(StringUtils.abbreviate(args.getName(), EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX));
         if (!StringUtils.isBlank(args.getNotebook().getGuid())) {
             note.setNotebookGuid(args.getNotebook().getGuid());
         }

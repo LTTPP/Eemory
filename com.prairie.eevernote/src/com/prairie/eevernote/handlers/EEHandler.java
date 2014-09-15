@@ -33,6 +33,7 @@ import com.prairie.eevernote.ui.HotTextDialog;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.DateTimeUtil;
 import com.prairie.eevernote.util.EclipseUtil;
+import com.prairie.eevernote.util.FileUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.LogUtil;
@@ -74,6 +75,9 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             }
 
             args.setAttachments(EclipseUtil.getSelectedFiles(event));
+            if (StringUtils.isBlank(args.getName())) {
+                args.setName(FileUtil.concatNameOfFiles(args.getAttachments()));
+            }
 
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
                 @Override
@@ -123,7 +127,9 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
 
             IEditorPart editor = HandlerUtil.getActiveEditor(event);
             StyledText styledText = (StyledText) editor.getAdapter(Control.class);
-            args.setName(editor.getTitle() + MINUS + DateTimeUtil.timestamp());
+            if (StringUtils.isBlank(args.getName())) {
+                args.setName(editor.getTitle() + MINUS + DateTimeUtil.timestamp());
+            }
             args.setContent(EclipseUtil.getSelectedStyleText(styledText));
 
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE)) {
@@ -176,7 +182,9 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                 return;
             }
             final File file = File.createTempFile(DateTimeUtil.formatCurrentTime(FileNamePartSimpleDateFormat), FILENAME_DELIMITER + IMG_PNG);
-            args.setName(DateTimeUtil.timestamp() + FILENAME_DELIMITER + IMG_PNG);
+            if (StringUtils.isBlank(args.getName())) {
+                args.setName(DateTimeUtil.timestamp() + FILENAME_DELIMITER + IMG_PNG);
+            }
             args.setAttachments(ListUtil.list(file));
 
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {

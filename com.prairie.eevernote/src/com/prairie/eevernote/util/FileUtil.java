@@ -9,11 +9,11 @@ import eu.medsea.mimeutil.MimeUtil;
 
 public class FileUtil implements ConstantsUtil {
 
-    public static String concatNameOfFiles(final List<File> files, final int maxLength) {
-        return concatNameOfFilesWithSeparator(files, PLUS, maxLength);
+    public static String concatNameOfFiles(final List<File> files) {
+        return concatNameOfFilesWithSeparator(files, PLUS);
     }
 
-    public static String concatNameOfFilesWithSeparator(final List<File> files, final String separator, final int maxLength) {
+    public static String concatNameOfFilesWithSeparator(final List<File> files, final String separator) {
         String name = StringUtils.EMPTY;
         for (File f : files) {
             if (!StringUtils.isBlank(name)) {
@@ -21,7 +21,6 @@ public class FileUtil implements ConstantsUtil {
             }
             name += f.getName();
         }
-        name = StringUtils.abbreviate(name, maxLength);
         return name;
     }
 
