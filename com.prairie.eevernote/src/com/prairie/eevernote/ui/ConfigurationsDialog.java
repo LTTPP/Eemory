@@ -3,6 +3,7 @@ package com.prairie.eevernote.ui;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -66,6 +67,9 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     // <Field Property, User Input>
     private Map<String, Boolean> inputMatrix;
 
+    // <Field Property, Hint Message Property>
+    private Map<String, String> hintPropMap;
+
     public ConfigurationsDialog(final Shell parentShell) {
         super(parentShell);
         shell = parentShell;
@@ -73,6 +77,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         notes = MapUtil.map();
         tags = ListUtil.list();
         globalClipper = EEClipperFactory.getInstance().getEEClipper();
+        buildHintPropMap();
     }
 
     @Override
@@ -134,7 +139,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 clearHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE);
                 try {
                     if (shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN)) {
-                        final String hotoken = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
+                        final String hotoken = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
                         BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                             @Override
                             public void run() {
@@ -180,8 +185,8 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
             public void focusGained(final FocusEvent e) {
                 clearHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE);
                 if (shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)) {
-                    final String hotoken = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
-                    final String hotebook = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+                    final String hotoken = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
+                    final String hotebook = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
                     BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                         @Override
                         public void run() {
@@ -217,7 +222,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
         final LabelCheckTextField tagsField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, tagsField);
-        fetchTagsInProgres();
+        fetchTagsInProgress();
         tagsProposalProvider = EclipseUtil.enableFilteringContentAssist(tagsField.getTextControl(), tags.toArray(new String[tags.size()]), TAGS_SEPARATOR);
         tagsField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
@@ -225,7 +230,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 clearHintText(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE);
                 try {
                     if (shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN)) {
-                        final String hotoken = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
+                        final String hotoken = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
                         BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                             @Override
                             public void run() {
@@ -273,8 +278,17 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         return area;
     }
 
+    private void buildHintPropMap() {
+        if (hintPropMap == null) {
+            hintPropMap = MapUtil.map();
+        }
+        hintPropMap.put(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE);
+        hintPropMap.put(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE);
+        hintPropMap.put(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE);
+    }
+
     private void authInProgress() {
-        final String token = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
+        final String token = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
         try {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
@@ -313,7 +327,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     }
 
     private void fetchNotesInProgres() {
-        final String notebook = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+        final String notebook = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
         try {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
@@ -332,7 +346,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         }
     }
 
-    private void fetchTagsInProgres() {
+    private void fetchTagsInProgress() {
         try {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
@@ -352,9 +366,9 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     }
 
     protected void postCreateDialogArea() {
-        showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE);
-        showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE);
-        showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE);
+        for (Entry<String, String> e : hintPropMap.entrySet()) {
+            showHintText(e.getKey(), e.getValue());
+        }
     }
 
     private void showHintText(final String property, final String hintMsg) {
@@ -397,13 +411,22 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
         // refresh notebook
         fetchNotebooksInProgres();
-        String nbName = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+        String nbName = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+        diagnoseNotebook(nbName);
+
+        // refresh note
+        nbName = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+        fetchNotesInProgres();
+        String nName = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
+        diagnoseNote(nName);
+
+        // refresh tags
+        fetchTagsInProgress();
+    }
+
+    private void diagnoseNotebook(final String nbName) {
         if (!StringUtils.isBlank(nbName)) {
-            if (notebooks.containsKey(nbName)) {
-                // recreate, delete cases
-                String guid = notebooks.get(nbName);
-                IDialogSettingsUtil.set(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID, guid);
-            } else if (notebooks.containsValue(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID))) {
+            if (!notebooks.containsKey(nbName) && notebooks.containsValue(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID))) {
                 // rename case
                 String key = MapUtil.getKey(notebooks, IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID));
                 if (!StringUtils.isBlank(nbName) && isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK) && !nbName.equals(key)) {
@@ -411,31 +434,22 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                 }
             }
         }
+    }
 
-        // refresh note
-        nbName = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
-        fetchNotesInProgres();
-        String nName = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
-        if (!StringUtils.isBlank(nName)) {
-            if (notes.containsKey(nName)) {
-                IDialogSettingsUtil.set(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID, notes.get(nName));
-            } else {
-                String guid = EDAMNotFoundHandler.findNoteGuid(notes, nName);
-                if (!StringUtils.isBlank(guid)) {
-                    // recreate, delete cases
-                    IDialogSettingsUtil.set(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID, guid);
-                } else if (notes.containsValue(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID))) {
-                    // rename case
-                    String key = MapUtil.getKey(notes, IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID));
-                    if (isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) && !nName.equals(key)) {
-                        setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, key);
-                    }
+    private void diagnoseNote(final String nName) {
+        if (!StringUtils.isBlank(nName) && !notes.containsKey(nName)) {
+            String guid = EDAMNotFoundHandler.findNoteGuid(notes, nName);
+            if (!StringUtils.isBlank(guid)) {
+                // recreate, delete cases
+                notes.put(nName, guid);
+            } else if (notes.containsValue(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID))) {
+                // rename case
+                String key = MapUtil.getKey(notes, IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID));
+                if (isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) && !nName.equals(key)) {
+                    setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, key);
                 }
             }
         }
-
-        // refresh tags
-        fetchTagsInProgres();
     }
 
     @Override
@@ -475,18 +489,20 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     }
 
     private void saveSettings() {
-        IDialogSettingsUtil.set(SETTINGS_KEY_TOKEN, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN));
+        IDialogSettingsUtil.set(SETTINGS_KEY_TOKEN, getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN));
 
-        String notebookValue = isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK) ? getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK) : StringUtils.EMPTY;
+        String notebookValue = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
         setSection(SETTINGS_SECTION_NOTEBOOK, notebookValue, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK), notebooks.get(notebookValue));
 
-        String noteValue = isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) ? getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) : StringUtils.EMPTY;
+        String noteValue = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
+        diagnoseNote(noteValue);
+        noteValue = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
         setSection(SETTINGS_SECTION_NOTE, noteValue, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), notes.get(noteValue));
 
-        String tagsValue = isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS) ? getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS) : StringUtils.EMPTY;
+        String tagsValue = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
         setSection(SETTINGS_SECTION_TAGS, tagsValue, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), null);
 
-        setSection(SETTINGS_SECTION_COMMENTS, getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), null);
+        setSection(SETTINGS_SECTION_COMMENTS, getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), null);
     }
 
     private void restoreSettings(final String label) {
@@ -578,6 +594,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     protected String getFieldValue(final String property) {
         return getField(property).getValue().trim();
+    }
+
+    protected String getFieldInput(final String property) {
+        if (hintPropMap.containsKey(property)) {
+            return isHasInput(property) ? getFieldValue(property) : StringUtils.EMPTY;
+        } else {
+            return getFieldValue(property);
+        }
     }
 
     protected void setFieldValue(final String property, final String value) {
