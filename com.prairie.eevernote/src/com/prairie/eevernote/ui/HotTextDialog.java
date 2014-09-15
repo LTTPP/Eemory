@@ -240,15 +240,16 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     private boolean confirmDefault() {
         boolean confirm = false;
         String msg = StringUtils.EMPTY;
-        if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getNotebook().getGuid())) {
-            msg += "notebook";
+        if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) && shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getGuid())) {
+            msg = "No existing note found, will create a new one.";
+            confirm = true;
+        } else if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getNotebook().getGuid())) {
+            msg = "No existing notebook found, will clip to default.";
+            confirm = true;
+        } else if (shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getGuid())) {
+            msg = "No existing note found, will create a new one.";
             confirm = true;
         }
-        if (shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getGuid())) {
-            msg += COMMA + StringUtils.SPACE + "note";
-            confirm = true;
-        }
-        msg = "No existing " + msg + " found, default will be used?";
         return confirm ? MessageDialog.openQuestion(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_HOTINPUTDIALOG_SHELL_TITLE), msg) : true;
     }
 
@@ -307,6 +308,11 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     }
 
     private static boolean shouldShow(final String property, final String key) {
+        if (property.equals(SETTINGS_SECTION_NOTEBOOK)) {
+            if (IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTE, SETTINGS_KEY_CHECKED) && !shouldShow(SETTINGS_SECTION_NOTE, key)) {
+                return false;
+            }
+        }
         boolean checked = IDialogSettingsUtil.getBoolean(property, SETTINGS_KEY_CHECKED);
         String value = IDialogSettingsUtil.get(property, key);
         return checked && StringUtils.isBlank(value);
