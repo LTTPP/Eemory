@@ -171,21 +171,21 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                 return;
             }
 
-            BufferedImage screenshot = CaptureView.showView();
+            final BufferedImage screenshot = CaptureView.showView();
             if (screenshot == null) {
                 return;
             }
-            // 2014-02-21T18-35-32
             final File file = File.createTempFile(DateTimeUtil.formatCurrentTime(FileNamePartSimpleDateFormat), FILENAME_DELIMITER + IMG_PNG);
-            ImageIO.write(screenshot, IMG_PNG, file);
-            args.setAttachments(ListUtil.list(file));
             args.setName(DateTimeUtil.timestamp() + FILENAME_DELIMITER + IMG_PNG);
+            args.setAttachments(ListUtil.list(file));
 
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
                     monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE), IProgressMonitor.UNKNOWN);
                     try {
+                        ImageIO.write(screenshot, IMG_PNG, file);
+
                         EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
                         clipper.clipFile(args);
                     } catch (EDAMNotFoundException e) {
@@ -197,16 +197,18 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                                 return ThrowableHandler.handleJobErr(e1);
                             }
                             saveIfNeeded(args);
+                            monitor.done();
                             return LogUtil.ok();
                         }
                         return ThrowableHandler.handleJobErr(e);
                     } catch (Throwable e) {
                         return ThrowableHandler.handleJobErr(e);
+                    } finally {
+                        if (file != null && file.exists()) {
+                            file.delete();
+                        }
                     }
                     monitor.done();
-                    if (file != null && file.exists()) {
-                        file.delete();
-                    }
                     return LogUtil.ok();
                 }
             };
