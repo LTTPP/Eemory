@@ -240,14 +240,11 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     private boolean confirmDefault() {
         boolean confirm = false;
         String msg = StringUtils.EMPTY;
-        if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) && shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getGuid())) {
-            msg = "No existing note found, will create a new one.";
+        if (shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getGuid())) {
+            msg = "No existing note found, will create a new one" + (StringUtils.isBlank(quickSettings.getName()) ? StringUtils.EMPTY : " with given name " + quickSettings.getName()) + ".";
             confirm = true;
         } else if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getNotebook().getGuid())) {
             msg = "No existing notebook found, will clip to default.";
-            confirm = true;
-        } else if (shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getGuid())) {
-            msg = "No existing note found, will create a new one.";
             confirm = true;
         }
         return confirm ? MessageDialog.openQuestion(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_HOTINPUTDIALOG_SHELL_TITLE), msg) : true;
