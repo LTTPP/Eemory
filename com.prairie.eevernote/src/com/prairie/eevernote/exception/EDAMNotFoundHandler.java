@@ -61,6 +61,15 @@ public class EDAMNotFoundHandler implements ConstantsUtil {
         return guid;
     }
 
+    /**
+     * find note by name
+     * 
+     * @param noteMap
+     *            uuid-ENNote map
+     * @param name
+     *            should be exact note name, not uuid.
+     * @return
+     */
     public static ENNote findNote(final Map<String, ENNote> noteMap, final String name) {
         List<String> titles = ListUtil.list();
         for (Entry<String, ENNote> e : noteMap.entrySet()) {

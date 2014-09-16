@@ -439,18 +439,42 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     private void diagnoseNote(final String nName) {
         if (!StringUtils.isBlank(nName) && !notes.containsKey(nName)) {
-            ENNote noteFound = EDAMNotFoundHandler.findNote(notes, nName);
-            if (noteFound != null && !StringUtils.isBlank(noteFound.getGuid())) {
-                // recreate, delete cases
-                notes.put(nName, noteFound);
-            } else if (notes.containsValue(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID))) {
-                // rename case
-                String key = MapUtil.getKey(notes, ENNoteImpl.forGuid(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID)));
-                if (isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) && !nName.equals(key)) {
-                    setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, key);
+            if (!StringUtils.equals(getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_UUID))) {
+                // user changed input
+                refreshGuidByName(nName);
+            } else {
+                // user make nothing change, but maybe something changed in Evernote, needs to be synced
+                if (notes.containsValue(ENNoteImpl.forGuid(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID)))) { // override equals() of ENNote, assume ENNote equals if guid equals
+                    refreshNameByGuid();
+                } else {
+                    refreshGuidByName(nName);
                 }
             }
         }
+    }
+
+    private void refreshGuidByName(final String nName) {
+        // recreate, delete cases
+        ENNote noteFound = EDAMNotFoundHandler.findNote(notes, nName); // pass in uuid here, so should not work for duplicate name case
+        if (noteFound != null && !StringUtils.isBlank(noteFound.getGuid())) {
+            notes.put(nName, noteFound);
+        }
+    }
+
+    private void refreshNameByGuid() {
+        // rename case
+        if (notes.containsValue(ENNoteImpl.forGuid(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID)))) { // override equals() of ENNote, assume ENNote equals if guid equals
+            String key = MapUtil.getKey(notes, ENNoteImpl.forGuid(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID))); // override equals() of ENNote, assume ENNote equals if guid equals
+            if (isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)) {
+                setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, key);
+            }
+        }
+    }
+
+    @Override
+    protected void okPressed() {
+        saveSettings();
+        super.okPressed();
     }
 
     @Override
@@ -461,12 +485,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     public static int show(final Shell shell) {
         ConfigurationsDialog dialog = new ConfigurationsDialog(shell);
         return dialog.open();
-    }
-
-    @Override
-    protected void okPressed() {
-        saveSettings();
-        super.okPressed();
     }
 
     private boolean shouldRefresh(final String uniqueKey, final String property) {
