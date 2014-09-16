@@ -516,7 +516,8 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         String noteValue = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
         diagnoseNote(noteValue);
         noteValue = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
-        setSection(SETTINGS_SECTION_NOTE, notes.get(noteValue).getName(), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), notes.get(noteValue).getGuid());
+        ENNote note = notes.get(noteValue);
+        setSection(SETTINGS_SECTION_NOTE, note != null ? note.getName() : null, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), note != null ? note.getGuid() : null);
         IDialogSettingsUtil.set(SETTINGS_SECTION_NOTE, SETTINGS_KEY_UUID, noteValue);
 
         String tagsValue = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
