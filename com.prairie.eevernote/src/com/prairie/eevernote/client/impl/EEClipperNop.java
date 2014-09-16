@@ -26,7 +26,7 @@ public class EEClipperNop extends EEClipper {
     }
 
     @Override
-    public Map<String, String> listNotesWithinNotebook(final ENNote args) throws Exception {
+    public Map<String, ENNote> listNotesWithinNotebook(final ENNote args) throws Exception {
         return MapUtil.map();
     }
 

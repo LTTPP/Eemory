@@ -50,7 +50,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     private EEClipper clipper;
 
     private Map<String, String> notebooks; // <Name, Guid>
-    private Map<String, String> notes; // <Name, Guid>
+    private Map<String, ENNote> notes; // <Name, Guid>
     private List<String> tags;
 
     private SimpleContentProposalProvider noteProposalProvider;
@@ -256,8 +256,8 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
         quickSettings.getNotebook().setName(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK));
         quickSettings.getNotebook().setGuid(notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
 
-        quickSettings.setName(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE));
-        quickSettings.setGuid(notes.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)));
+        quickSettings.setName(notes.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)).getName());
+        quickSettings.setGuid(notes.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)).getGuid());
 
         String tags = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
         if (!StringUtils.isBlank(tags)) {

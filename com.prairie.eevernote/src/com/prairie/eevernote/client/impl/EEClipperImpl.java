@@ -31,6 +31,7 @@ import com.prairie.eevernote.util.EvernoteUtil;
 import com.prairie.eevernote.util.ListStringizer;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapStringizer;
+import com.prairie.eevernote.util.MapUtil;
 
 public class EEClipperImpl extends EEClipper {
 
@@ -159,9 +160,7 @@ public class EEClipperImpl extends EEClipper {
      *             This plug-in is out of date
      */
     @Override
-    public Map<String, String> listNotesWithinNotebook(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, OutOfDateException {
-        NotesMetadataList notesMetadataList = new NotesMetadataList();
-
+    public Map<String, ENNote> listNotesWithinNotebook(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, OutOfDateException {
         NoteFilter filter = new NoteFilter();
         filter.setInactive(false);
         if (!StringUtils.isBlank(args.getNotebook().getGuid())) {
@@ -174,19 +173,18 @@ public class EEClipperImpl extends EEClipper {
         NotesMetadataResultSpec resultSpec = new NotesMetadataResultSpec();
         resultSpec.setIncludeTitle(true);
 
-        notesMetadataList = noteStoreClient.findNotesMetadata(filter, ConstantsUtil.ZERO, com.evernote.edam.limits.Constants.EDAM_USER_NOTES_MAX, resultSpec);
+        NotesMetadataList notesMetadataList = noteStoreClient.findNotesMetadata(filter, ConstantsUtil.ZERO, com.evernote.edam.limits.Constants.EDAM_USER_NOTES_MAX, resultSpec);
+        List<NoteMetadata> noteList = notesMetadataList.getNotes();
 
-        return ListUtil.toStringMap(notesMetadataList.getNotes(), new MapStringizer() {
-            @Override
-            public String key(final Object o) {
-                return ((NoteMetadata) o).getTitle() + ConstantsUtil.LEFT_PARENTHESIS + ((NoteMetadata) o).getGuid() + ConstantsUtil.RIGHT_PARENTHESIS;
+        Map<String, ENNote> map = MapUtil.map();
+        for (NoteMetadata n : noteList) {
+            if (map.containsKey(n.getTitle())) {
+                map.put(n.getTitle() + ConstantsUtil.LEFT_PARENTHESIS + n.getGuid() + ConstantsUtil.RIGHT_PARENTHESIS, ENNoteImpl.forNameAndGuid(n.getTitle(), n.getGuid()));
+            } else {
+                map.put(n.getTitle(), ENNoteImpl.forNameAndGuid(n.getTitle(), n.getGuid()));
             }
-
-            @Override
-            public String value(final Object o) {
-                return ((NoteMetadata) o).getGuid();
-            }
-        });
+        }
+        return map;
     }
 
     /**

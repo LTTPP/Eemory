@@ -20,6 +20,7 @@ public interface Constants {
     public static final String SETTINGS_KEY_NAME = "name";
     public static final String SETTINGS_KEY_GUID = "guid";
     public static final String SETTINGS_KEY_CHECKED = "isChecked";
+    public static final String SETTINGS_KEY_UUID = "uuid";
 
     // Command IDs
     public static final String EEPLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipToEvernote";

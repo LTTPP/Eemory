@@ -32,7 +32,7 @@ public class EDAMNotFoundHandler implements ConstantsUtil {
         return false;
     }
 
-    public String findNotebookGuidByName(final String name) {
+    public String findNotebookByName(final String name) {
         String guid = null;
         try {
             EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(token, false);
@@ -45,16 +45,15 @@ public class EDAMNotFoundHandler implements ConstantsUtil {
         return guid;
     }
 
-    public String findNoteGuidByName(final String notebookGuid, final String name) {
-        String guid = null;
+    public ENNote findNoteByName(final String notebookGuid, final String name) {
+        ENNote guid = null;
         try {
             EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(token, false);
             ENNote args = new ENNoteImpl();
             args.getNotebook().setGuid(notebookGuid);
-            String realName = StringUtils.substringBeforeLast(name, LEFT_PARENTHESIS);
-            args.setName(realName);
-            Map<String, String> map = clipper.listNotesWithinNotebook(args);
-            guid = findNoteGuid(map, name);
+            args.setName(name);
+            Map<String, ENNote> map = clipper.listNotesWithinNotebook(args);
+            guid = findNote(map, name);
         } catch (Throwable e) {
             // ignore and give up failure recovery
             LogUtil.logCancel(e);
@@ -62,12 +61,10 @@ public class EDAMNotFoundHandler implements ConstantsUtil {
         return guid;
     }
 
-    public static String findNoteGuid(final Map<String, String> noteMap, final String name) {
+    public static ENNote findNote(final Map<String, ENNote> noteMap, final String name) {
         List<String> titles = ListUtil.list();
-        String realName = StringUtils.substringBeforeLast(name, LEFT_PARENTHESIS);
-        for (Entry<String, String> e : noteMap.entrySet()) {
-            String title = StringUtils.substringBeforeLast(e.getKey(), LEFT_PARENTHESIS);
-            if (title.equals(realName)) {
+        for (Entry<String, ENNote> e : noteMap.entrySet()) {
+            if (e.getValue().getName().equals(name)) {
                 if (titles.size() != ZERO) {
                     return null;
                 }
@@ -81,7 +78,7 @@ public class EDAMNotFoundHandler implements ConstantsUtil {
     }
 
     private boolean fixNotFoundNotebookGuid(final ENNote args) {
-        String found = findNotebookGuidByName(args.getNotebook().getName());
+        String found = findNotebookByName(args.getNotebook().getName());
         if (!StringUtils.isBlank(found)) {
             args.getNotebook().setGuid(found);
             args.getNotebook().setGuidReset(true);
@@ -91,9 +88,9 @@ public class EDAMNotFoundHandler implements ConstantsUtil {
     }
 
     private boolean fixNotFoundNoteGuid(final ENNote args) {
-        String found = findNoteGuidByName(args.getNotebook().getGuid(), args.getName());
-        if (!StringUtils.isBlank(found)) {
-            args.setGuid(found);
+        ENNote found = findNoteByName(args.getNotebook().getGuid(), args.getName());
+        if (!StringUtils.isBlank(found.getGuid())) {
+            args.setGuid(found.getGuid());
             args.setGuidReset(true);
             return true;
         }

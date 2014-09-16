@@ -91,7 +91,7 @@ public final class MapUtil {
     }
 
     /**
-     * The first key that value is matched, preffered to be used when value is
+     * The first key that value is matched, preferred to be used when value is
      * unique.
      */
     public static <K, V> K getKey(final Map<K, V> map, final V value) {

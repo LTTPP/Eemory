@@ -78,4 +78,13 @@ public class ENObjectImpl implements ENObject {
         this.adopt = adopt;
     }
 
+    @Override
+    public boolean equals(final Object other) {
+        if (!(other instanceof ENObject)) {
+            return false;
+        }
+        ENObject o = (ENObject) other;
+        return StringUtils.equals(guid, o.getGuid());
+    }
+
 }

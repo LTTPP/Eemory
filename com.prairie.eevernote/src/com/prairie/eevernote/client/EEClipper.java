@@ -13,7 +13,7 @@ public abstract class EEClipper {
 
     public abstract Map<String, String> listNotebooks() throws Exception;
 
-    public abstract Map<String, String> listNotesWithinNotebook(ENNote args) throws Exception;
+    public abstract Map<String, ENNote> listNotesWithinNotebook(ENNote args) throws Exception;
 
     public abstract List<String> listTags() throws Exception;
 

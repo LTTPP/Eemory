@@ -35,6 +35,7 @@ import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
+import com.prairie.eevernote.client.ENNote;
 import com.prairie.eevernote.client.impl.ENNoteImpl;
 import com.prairie.eevernote.exception.EDAMNotFoundHandler;
 import com.prairie.eevernote.exception.ThrowableHandler;
@@ -54,7 +55,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     private EEClipper globalClipper;
 
     private Map<String, String> notebooks; // <Name, Guid>
-    private Map<String, String> notes; // <Name, Guid>
+    private Map<String, ENNote> notes; // <Name, Guid>
     private List<String> tags;
 
     private SimpleContentProposalProvider notebookProposalProvider;
@@ -438,13 +439,13 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     private void diagnoseNote(final String nName) {
         if (!StringUtils.isBlank(nName) && !notes.containsKey(nName)) {
-            String guid = EDAMNotFoundHandler.findNoteGuid(notes, nName);
-            if (!StringUtils.isBlank(guid)) {
+            ENNote noteFound = EDAMNotFoundHandler.findNote(notes, nName);
+            if (noteFound != null && !StringUtils.isBlank(noteFound.getGuid())) {
                 // recreate, delete cases
-                notes.put(nName, guid);
+                notes.put(nName, noteFound);
             } else if (notes.containsValue(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID))) {
                 // rename case
-                String key = MapUtil.getKey(notes, IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID));
+                String key = MapUtil.getKey(notes, ENNoteImpl.forGuid(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID)));
                 if (isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) && !nName.equals(key)) {
                     setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, key);
                 }
@@ -497,7 +498,8 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         String noteValue = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
         diagnoseNote(noteValue);
         noteValue = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
-        setSection(SETTINGS_SECTION_NOTE, noteValue, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), notes.get(noteValue));
+        setSection(SETTINGS_SECTION_NOTE, notes.get(noteValue).getName(), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), notes.get(noteValue).getGuid());
+        IDialogSettingsUtil.set(SETTINGS_SECTION_NOTE, SETTINGS_KEY_UUID, noteValue);
 
         String tagsValue = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
         setSection(SETTINGS_SECTION_TAGS, tagsValue, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), null);
@@ -518,7 +520,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
             }
         } else if (label.equals(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)) {
             editableField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTE, SETTINGS_KEY_CHECKED));
-            String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_NAME);
+            String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_UUID);
             if (isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE) && !StringUtils.isBlank(value)) {
                 setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, value);
             }
