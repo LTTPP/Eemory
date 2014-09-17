@@ -259,7 +259,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
         quickSettings.getNotebook().setGuid(notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
 
         ENNote note = notes.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE));
-        quickSettings.setName(note != null ? note.getName() : null);
+        quickSettings.setName(note != null ? note.getName() : getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE));
         quickSettings.setGuid(note != null ? note.getGuid() : null);
 
         String tags = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
