@@ -440,7 +440,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     }
 
     private void diagnoseNote(final String nName) {
-        if (!StringUtils.isBlank(nName) && !notes.containsKey(nName)) {
+        if (!isOk(nName)) {
             if (!StringUtils.equals(getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_UUID))) {
                 // user changed input
                 refreshGuidByName(nName);
@@ -455,11 +455,17 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         }
     }
 
+    // diagnose if everything is fine, nothing needs to change
+    private boolean isOk(final String nName) {
+        return StringUtils.isBlank(nName) || notes.containsKey(nName) && (StringUtils.equals(notes.get(nName).getName(), IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_NAME)) || StringUtils.isBlank(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_NAME))) && (StringUtils.equals(notes.get(nName).getGuid(), IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID)) || StringUtils.isBlank(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID)));
+    }
+
     private void refreshGuidByName(final String nName) {
         // recreate, delete cases
         ENNote noteFound = EDAMNotFoundHandler.findNote(notes, nName); // pass in uuid here, so should not work for duplicate name case
         if (noteFound != null && !StringUtils.isBlank(noteFound.getGuid())) {
             notes.put(nName, noteFound);
+            saveNoteSettings(nName);
         }
     }
 
@@ -469,6 +475,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
             String key = MapUtil.getKey(notes, ENNoteImpl.forGuid(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID))); // override equals() of ENNote, assume ENNote equals if guid equals
             if (isHasInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE)) {
                 setFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, key);
+                saveNoteSettings(key);
             }
         }
     }
@@ -518,14 +525,18 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         String noteValue = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
         diagnoseNote(noteValue);
         noteValue = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
-        ENNote note = notes.get(noteValue);
-        setSection(SETTINGS_SECTION_NOTE, note != null ? note.getName() : null, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), note != null ? note.getGuid() : null);
-        IDialogSettingsUtil.set(SETTINGS_SECTION_NOTE, SETTINGS_KEY_UUID, noteValue);
+        saveNoteSettings(noteValue);
 
         String tagsValue = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
         setSection(SETTINGS_SECTION_TAGS, tagsValue, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS), null);
 
         setSection(SETTINGS_SECTION_COMMENTS, getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS), null);
+    }
+
+    private void saveNoteSettings(final String noteValue) {
+        ENNote note = notes.get(noteValue);
+        setSection(SETTINGS_SECTION_NOTE, note != null ? note.getName() : null, isFieldEditable(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE), note != null ? note.getGuid() : null);
+        IDialogSettingsUtil.set(SETTINGS_SECTION_NOTE, SETTINGS_KEY_UUID, noteValue);
     }
 
     private void restoreSettings(final String label) {
