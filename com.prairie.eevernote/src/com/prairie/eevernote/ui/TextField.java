@@ -23,4 +23,6 @@ public abstract class TextField {
 
     public abstract Color getBackground();
 
+    public abstract void setTextLimit(int limit);
+
 }

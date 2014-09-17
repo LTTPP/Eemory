@@ -56,4 +56,9 @@ public class LabelTextField extends TextField {
         return text.getBackground();
     }
 
+    @Override
+    public void setTextLimit(final int limit) {
+        text.setTextLimit(limit);
+    }
+
 }

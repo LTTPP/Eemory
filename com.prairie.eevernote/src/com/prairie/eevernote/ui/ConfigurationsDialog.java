@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
+import com.prairie.eevernote.client.EDAMLimits;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.ENNote;
@@ -222,6 +223,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         // ----------------------
 
         final LabelCheckTextField tagsField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
+        tagsField.setTextLimit(EDAMLimits.EDAM_TAG_NAME_LEN_MAX);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, tagsField);
         fetchTagsInProgress();
         tagsProposalProvider = EclipseUtil.enableFilteringContentAssist(tagsField.getTextControl(), tags.toArray(new String[tags.size()]), TAGS_SEPARATOR);

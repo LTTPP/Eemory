@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
+import com.prairie.eevernote.client.EDAMLimits;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.ENNote;
@@ -167,6 +168,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
         if (shouldShow(SETTINGS_SECTION_TAGS, SETTINGS_KEY_NAME)) {
             Text tagsField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
+            tagsField.setTextLimit(EDAMLimits.EDAM_TAG_NAME_LEN_MAX);
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, tagsField);
             try {
                 new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
