@@ -96,6 +96,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
         if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID)) {
 
             Text notebookField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+            notebookField.setTextLimit(EDAMLimits.EDAM_NOTEBOOK_NAME_LEN_MAX);
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebookField);
             try {
                 new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
@@ -120,6 +121,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
         if (shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID)) {
             Text noteField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
+            noteField.setTextLimit(EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX);
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, noteField);
             final String notebook = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
             try {

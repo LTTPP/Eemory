@@ -132,6 +132,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         authInProgress();
 
         final LabelCheckTextField notebookField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+        notebookField.setTextLimit(EDAMLimits.EDAM_NOTEBOOK_NAME_LEN_MAX);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebookField);
         fetchNotebooksInProgres();
         notebookProposalProvider = EclipseUtil.enableFilteringContentAssist(notebookField.getTextControl(), notebooks.keySet().toArray(new String[notebooks.size()]));
@@ -179,6 +180,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         // ----------------------
 
         final LabelCheckTextField noteField = createLabelCheckTextField(groupPref, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
+        noteField.setTextLimit(EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX);
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, noteField);
         fetchNotesInProgres();
         noteProposalProvider = EclipseUtil.enableFilteringContentAssist(noteField.getTextControl(), notes.keySet().toArray(new String[notes.size()]));

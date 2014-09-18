@@ -9,6 +9,7 @@ import com.prairie.eevernote.util.NumberUtil;
 public class EDAMLimits {
 
     public static final int EDAM_NOTE_TITLE_LEN_MAX = NumberUtil.number(ConstantsUtil.TWO, ConstantsUtil.FIVE, ConstantsUtil.FIVE);
+    public static final int EDAM_NOTEBOOK_NAME_LEN_MAX = NumberUtil.number(ConstantsUtil.ONE, ConstantsUtil.ZERO, ConstantsUtil.ZERO);
     public static final int EDAM_TAG_NAME_LEN_MAX = NumberUtil.number(ConstantsUtil.ONE, ConstantsUtil.ZERO, ConstantsUtil.ZERO);
 
 }
