@@ -116,8 +116,8 @@ public final class StringUtil implements ConstantsUtil {
         String[] transition = ArrayUtils.EMPTY_STRING_ARRAY;
         String[] splits = { str };
         for (String sep : separators) {
-            for (String s : splits) {
-                String[] r = StringUtils.splitByWholeSeparatorPreserveAllTokens(s, sep);
+            for (String part : splits) {
+                String[] r = StringUtils.isEmpty(part) ? ArrayUtils.toArray(part) : StringUtils.splitByWholeSeparatorPreserveAllTokens(part, sep);
                 transition = ArrayUtils.addAll(transition, r);
             }
             splits = transition;
