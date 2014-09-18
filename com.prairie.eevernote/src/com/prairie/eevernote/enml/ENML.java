@@ -87,7 +87,7 @@ public class ENML implements ConstantsUtil {
      * @throws TransformerException
      */
     public String get() throws ParserConfigurationException, SAXException, IOException, TransformerException {
-        if (isNewCreated()) {
+        if (isCreateNew()) {
             for (Node n : newAddedNodes) {
                 root.appendChild(n);
             }
@@ -95,6 +95,12 @@ public class ENML implements ConstantsUtil {
             validateENML(newEnml);
             return newEnml;
         } else {
+            if (!ListUtil.isNullOrEmptyList(newAddedNodes)) {
+                Element div = div();
+                div.appendChild(br());
+                newAddedNodes.add(div);
+            }
+
             String beginPart = existingEnml.substring(0, StringUtil.find(existingEnml, ENML_TAG_EN_NOTE_START_REGEX));
             existingEnml = existingEnml.replace(beginPart, beginPart + DomUtil.toString(newAddedNodes));
             validateENML(existingEnml);
@@ -102,7 +108,7 @@ public class ENML implements ConstantsUtil {
         }
     }
 
-    private boolean isNewCreated() {
+    private boolean isCreateNew() {
         return document != null && root != null && StringUtils.isBlank(existingEnml);
     }
 
@@ -127,9 +133,6 @@ public class ENML implements ConstantsUtil {
         for (List<StyleText> lineBlocks : styleTextBlocks) {
             list.add(div(lineBlocks));
         }
-        Element div = div();
-        div.appendChild(br());
-        list.add(div);
         return list;
     }
 

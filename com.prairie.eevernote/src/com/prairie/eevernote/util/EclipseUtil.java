@@ -78,6 +78,9 @@ public class EclipseUtil implements ConstantsUtil {
     public static List<List<StyleText>> getSelectedStyleText(final StyledText styledText) throws DOMException, ParserConfigurationException {
         Point selection = styledText.getSelection();
         String selectionText = styledText.getSelectionText();
+        if (StringUtils.isEmpty(selectionText)) {
+            return ListUtil.list();
+        }
 
         String face = StringUtils.EMPTY;
         int size = TEN;//TODO why ten
