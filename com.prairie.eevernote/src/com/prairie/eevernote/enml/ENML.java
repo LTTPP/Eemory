@@ -110,6 +110,10 @@ public class ENML implements ConstantsUtil {
         return document.createElement(ENML_TAG_DIV);
     }
 
+    private Element br() {
+        return document.createElement(ENML_TAG_BR);
+    }
+
     private Element media(final String hashHex, final String mimeType) throws DOMException, ParserConfigurationException {
         Element media = document.createElement(ENML_TAG_EN_MEDIA);
         media.setAttribute(ENML_ATTR_ALIGN, Alignment.LEFT.toString());
@@ -123,6 +127,9 @@ public class ENML implements ConstantsUtil {
         for (List<StyleText> lineBlocks : styleTextBlocks) {
             list.add(div(lineBlocks));
         }
+        Element div = div();
+        div.appendChild(br());
+        list.add(div);
         return list;
     }
 
@@ -147,7 +154,7 @@ public class ENML implements ConstantsUtil {
     private Node span(final String text, final String size, final FontStyle fontStyle) throws DOMException, ParserConfigurationException {
         Element span = document.createElement(ENML_TAG_SPAN);
         if (StringUtils.isEmpty(text)) {
-            span.appendChild(document.createElement(ENML_TAG_BR));
+            span.appendChild(br());
         } else {
             if (fontStyle == FontStyle.BOLD) {
                 span.appendChild(b(text));
