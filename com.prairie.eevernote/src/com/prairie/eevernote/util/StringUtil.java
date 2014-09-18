@@ -126,4 +126,10 @@ public final class StringUtil implements ConstantsUtil {
         return splits;
     }
 
+    public static int indexOfAny(final String selectionText, final String[] array, final int startPosition) {
+        String subStrFromStart = selectionText.substring(startPosition);
+        int i = StringUtils.indexOfAny(subStrFromStart, array);
+        return i < 0 ? i : startPosition + i;
+    }
+
 }

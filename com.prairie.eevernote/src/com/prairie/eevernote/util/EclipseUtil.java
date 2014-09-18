@@ -66,8 +66,7 @@ public class EclipseUtil implements ConstantsUtil {
         } else if (selection instanceof ITextSelection) {
             IEditorPart editorPart = HandlerUtil.getActiveEditor(event);
             IFile iFile = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
-            if (iFile != null) {// TODO iFile == null: how to handle this
-                // case in XML file
+            if (iFile != null) {// TODO iFile == null: how to handle this case in XML file
                 File file = iFile.getLocation().makeAbsolute().toFile();
                 files.add(file);
             }
@@ -81,22 +80,28 @@ public class EclipseUtil implements ConstantsUtil {
         String selectionText = styledText.getSelectionText();
 
         String face = StringUtils.EMPTY;
-        int size = TEN;
-        FontData[] fontDatas = styledText.getFont().getFontData();
+        int size = TEN;//TODO why ten
+        FontData[] fontDatas = styledText.getFont().getFontData(); // TODO why array here
         if (fontDatas != null && fontDatas.length > ZERO) {
             face = fontDatas[ZERO].getName();
             size = fontDatas[ZERO].getHeight();
         }
 
-        String[] lines = StringUtil.splitByMultipleSeparatorsPreserveAllTokens(selectionText, ArrayUtils.toArray(StringUtil.CRLF, StringUtils.CR, StringUtils.LF));
-        int count = ZERO;
         List<List<StyleText>> list = ListUtil.list();
-        for (int i = ZERO; i < lines.length; i++) {
-            int offset = selection.x + (count += i <= ZERO ? ZERO : lines[i - ONE].length()) + i * TWO;
-            StyleRange[] ranges = styledText.getStyleRanges(offset, lines[i].length());
-            List<StyleText> textRanges = parseLine(lines[i], ranges, offset, face, String.valueOf(size));
+        int start = ZERO;
+        while (start >= ZERO) {
+            int end = StringUtil.indexOfAny(selectionText, ArrayUtils.toArray(StringUtil.CRLF, StringUtils.CR, StringUtils.LF), start);
+
+            String line = selectionText.substring(start, end < 0 ? selectionText.length() : end);
+
+            int offset = selection.x + start;
+            StyleRange[] ranges = styledText.getStyleRanges(offset, line.length());
+            List<StyleText> textRanges = parseLine(line, ranges, offset, face, String.valueOf(size));
             list.add(textRanges);
+
+            start = end < ZERO ? end : end + (selectionText.startsWith(StringUtil.CRLF, end) ? StringUtil.CRLF.length() : selectionText.startsWith(StringUtils.CR, end) ? StringUtils.CR.length() : StringUtils.LF.length());
         }
+
         return list;
     }
 
