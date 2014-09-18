@@ -88,7 +88,7 @@ public class EclipseUtil implements ConstantsUtil {
             size = fontDatas[ZERO].getHeight();
         }
 
-        String[] lines = StringUtil.splitByMultipleSeparatorsPreserveAllTokens(selectionText, new String[] { StringUtil.CRLF, StringUtils.CR, StringUtils.LF });
+        String[] lines = StringUtil.splitByMultipleSeparatorsPreserveAllTokens(selectionText, ArrayUtils.toArray(StringUtil.CRLF, StringUtils.CR, StringUtils.LF));
         int count = ZERO;
         List<List<StyleText>> list = ListUtil.list();
         for (int i = ZERO; i < lines.length; i++) {
