@@ -72,7 +72,6 @@ public interface ConstantsUtil {
     public static final String ENML_TAG_SPAN = "span";
     public static final String ENML_ATTR_HASH = "hash";
     public static final String ENML_ATTR_TYPE = "type";
-    public static final String ENML_ATTR_ALIGN = "align";
     public static final String ENML_TAG_EN_MEDIA = "en-media";
     public static final String ENML_TAG_EN_NOTE = "en-note";
     public static final String ENML_TAG_DIV = "div";
