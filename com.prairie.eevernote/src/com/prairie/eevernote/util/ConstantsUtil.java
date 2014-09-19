@@ -31,7 +31,8 @@ public interface ConstantsUtil {
     public static final int EIGHT = 8;
     public static final int NINE = 9;
     public static final int TEN = 10;
-    public static final int HUNDRED = 100;
+    public static final int HUNDRED = TEN * TEN;
+    public static final int THOUSAND = TEN * TEN * TEN;
     public static final int NEGATIVE = -1;
 
     public static final String PLUS = "+";

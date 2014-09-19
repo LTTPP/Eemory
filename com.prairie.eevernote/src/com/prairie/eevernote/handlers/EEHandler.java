@@ -37,6 +37,7 @@ import com.prairie.eevernote.util.FileUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.LogUtil;
+import com.prairie.eevernote.util.NumberUtil;
 
 public class EEHandler extends AbstractHandler implements ConstantsUtil, Constants {
 
@@ -176,6 +177,8 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             } else if (option == HotTextDialog.CANCEL) {
                 return;
             }
+
+            Thread.sleep(NumberUtil.number(THREE, ZERO, ZERO)); // wait for right click menu to hide
 
             final BufferedImage screenshot = CaptureView.showView();
             if (screenshot == null) {

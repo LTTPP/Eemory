@@ -15,6 +15,10 @@ public class NumberUtil implements ConstantsUtil {
         return hundreds * HUNDRED + tens * TEN + single;
     }
 
+    public static int number(final int thousands, final int hundreds, final int tens, final int single) {
+        return thousands * THOUSAND + hundreds * HUNDRED + tens * TEN + single;
+    }
+
     public static int signedNumber(final int single, final int sign) {
         return sign * single;
     }
