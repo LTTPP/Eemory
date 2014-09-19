@@ -96,7 +96,6 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
         // ------------
 
         if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID)) {
-
             Text notebookField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
             notebookField.setTextLimit(EDAMLimits.EDAM_NOTEBOOK_NAME_LEN_MAX);
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebookField);
@@ -112,7 +111,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, noteField);
             fetchNotesInProgres();
             noteProposalProvider = EclipseUtil.enableFilteringContentAssist(noteField, notes.keySet().toArray(new String[notes.size()]));
-            if (IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED)) {//TODO shouldShow()
+            if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID)) {
                 noteField.addFocusListener(new FocusAdapter() {
                     @Override
                     public void focusGained(final FocusEvent e) {
@@ -208,15 +207,13 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
         if (isCanceled()) {
             return;
         }
-        final String notebook = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
         try {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask("Fetching notes...", ONE);
                     try {
-                        //TODO shoudShow()
-                        notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED) ? IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) : notebooks.get(notebook)));
+                        notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID)));
                     } catch (Throwable e) {
                         ThrowableHandler.handleDesignTimeErr(shell, e);
                     }
