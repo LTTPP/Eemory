@@ -10,7 +10,7 @@ public class GeomPoint implements ConstantsUtil {
     private int y;
 
     public GeomPoint() {
-        this(0, 0);
+        this(ZERO, ZERO);
     }
 
     public GeomPoint(final int x, final int y) {
@@ -45,7 +45,7 @@ public class GeomPoint implements ConstantsUtil {
     }
 
     public boolean isMovable(final int x, final int y) {
-        if (getX() + x >= 0 && getX() + x <= Toolkit.getDefaultToolkit().getScreenSize().getWidth() && getY() + y >= 0 && getY() + y <= Toolkit.getDefaultToolkit().getScreenSize().getHeight()) {
+        if (getX() + x >= ZERO && getX() + x <= Toolkit.getDefaultToolkit().getScreenSize().getWidth() && getY() + y >= ZERO && getY() + y <= Toolkit.getDefaultToolkit().getScreenSize().getHeight()) {
             return true;
         }
         return false;
@@ -60,8 +60,8 @@ public class GeomPoint implements ConstantsUtil {
     }
 
     public void clear() {
-        x = 0;
-        y = 0;
+        x = ZERO;
+        y = ZERO;
     }
 
     @Override

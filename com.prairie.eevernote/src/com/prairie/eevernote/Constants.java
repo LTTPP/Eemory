@@ -30,7 +30,7 @@ public interface Constants {
     public static final String EEPLUGIN_COMMAND_ID_CONFIGURATIONS = "com.prairie.eevernote.commands.Configurations";
 
     public static final int EEPLUGIN_SCREENSHOT_HINT_HEIGHT = 18;
-    public static final int EEPLUGIN_SCREENSHOT_HINT_WIDTH = 235;
+    public static final int EEPLUGIN_SCREENSHOT_HINT_WIDTH = 260;
     public static float EEPLUGIN_SCREENSHOT_HINT_SCALEFACTOR = 0.3F;
     public static final int EEPLUGIN_SCREENSHOT_HINT_TEXT_START_X = 5;
     public static final int EEPLUGIN_SCREENSHOT_HINT_TEXT_START_Y = -6;

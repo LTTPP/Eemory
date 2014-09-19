@@ -5,7 +5,7 @@ import org.eclipse.swt.SWT;
 
 public class ColorUtil implements ConstantsUtil {
 
-    public final static java.awt.Color AWT_EVERNOTE_GREEN = new java.awt.Color(ONE * HUNDRED + ONE * TEN + ONE, ONE * HUNDRED + EIGHT * TEN + ONE, FIVE * TEN + FOUR);
+    public final static java.awt.Color AWT_EVERNOTE_GREEN = new java.awt.Color(NumberUtil.number(THREE, TWO), NumberUtil.number(ONE, NINE, TWO), NumberUtil.number(NINE, TWO));
     public final static org.eclipse.swt.graphics.Color SWT_COLOR_DEFAULT = new org.eclipse.swt.graphics.Color(null, ZERO,ZERO,ZERO);
     public final static int SWT_COLOR_GRAY = SWT.COLOR_GRAY;
 

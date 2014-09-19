@@ -27,6 +27,7 @@ import com.prairie.eevernote.ui.GeomRectangle.Position;
 import com.prairie.eevernote.util.ColorUtil;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.ImageUtil;
+import com.prairie.eevernote.util.NumberUtil;
 import com.prairie.eevernote.util.Times;
 
 @SuppressWarnings("serial")
@@ -39,6 +40,8 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
     private boolean isCaptureFullScreenViaClick = false;
     private final Times times = new Times();
     private GeomPoint datumPoint;
+
+    private final static Cursor DRAW_CURSOR = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
 
     public CaptureView() throws HeadlessException, AWTException {
 
@@ -80,7 +83,7 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
                             resetView();
                             isCaptured = false;
                             isCaptureFullScreenViaClick = false;
-                            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                            setCursor(DRAW_CURSOR);
                         } else {
                             rectangle.clear();
                             setVisible(false);
@@ -170,7 +173,7 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
                     } else if (rectangle.positionOf(new GeomPoint(e.getX(), e.getY())) == GeomRectangle.Position.INSIDE) {
                         setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                     } else {
-                        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                        setCursor(DRAW_CURSOR);
                     }
                 }
             }
@@ -212,9 +215,10 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
             g2.drawRect(rectangle.getRightRectangle().getTopLeftPoint().getX(), rectangle.getRightRectangle().getTopLeftPoint().getY(), rectangle.getRightRectangle().getWidth(), rectangle.getRightRectangle().getHeight());
             g2.fillRect(rectangle.getRightRectangle().getTopLeftPoint().getX(), rectangle.getRightRectangle().getTopLeftPoint().getY(), rectangle.getRightRectangle().getWidth(), rectangle.getRightRectangle().getHeight());
 
+            // draw hint
             GeomPoint p = rectangle.getTopLeftPoint();
             if (p.getY() - (EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO) < ZERO) {
-                p = new GeomPoint(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY() + (EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO));
+                p = new GeomPoint(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY() + EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO);
             }
             g2.drawImage(ImageUtil.mask(fullScreen.getSubimage(p.getX(), p.getY() - (EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO), EEPLUGIN_SCREENSHOT_HINT_WIDTH, EEPLUGIN_SCREENSHOT_HINT_HEIGHT), EEPLUGIN_SCREENSHOT_HINT_SCALEFACTOR), p.getX(), p.getY() - (EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO), null);
             g2.setColor(Color.WHITE);
@@ -267,8 +271,9 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
     public static BufferedImage showView() throws HeadlessException, AWTException, InterruptedException {
         final CaptureView view = new CaptureView();
         view.setVisible(true);
+        view.setCursor(DRAW_CURSOR);
         while (view.isVisible()) {
-            Thread.sleep(100);
+            Thread.sleep(NumberUtil.number(ONE, ZERO, ZERO));
         }
         return view.getScreenshot();
     }
