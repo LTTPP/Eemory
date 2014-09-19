@@ -63,6 +63,8 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
     private boolean fatal = false;// TODO may remove
 
+    private boolean canceled = false;
+
     public HotTextDialog(final Shell parentShell) {
         super(parentShell);
         shell = parentShell;
@@ -98,23 +100,8 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
             Text notebookField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
             notebookField.setTextLimit(EDAMLimits.EDAM_NOTEBOOK_NAME_LEN_MAX);
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebookField);
-            try {
-                new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
-                    @Override
-                    public void run(final IProgressMonitor monitor) {
-                        monitor.beginTask("Fetching notebooks...", IProgressMonitor.UNKNOWN);
-                        try {
-                            notebooks = clipper.listNotebooks();
-                        } catch (Throwable e) {
-                            ThrowableHandler.handleDesignTimeErr(shell, e);
-                        }
-                        monitor.done();
-                    }
-                });
-                EclipseUtil.enableFilteringContentAssist(notebookField, notebooks.keySet().toArray(new String[notebooks.size()]));
-            } catch (Throwable e) {
-                ThrowableHandler.handleDesignTimeErr(shell, e);
-            }
+            fetchNotebooksInProgres();
+            EclipseUtil.enableFilteringContentAssist(notebookField, notebooks.keySet().toArray(new String[notebooks.size()]));
         }
 
         // ------------
@@ -123,25 +110,9 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
             Text noteField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
             noteField.setTextLimit(EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX);
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, noteField);
-            final String notebook = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
-            try {
-                new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
-                    @Override
-                    public void run(final IProgressMonitor monitor) {
-                        monitor.beginTask("Fetching notes...", IProgressMonitor.UNKNOWN);
-                        try {
-                            notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED) ? IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) : notebooks.get(notebook)));
-                        } catch (Throwable e) {
-                            ThrowableHandler.handleDesignTimeErr(shell, e);
-                        }
-                        monitor.done();
-                    }
-                });
-                noteProposalProvider = EclipseUtil.enableFilteringContentAssist(noteField, notes.keySet().toArray(new String[notes.size()]));
-            } catch (Throwable e) {
-                ThrowableHandler.handleDesignTimeErr(shell, e);
-            }
-            if (IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED)) {
+            fetchNotesInProgres();
+            noteProposalProvider = EclipseUtil.enableFilteringContentAssist(noteField, notes.keySet().toArray(new String[notes.size()]));
+            if (IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED)) {//TODO shouldShow()
                 noteField.addFocusListener(new FocusAdapter() {
                     @Override
                     public void focusGained(final FocusEvent e) {
@@ -172,23 +143,8 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
             Text tagsField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
             tagsField.setTextLimit(EDAMLimits.EDAM_TAG_NAME_LEN_MAX);
             addField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, tagsField);
-            try {
-                new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
-                    @Override
-                    public void run(final IProgressMonitor monitor) {
-                        monitor.beginTask("Fetching tags...", IProgressMonitor.UNKNOWN);
-                        try {
-                            tags = clipper.listTags();
-                        } catch (Throwable e) {
-                            ThrowableHandler.handleDesignTimeErr(shell, e);
-                        }
-                        monitor.done();
-                    }
-                });
-                EclipseUtil.enableFilteringContentAssist(tagsField, tags.toArray(new String[tags.size()]), TAGS_SEPARATOR);
-            } catch (Throwable e) {
-                ThrowableHandler.handleDesignTimeErr(shell, e);
-            }
+            fetchTagsInProgress();
+            EclipseUtil.enableFilteringContentAssist(tagsField, tags.toArray(new String[tags.size()]), TAGS_SEPARATOR);
         }
 
         // ------------
@@ -201,23 +157,98 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     }
 
     private void authInProgress() {
+        if (isCanceled()) {
+            return;
+        }
         try {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Authenticating...", IProgressMonitor.UNKNOWN);
+                    monitor.beginTask("Authenticating...", ONE);
                     try {
                         clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false);
                     } catch (Throwable e) {
                         fatal = true;
                         ThrowableHandler.handleDesignTimeErr(shell, e, true);
                     }
+                    setCanceled(monitor.isCanceled());
                     monitor.done();
                 }
             });
         } catch (Throwable e) {
             fatal = true;
             ThrowableHandler.handleDesignTimeErr(shell, e, true);
+        }
+    }
+
+    private void fetchNotebooksInProgres() {
+        if (isCanceled()) {
+            return;
+        }
+        try {
+            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(final IProgressMonitor monitor) {
+                    monitor.beginTask("Fetching notebooks...", ONE);
+                    try {
+                        notebooks = clipper.listNotebooks();
+                    } catch (Throwable e) {
+                        ThrowableHandler.handleDesignTimeErr(shell, e);
+                    }
+                    setCanceled(monitor.isCanceled());
+                    monitor.done();
+                }
+            });
+        } catch (Throwable e) {
+            ThrowableHandler.handleDesignTimeErr(shell, e);
+        }
+    }
+
+    private void fetchNotesInProgres() {
+        if (isCanceled()) {
+            return;
+        }
+        final String notebook = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+        try {
+            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(final IProgressMonitor monitor) {
+                    monitor.beginTask("Fetching notes...", ONE);
+                    try {
+                        //TODO shoudShow()
+                        notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_CHECKED) ? IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) : notebooks.get(notebook)));
+                    } catch (Throwable e) {
+                        ThrowableHandler.handleDesignTimeErr(shell, e);
+                    }
+                    setCanceled(monitor.isCanceled());
+                    monitor.done();
+                }
+            });
+        } catch (Throwable e) {
+            ThrowableHandler.handleDesignTimeErr(shell, e);
+        }
+    }
+
+    private void fetchTagsInProgress() {
+        if (isCanceled()) {
+            return;
+        }
+        try {
+            new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(final IProgressMonitor monitor) {
+                    monitor.beginTask("Fetching tags...", ONE);
+                    try {
+                        tags = clipper.listTags();
+                    } catch (Throwable e) {
+                        ThrowableHandler.handleDesignTimeErr(shell, e);
+                    }
+                    setCanceled(monitor.isCanceled());
+                    monitor.done();
+                }
+            });
+        } catch (Throwable e) {
+            ThrowableHandler.handleDesignTimeErr(shell, e);
         }
     }
 
@@ -354,6 +385,14 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
     public static HotTextDialog getThis() {
         return thisDialog;
+    }
+
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    public void setCanceled(final boolean canceled) {
+        this.canceled = canceled;
     }
 
 }

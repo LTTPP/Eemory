@@ -72,6 +72,8 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     // <Field Property, Hint Message Property>
     private Map<String, String> hintPropMap;
 
+    private boolean canceled = false;
+
     public ConfigurationsDialog(final Shell parentShell) {
         super(parentShell);
         shell = parentShell;
@@ -293,17 +295,21 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     }
 
     private void authInProgress() {
+        if (isCanceled()) {
+            return;
+        }
         final String token = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
         try {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Authenticating...", IProgressMonitor.UNKNOWN);
+                    monitor.beginTask("Authenticating...", ONE);
                     try {
                         globalClipper = EEClipperFactory.getInstance().getEEClipper(token, false);
                     } catch (Throwable e) {
                         ThrowableHandler.handleDesignTimeErr(shell, e);
                     }
+                    setCanceled(monitor.isCanceled());
                     monitor.done();
                 }
             });
@@ -313,16 +319,20 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     }
 
     private void fetchNotebooksInProgres() {
+        if (isCanceled()) {
+            return;
+        }
         try {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Fetching notebooks...", IProgressMonitor.UNKNOWN);
+                    monitor.beginTask("Fetching notebooks...", ONE);
                     try {
                         notebooks = globalClipper.listNotebooks();
                     } catch (Throwable e) {
                         ThrowableHandler.handleDesignTimeErr(shell, e);
                     }
+                    setCanceled(monitor.isCanceled());
                     monitor.done();
                 }
             });
@@ -332,17 +342,21 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     }
 
     private void fetchNotesInProgres() {
+        if (isCanceled()) {
+            return;
+        }
         final String notebook = getFieldInput(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
         try {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Fetching notes...", IProgressMonitor.UNKNOWN);
+                    monitor.beginTask("Fetching notes...", ONE);
                     try {
                         notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(notebook)));
                     } catch (Throwable e) {
                         ThrowableHandler.handleDesignTimeErr(shell, e);
                     }
+                    setCanceled(monitor.isCanceled());
                     monitor.done();
                 }
             });
@@ -352,16 +366,20 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     }
 
     private void fetchTagsInProgress() {
+        if (isCanceled()) {
+            return;
+        }
         try {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Fetching tags...", IProgressMonitor.UNKNOWN);
+                    monitor.beginTask("Fetching tags...", ONE);
                     try {
                         tags = globalClipper.listTags();
                     } catch (Throwable e) {
                         ThrowableHandler.handleDesignTimeErr(shell, e);
                     }
+                    setCanceled(monitor.isCanceled());
                     monitor.done();
                 }
             });
@@ -678,6 +696,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     protected String getProperty(final String key) {
         return EEProperties.getProperties().getProperty(key);
+    }
+
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    public void setCanceled(final boolean canceled) {
+        this.canceled = canceled;
     }
 
 }

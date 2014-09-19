@@ -83,10 +83,16 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE), IProgressMonitor.UNKNOWN);
+                    monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE), TWO);
                     try {
                         EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
+                        monitor.worked(ONE);
+
+                        if (monitor.isCanceled()) {
+                            return LogUtil.cancel();
+                        }
                         clipper.clipFile(args);
+                        monitor.worked(TWO);
                     } catch (EDAMNotFoundException e) {
                         // try to auto fix EDAMNotFoundException
                         boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
@@ -136,10 +142,16 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE)) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE), IProgressMonitor.UNKNOWN);
+                    monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE), TWO);
                     try {
                         EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
+                        monitor.worked(ONE);
+
+                        if (monitor.isCanceled()) {
+                            return LogUtil.cancel();
+                        }
                         clipper.clipSelection(args);
+                        monitor.worked(TWO);
                     } catch (EDAMNotFoundException e) {
                         boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
                         if (fixed) {
@@ -193,12 +205,19 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             Job job = new Job(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE), IProgressMonitor.UNKNOWN);
+                    monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE), THREE);
                     try {
                         ImageIO.write(screenshot, IMG_PNG, file);
+                        monitor.worked(ONE);
 
                         EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
+                        monitor.worked(TWO);
+
+                        if (monitor.isCanceled()) {
+                            return LogUtil.cancel();
+                        }
                         clipper.clipFile(args);
+                        monitor.worked(THREE);
                     } catch (EDAMNotFoundException e) {
                         boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
                         if (fixed) {
