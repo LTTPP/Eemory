@@ -42,6 +42,8 @@ public interface ConstantsUtil {
     public static final String DOUBLE_QUOTATION_MARK = "\"";
     public static String YES = "yes";
     public static String NO = "no";
+    public static String OK_CAPS = "OK";
+    public static String OK_LOWS = "ok";
     public static String SLASH = "/";
     public static String BACKSLASH = "\\";
     public static String QUESTION_MARK = "?";

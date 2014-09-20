@@ -5,6 +5,7 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -12,7 +13,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
@@ -48,9 +48,13 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
         } else {
             // check token
             if (StringUtils.isBlank(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN))) {
-                MessageDialog.openWarning(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), "Token is not configured, please first configure token in Configurations dialog.");
+                int opt = EclipseUtil.openWarningWithMultipleButtons(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), "Token is not configured, please first configure token in Configurations dialog.", ArrayUtils.toArray("Configure", OK_CAPS));
+                if (opt == ZERO) {
+                    configurationsClicked(event);
+                }
                 return null;
             }
+            // clip
             if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE)) {
                 // TODO
             } else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE)) {

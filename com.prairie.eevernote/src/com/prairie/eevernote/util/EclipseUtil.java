@@ -13,6 +13,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
@@ -26,6 +27,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.w3c.dom.DOMException;
@@ -172,6 +174,16 @@ public class EclipseUtil implements ConstantsUtil {
         contentProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 
         return contentProposalProvider;
+    }
+
+    public static int openWarningWithMultipleButtons(final Shell shell, final String title, final String message, final String[] buttons) {
+        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.WARNING, buttons, ZERO);
+        return dialog.open();
+    }
+
+    public static int openErrorWithMultipleButtons(final Shell shell, final String title, final String message, final String[] buttons) {
+        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.WARNING, buttons, ZERO);
+        return dialog.open();
     }
 
 }
