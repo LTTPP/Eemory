@@ -35,4 +35,9 @@ public class EEClipperNop extends EEClipper {
         return ListUtil.list();
     }
 
+    @Override
+    public void setInvalid() {
+
+    }
+
 }

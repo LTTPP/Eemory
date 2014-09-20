@@ -123,7 +123,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                                     try {
                                         notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
                                     } catch (Throwable e) {
-                                        ThrowableHandler.handleDesignTimeErr(shell, e);
+                                        ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
                                     }
                                 }
                             });
@@ -168,7 +168,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                         clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false);
                     } catch (Throwable e) {
                         fatal = true;
-                        ThrowableHandler.handleDesignTimeErr(shell, e, true);
+                        ThrowableHandler.handleDesignTimeErr(shell, e, true, clipper);
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();
@@ -192,7 +192,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                     try {
                         notebooks = clipper.listNotebooks();
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e);
+                        ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();
@@ -215,7 +215,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                     try {
                         notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID)));
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e);
+                        ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();
@@ -238,7 +238,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
                     try {
                         tags = clipper.listTags();
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e);
+                        ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();

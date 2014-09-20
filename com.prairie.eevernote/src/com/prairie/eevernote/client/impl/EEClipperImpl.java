@@ -23,6 +23,7 @@ import com.evernote.edam.notestore.NotesMetadataResultSpec;
 import com.evernote.edam.type.Notebook;
 import com.evernote.edam.type.Tag;
 import com.evernote.thrift.TException;
+import com.evernote.thrift.transport.TTransportException;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.ENNote;
 import com.prairie.eevernote.exception.OutOfDateException;
@@ -206,6 +207,24 @@ public class EEClipperImpl extends EEClipper {
                 return ((Tag) o).getName();
             }
         });
+    }
+
+    @Override
+    public boolean isValid() {
+        if (!super.isValid()) {
+            return false;
+        }
+        if (noteStoreClient == null) {
+            return false;
+        }
+        try {
+            noteStoreClient.getDefaultNotebook();
+        } catch (Throwable e) {
+            if (e instanceof TTransportException) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

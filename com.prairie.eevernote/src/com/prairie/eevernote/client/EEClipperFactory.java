@@ -82,7 +82,15 @@ public class EEClipperFactory {
                     }
                 }
             }
-            return realEEClipperMap.get(token);
+            EEClipper clipper = realEEClipperMap.get(token);
+            if (!clipper.isValid()) {
+                synchronized (realEEClipperMap) {
+                    if (!clipper.isValid()) {
+                        clipper = getEEClipper(token);
+                    }
+                }
+            }
+            return clipper;
         }
     }
 
@@ -115,4 +123,5 @@ public class EEClipperFactory {
         }
         return nopEEClipper;
     }
+
 }

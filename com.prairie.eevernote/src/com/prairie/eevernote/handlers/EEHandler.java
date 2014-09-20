@@ -84,8 +84,9 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
                     monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE), TWO);
+                    EEClipper clipper = null;
                     try {
-                        EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
+                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
                         monitor.worked(ONE);
 
                         if (monitor.isCanceled()) {
@@ -98,16 +99,16 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                         boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
                         if (fixed) {
                             try {
-                                EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false).clipFile(args);
+                                clipper.clipFile(args);
                             } catch (Throwable e1) {
-                                return ThrowableHandler.handleJobErr(e1);
+                                return ThrowableHandler.handleJobErr(e1, clipper);
                             }
                             saveIfNeeded(args);
                             return LogUtil.ok();
                         }
                         return ThrowableHandler.handleJobErr(e);
                     } catch (Throwable e) {
-                        return ThrowableHandler.handleJobErr(e);
+                        return ThrowableHandler.handleJobErr(e, clipper);
                     }
                     monitor.done();
                     return LogUtil.ok();
@@ -143,8 +144,9 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
                     monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE), TWO);
+                    EEClipper clipper = null;
                     try {
-                        EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
+                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
                         monitor.worked(ONE);
 
                         if (monitor.isCanceled()) {
@@ -156,16 +158,16 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                         boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
                         if (fixed) {
                             try {
-                                EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false).clipFile(args);
+                                clipper.clipFile(args);
                             } catch (Throwable e1) {
-                                return ThrowableHandler.handleJobErr(e1);
+                                return ThrowableHandler.handleJobErr(e1, clipper);
                             }
                             saveIfNeeded(args);
                             return LogUtil.ok();
                         }
                         return ThrowableHandler.handleJobErr(e);
                     } catch (final Throwable e) {
-                        return ThrowableHandler.handleJobErr(e);
+                        return ThrowableHandler.handleJobErr(e, clipper);
                     }
                     monitor.done();
                     return LogUtil.ok();
@@ -206,11 +208,12 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
                     monitor.beginTask(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE), THREE);
+                    EEClipper clipper = null;
                     try {
                         ImageIO.write(screenshot, IMG_PNG, file);
                         monitor.worked(ONE);
 
-                        EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
+                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
                         monitor.worked(TWO);
 
                         if (monitor.isCanceled()) {
@@ -222,9 +225,9 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                         boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
                         if (fixed) {
                             try {
-                                EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false).clipFile(args);
+                                clipper.clipFile(args);
                             } catch (Throwable e1) {
-                                return ThrowableHandler.handleJobErr(e1);
+                                return ThrowableHandler.handleJobErr(e1, clipper);
                             }
                             saveIfNeeded(args);
                             monitor.done();
@@ -232,7 +235,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                         }
                         return ThrowableHandler.handleJobErr(e);
                     } catch (Throwable e) {
-                        return ThrowableHandler.handleJobErr(e);
+                        return ThrowableHandler.handleJobErr(e, clipper);
                     } finally {
                         if (file != null && file.exists()) {
                             file.delete();

@@ -27,6 +27,22 @@ public class LogUtil {
         log.log(error(exception));
     }
 
+    public static void logInfo(final String message) {
+        log.log(info(message));
+    }
+
+    public static void logWarning(final String message) {
+        log.log(warning(message));
+    }
+
+    public static void logCancel(final String message) {
+        log.log(cancel(message));
+    }
+
+    public static void logError(final String message) {
+        log.log(error(message));
+    }
+
     public static IStatus info(final Throwable exception) {
         return new Status(Status.INFO, EEPlugin.PLUGIN_ID, ExceptionUtils.getRootCauseMessage(exception), exception);
     }

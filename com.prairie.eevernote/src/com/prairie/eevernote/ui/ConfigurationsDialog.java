@@ -148,10 +148,12 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                         BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                             @Override
                             public void run() {
+                                EEClipper clipper = null;
                                 try {
-                                    notebooks = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listNotebooks();
+                                    clipper = EEClipperFactory.getInstance().getEEClipper(hotoken, false);
+                                    notebooks = clipper.listNotebooks();
                                 } catch (Throwable e) {
-                                    ThrowableHandler.handleDesignTimeErr(shell, e);
+                                    ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
                                 }
                             }
                         });
@@ -196,10 +198,12 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                     BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                         @Override
                         public void run() {
+                            EEClipper clipper = null;
                             try {
-                                notes = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
+                                clipper = EEClipperFactory.getInstance().getEEClipper(hotoken, false);
+                                notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
                             } catch (Throwable e) {
-                                ThrowableHandler.handleDesignTimeErr(shell, e);
+                                ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
                             }
                         }
                     });
@@ -241,10 +245,12 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                         BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                             @Override
                             public void run() {
+                                EEClipper clipper = null;
                                 try {
-                                    tags = EEClipperFactory.getInstance().getEEClipper(hotoken, false).listTags();
+                                    clipper = EEClipperFactory.getInstance().getEEClipper(hotoken, false);
+                                    tags = clipper.listTags();
                                 } catch (Throwable e) {
-                                    ThrowableHandler.handleDesignTimeErr(shell, e);
+                                    ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
                                 }
                             }
                         });
@@ -307,7 +313,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                     try {
                         globalClipper = EEClipperFactory.getInstance().getEEClipper(token, false);
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e);
+                        ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();
@@ -330,7 +336,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                     try {
                         notebooks = globalClipper.listNotebooks();
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e);
+                        ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();
@@ -354,7 +360,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                     try {
                         notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(notebook)));
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e);
+                        ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();
@@ -377,7 +383,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
                     try {
                         tags = globalClipper.listTags();
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e);
+                        ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();
