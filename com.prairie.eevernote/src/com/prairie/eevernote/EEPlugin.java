@@ -15,10 +15,8 @@ public class EEPlugin extends AbstractUIPlugin {
     // The shared instance
     private static EEPlugin plugin;
 
-    /**
-     * The constructor
-     */
     public EEPlugin() {
+
     }
 
     @Override
