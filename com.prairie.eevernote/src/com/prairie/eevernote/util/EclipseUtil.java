@@ -27,6 +27,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -174,6 +175,15 @@ public class EclipseUtil implements ConstantsUtil {
         contentProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 
         return contentProposalProvider;
+    }
+
+    public static void openErrorSync(final Shell shell, final String title, final String message) {
+        Display.getDefault().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                MessageDialog.openError(shell, title, message);
+            }
+        });
     }
 
     public static int openWarningWithMultipleButtons(final Shell shell, final String title, final String message, final String[] buttons) {

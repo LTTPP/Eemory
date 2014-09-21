@@ -4,8 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import com.evernote.edam.error.EDAMUserException;
@@ -14,19 +12,15 @@ import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEPlugin;
 import com.prairie.eevernote.EEProperties;
 import com.prairie.eevernote.client.EEClipper;
+import com.prairie.eevernote.util.EclipseUtil;
 import com.prairie.eevernote.util.LogUtil;
 
 public class ThrowableHandler implements Constants {
 
     private static String OUT_OF_DATE_ERROR = EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE);
 
-    private static void openError(final Shell shell, final String error) {
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                MessageDialog.openError(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), error);
-            }
-        });
+    public static void openError(final Shell shell, final String message) {
+        EclipseUtil.openErrorSync(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), message);
     }
 
     public static void handleDesignTimeErr(final Shell shell, final Throwable e) {

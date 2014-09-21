@@ -1,5 +1,6 @@
 package com.prairie.eevernote.ui;
 
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEProperties;
@@ -117,8 +120,18 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         groupAuth.setLayout(new GridLayout(TWO, false));
         groupAuth.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
 
-        TextField tokenField = createLabelTextField(groupAuth, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
+        TextField tokenField = createLabelHyperlinkTextField(groupAuth, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN, "https://evernote.com", "click to authenticate to Evernote account");
         addField(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN, tokenField);
+        tokenField.getTextControl().addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(final FocusEvent e) {
+                clearHintText(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN_HINTMESSAGE);
+            }
+            @Override
+            public void focusLost(final FocusEvent e) {
+                showHintText(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN_HINTMESSAGE);
+            }
+        });
         restoreSettings(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN);
 
         // ----------------------
@@ -298,6 +311,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         hintPropMap.put(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK_HINTMESSAGE);
         hintPropMap.put(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE_HINTMESSAGE);
         hintPropMap.put(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS_HINTMESSAGE);
+        hintPropMap.put(EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN, EECLIPPERPLUGIN_CONFIGURATIONS_TOKEN_HINTMESSAGE);
     }
 
     private void authInProgress() {
@@ -413,8 +427,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     private void clearHintText(final String property, final String hintMsg) {
         if (!isHasInput(property)) {
             setFieldValue(property, StringUtils.EMPTY);
-            // Sets foreground color to the default system color for this
-            // control.
+            // Sets foreground color to the default system color for this control.
             getField(property).setForeground(null);
         }
     }
@@ -633,6 +646,28 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     protected TextField createLabelTextField(final Composite container, final String labelText) {
         Label label = new Label(container, SWT.NONE);
         label.setText(getProperty(labelText) + COLON);
+
+        Text text = new Text(container, SWT.BORDER);
+        text.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
+
+        return new LabelTextField(text);
+    }
+
+    protected TextField createLabelHyperlinkTextField(final Composite container, final String labelText, final String hyperlink, final String tip) {
+        Link link = new Link(container, SWT.NONE);
+        link.setText("<a href=\"" + hyperlink + "\">" + getProperty(labelText) + COLON + "</a>");
+        link.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+                try {
+                    //  Open default external browser
+                    PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(event.text));
+                } catch (Throwable e) {
+                    ThrowableHandler.openError(shell, "Problem occurred when open hyperlink, please copy the link: " + hyperlink + "to browser to continue.");
+                }
+            }
+        });
+        link.setToolTipText(tip);
 
         Text text = new Text(container, SWT.BORDER);
         text.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
