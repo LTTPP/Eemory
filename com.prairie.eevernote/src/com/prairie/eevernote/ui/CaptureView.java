@@ -22,7 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import com.prairie.eevernote.Constants;
-import com.prairie.eevernote.EEProperties;
+import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.ui.GeomRectangle.Position;
 import com.prairie.eevernote.util.ColorUtil;
 import com.prairie.eevernote.util.ConstantsUtil;
@@ -223,7 +223,7 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
             g2.drawImage(ImageUtil.mask(fullScreen.getSubimage(p.getX(), p.getY() - (EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO), EEPLUGIN_SCREENSHOT_HINT_WIDTH, EEPLUGIN_SCREENSHOT_HINT_HEIGHT), EEPLUGIN_SCREENSHOT_HINT_SCALEFACTOR), p.getX(), p.getY() - (EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO), null);
             g2.setColor(Color.WHITE);
             g2.setFont(getFont().deriveFont(Font.BOLD));
-            g2.drawString(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_CLIPSCREENSHOTTOEVERNOTE_HINT), p.getX() + EEPLUGIN_SCREENSHOT_HINT_TEXT_START_X, p.getY() + EEPLUGIN_SCREENSHOT_HINT_TEXT_START_Y);
+            g2.drawString(Messages.getString(EECLIPPERPLUGIN_ACTIONDELEGATE_CLIPSCREENSHOTTOEVERNOTE_HINT), p.getX() + EEPLUGIN_SCREENSHOT_HINT_TEXT_START_X, p.getY() + EEPLUGIN_SCREENSHOT_HINT_TEXT_START_Y);
         }
     }
 

@@ -20,7 +20,7 @@ import com.evernote.edam.type.ResourceAttributes;
 import com.evernote.thrift.TException;
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEPlugin;
-import com.prairie.eevernote.EEProperties;
+import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.exception.OutOfDateException;
 
 public class EvernoteUtil implements ConstantsUtil {
@@ -40,7 +40,7 @@ public class EvernoteUtil implements ConstantsUtil {
         UserStoreClient userStore = factory.createUserStoreClient();
         boolean versionOk = userStore.checkVersion(EEPlugin.getName(), com.evernote.edam.userstore.Constants.EDAM_VERSION_MAJOR, com.evernote.edam.userstore.Constants.EDAM_VERSION_MINOR);
         if (!versionOk) {
-            throw new OutOfDateException(EEProperties.getProperties().getProperty(Constants.EECLIPPERPLUGIN_EECLIPPERIMPL_EXCEPTION_MESSAGE));
+            throw new OutOfDateException(Messages.getString(Constants.EECLIPPERPLUGIN_EECLIPPERIMPL_EXCEPTION_MESSAGE));
         }
     }
 

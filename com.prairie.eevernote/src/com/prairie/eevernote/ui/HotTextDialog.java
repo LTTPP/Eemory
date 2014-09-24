@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.prairie.eevernote.Constants;
-import com.prairie.eevernote.EEProperties;
+import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.client.EDAMLimits;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
@@ -77,7 +77,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     @Override
     protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_HOTINPUTDIALOG_SHELL_TITLE));
+        newShell.setText(Messages.getString(EECLIPPERPLUGIN_HOTINPUTDIALOG_SHELL_TITLE));
     }
 
     @Override
@@ -279,7 +279,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
             msg = "No existing notebook found, will clip to default.";
             confirm = true;
         }
-        return confirm ? MessageDialog.openQuestion(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_HOTINPUTDIALOG_SHELL_TITLE), msg) : true;
+        return confirm ? MessageDialog.openQuestion(shell, Messages.getString(EECLIPPERPLUGIN_HOTINPUTDIALOG_SHELL_TITLE), msg) : true;
     }
 
     private void saveQuickSettings() {
@@ -350,7 +350,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
     protected Text createLabelTextField(final Composite container, final String labelText) {
         Label label = new Label(container, SWT.NONE);
-        label.setText(EEProperties.getProperties().getProperty(labelText) + COLON);
+        label.setText(Messages.getString(labelText) + COLON);
 
         Text text = new Text(container, SWT.BORDER);
         text.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));

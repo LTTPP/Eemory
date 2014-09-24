@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 import com.prairie.eevernote.Constants;
-import com.prairie.eevernote.EEProperties;
+import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.client.EDAMLimits;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
@@ -736,7 +736,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
     }
 
     protected String getProperty(final String key) {
-        return EEProperties.getProperties().getProperty(key);
+        return Messages.getString(key);
     }
 
     public boolean isCanceled() {

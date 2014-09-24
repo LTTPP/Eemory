@@ -10,17 +10,17 @@ import com.evernote.edam.error.EDAMUserException;
 import com.evernote.thrift.transport.TTransportException;
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEPlugin;
-import com.prairie.eevernote.EEProperties;
+import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.util.EclipseUtil;
 import com.prairie.eevernote.util.LogUtil;
 
 public class ThrowableHandler implements Constants {
 
-    private static String OUT_OF_DATE_ERROR = EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE);
+    private static String OUT_OF_DATE_ERROR = EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + Messages.getString(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE);
 
     public static void openError(final Shell shell, final String message) {
-        EclipseUtil.openErrorSync(shell, EEProperties.getProperties().getProperty(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), message);
+        EclipseUtil.openErrorSync(shell, Messages.getString(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), message);
     }
 
     public static void handleDesignTimeErr(final Shell shell, final Throwable e) {
