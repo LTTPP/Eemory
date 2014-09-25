@@ -18,6 +18,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
+import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.dom.DOMException;
 import com.prairie.eevernote.dom.Document;
 import com.prairie.eevernote.dom.Element;
@@ -27,7 +28,7 @@ import com.prairie.eevernote.util.DomUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.StringUtil;
 
-public class ENML implements ConstantsUtil {
+public class ENML implements Constants, ConstantsUtil {
 
     // used to create new note
     private final Document document;

@@ -40,7 +40,7 @@ public class EvernoteUtil implements ConstantsUtil {
         UserStoreClient userStore = factory.createUserStoreClient();
         boolean versionOk = userStore.checkVersion(EEPlugin.getName(), com.evernote.edam.userstore.Constants.EDAM_VERSION_MAJOR, com.evernote.edam.userstore.Constants.EDAM_VERSION_MINOR);
         if (!versionOk) {
-            throw new OutOfDateException(Messages.getString(Constants.EECLIPPERPLUGIN_EECLIPPERIMPL_EXCEPTION_MESSAGE));
+            throw new OutOfDateException(Messages.getString(Constants.PLUGIN_ERROR_OOD));
         }
     }
 

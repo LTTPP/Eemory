@@ -2,6 +2,7 @@ package com.prairie.eevernote.dom.impl;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.dom.DocumentFragment;
 import com.prairie.eevernote.dom.Node;
 
@@ -19,7 +20,7 @@ public class DocumentFragmentImpl extends NodeImpl implements DocumentFragment {
 
     @Override
     public String getNodeName() {
-        return "#document-fragment";
+        return Constants.PLUGIN_DOM_FRAGMENT_NAME;
     }
 
     @Override

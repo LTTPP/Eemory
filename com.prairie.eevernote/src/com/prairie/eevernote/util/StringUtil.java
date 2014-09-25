@@ -132,4 +132,16 @@ public final class StringUtil implements ConstantsUtil {
         return i < 0 ? i : startPosition + i;
     }
 
+    /**
+     * <pre>
+     * StringUtil.toQuotedString("abc") = ""abc"";
+     * </pre>
+     * 
+     * @param str
+     *            string to quote, may be null.
+     * @return quoted string
+     */
+    public static String toQuotedString(final String str) {
+        return DOUBLE_QUOTATION + str + DOUBLE_QUOTATION;
+    }
 }

@@ -43,7 +43,7 @@ import com.prairie.eevernote.util.StringUtil;
 
 public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
-    public static final int SHOULD_NOT_SHOW = EECLIPPERPLUGIN_HOTINPUTDIALOG_SHOULD_NOT_SHOW_ID;
+    public static final int SHOULD_NOT_SHOW = PLUGIN_CONFIGS_HOTSET_SHOULD_NOT_SHOW_ID;
 
     private final Shell shell;
     private static HotTextDialog thisDialog;
@@ -77,7 +77,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     @Override
     protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(Messages.getString(EECLIPPERPLUGIN_HOTINPUTDIALOG_SHELL_TITLE));
+        newShell.setText(Messages.getString(PLUGIN_CONFIGS_HOTSET_SHELL_TITLE));
     }
 
     @Override
@@ -95,28 +95,28 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
         // ------------
 
-        if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID)) {
-            Text notebookField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+        if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)) {
+            Text notebookField = createLabelTextField(container, PLUGIN_CONFIGS_NOTEBOOK);
             notebookField.setTextLimit(EDAMLimits.EDAM_NOTEBOOK_NAME_LEN_MAX);
-            addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK, notebookField);
+            addField(PLUGIN_CONFIGS_NOTEBOOK, notebookField);
             fetchNotebooksInProgres();
             EclipseUtil.enableFilteringContentAssist(notebookField, notebooks.keySet().toArray(new String[notebooks.size()]));
         }
 
         // ------------
 
-        if (shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID)) {
-            Text noteField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_NOTE);
+        if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID)) {
+            Text noteField = createLabelTextField(container, PLUGIN_CONFIGS_NOTE);
             noteField.setTextLimit(EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX);
-            addField(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, noteField);
+            addField(PLUGIN_CONFIGS_NOTE, noteField);
             fetchNotesInProgres();
             noteProposalProvider = EclipseUtil.enableFilteringContentAssist(noteField, notes.keySet().toArray(new String[notes.size()]));
-            if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID)) {
+            if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)) {
                 noteField.addFocusListener(new FocusAdapter() {
                     @Override
                     public void focusGained(final FocusEvent e) {
-                        if (shouldRefresh(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE, EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)) {
-                            final String hotebook = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK);
+                        if (shouldRefresh(PLUGIN_CONFIGS_NOTE, PLUGIN_CONFIGS_NOTEBOOK)) {
+                            final String hotebook = getFieldValue(PLUGIN_CONFIGS_NOTEBOOK);
                             BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                                 @Override
                                 public void run() {
@@ -138,18 +138,18 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
         // ------------
 
-        if (shouldShow(SETTINGS_SECTION_TAGS, SETTINGS_KEY_NAME)) {
-            Text tagsField = createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
+        if (shouldShow(PLUGIN_SETTINGS_SECTION_TAGS, PLUGIN_SETTINGS_KEY_NAME)) {
+            Text tagsField = createLabelTextField(container, PLUGIN_CONFIGS_TAGS);
             tagsField.setTextLimit(EDAMLimits.EDAM_TAG_NAME_LEN_MAX);
-            addField(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS, tagsField);
+            addField(PLUGIN_CONFIGS_TAGS, tagsField);
             fetchTagsInProgress();
             EclipseUtil.enableFilteringContentAssist(tagsField, tags.toArray(new String[tags.size()]), TAGS_SEPARATOR);
         }
 
         // ------------
 
-        if (shouldShow(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_NAME)) {
-            addField(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS, createLabelTextField(container, EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS));
+        if (shouldShow(PLUGIN_SETTINGS_SECTION_COMMENTS, PLUGIN_SETTINGS_KEY_NAME)) {
+            addField(PLUGIN_CONFIGS_COMMENTS, createLabelTextField(container, PLUGIN_CONFIGS_COMMENTS));
         }
 
         return container;
@@ -163,9 +163,9 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Authenticating...", ONE);
+                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_AUTHENTICATING), ONE);
                     try {
-                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(SETTINGS_KEY_TOKEN), false);
+                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN), false);
                     } catch (Throwable e) {
                         fatal = true;
                         ThrowableHandler.handleDesignTimeErr(shell, e, true, clipper);
@@ -188,7 +188,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Fetching notebooks...", ONE);
+                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGNOTEBOOKS), ONE);
                     try {
                         notebooks = clipper.listNotebooks();
                     } catch (Throwable e) {
@@ -211,9 +211,9 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Fetching notes...", ONE);
+                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGNOTES), ONE);
                     try {
-                        notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID)));
+                        notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)));
                     } catch (Throwable e) {
                         ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
                     }
@@ -234,7 +234,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask("Fetching tags...", ONE);
+                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGTAGS), ONE);
                     try {
                         tags = clipper.listTags();
                     } catch (Throwable e) {
@@ -272,32 +272,32 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     private boolean confirmDefault() {
         boolean confirm = false;
         String msg = StringUtils.EMPTY;
-        if (shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getGuid())) {
-            msg = "No existing note found, will create a new one" + (StringUtils.isBlank(quickSettings.getName()) ? StringUtils.EMPTY : " with given name " + quickSettings.getName()) + ".";
+        if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getGuid())) {
+            msg = StringUtils.isBlank(quickSettings.getName()) ? Messages.getString(PLUGIN_RUNTIME_CREATENEWNOTE) : Messages.getString(PLUGIN_RUNTIME_CREATENEWNOTE, quickSettings.getName());
             confirm = true;
-        } else if (shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getNotebook().getGuid())) {
-            msg = "No existing notebook found, will clip to default.";
+        } else if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getNotebook().getGuid())) {
+            msg = Messages.getString(PLUGIN_RUNTIME_CLIPTODEFAULT);
             confirm = true;
         }
-        return confirm ? MessageDialog.openQuestion(shell, Messages.getString(EECLIPPERPLUGIN_HOTINPUTDIALOG_SHELL_TITLE), msg) : true;
+        return confirm ? MessageDialog.openQuestion(shell, Messages.getString(PLUGIN_CONFIGS_HOTSET_SHELL_TITLE), msg) : true;
     }
 
     private void saveQuickSettings() {
         quickSettings = new ENNoteImpl();
 
-        quickSettings.getNotebook().setName(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK));
-        quickSettings.getNotebook().setGuid(notebooks.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTEBOOK)));
+        quickSettings.getNotebook().setName(getFieldValue(PLUGIN_CONFIGS_NOTEBOOK));
+        quickSettings.getNotebook().setGuid(notebooks.get(getFieldValue(PLUGIN_CONFIGS_NOTEBOOK)));
 
-        ENNote note = notes.get(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE));
-        quickSettings.setName(note != null ? note.getName() : getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_NOTE));
+        ENNote note = notes.get(getFieldValue(PLUGIN_CONFIGS_NOTE));
+        quickSettings.setName(note != null ? note.getName() : getFieldValue(PLUGIN_CONFIGS_NOTE));
         quickSettings.setGuid(note != null ? note.getGuid() : null);
 
-        String tags = getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_TAGS);
+        String tags = getFieldValue(PLUGIN_CONFIGS_TAGS);
         if (!StringUtils.isBlank(tags)) {
-            quickSettings.setTags(ListUtil.toList(tags.split(ConstantsUtil.TAGS_SEPARATOR)));
+            quickSettings.setTags(ListUtil.toList(tags.split(TAGS_SEPARATOR)));
         }
 
-        quickSettings.setComments(getFieldValue(EECLIPPERPLUGIN_CONFIGURATIONS_COMMENTS));
+        quickSettings.setComments(getFieldValue(PLUGIN_CONFIGS_COMMENTS));
     }
 
     public ENNote getQuickSettings() {
@@ -334,16 +334,16 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
     }
 
     protected static boolean shouldShow() {
-        return shouldShow(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID) || shouldShow(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID) || shouldShow(SETTINGS_SECTION_TAGS, SETTINGS_KEY_NAME) || shouldShow(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_NAME);
+        return shouldShow(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID) || shouldShow(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID) || shouldShow(PLUGIN_SETTINGS_SECTION_TAGS, PLUGIN_SETTINGS_KEY_NAME) || shouldShow(PLUGIN_SETTINGS_SECTION_COMMENTS, PLUGIN_SETTINGS_KEY_NAME);
     }
 
     private static boolean shouldShow(final String property, final String key) {
-        if (property.equals(SETTINGS_SECTION_NOTEBOOK)) {
-            if (IDialogSettingsUtil.getBoolean(SETTINGS_SECTION_NOTE, SETTINGS_KEY_CHECKED) && !shouldShow(SETTINGS_SECTION_NOTE, key)) {
+        if (property.equals(PLUGIN_SETTINGS_SECTION_NOTEBOOK)) {
+            if (IDialogSettingsUtil.getBoolean(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_CHECKED) && !shouldShow(PLUGIN_SETTINGS_SECTION_NOTE, key)) {
                 return false;
             }
         }
-        boolean checked = IDialogSettingsUtil.getBoolean(property, SETTINGS_KEY_CHECKED);
+        boolean checked = IDialogSettingsUtil.getBoolean(property, PLUGIN_SETTINGS_KEY_CHECKED);
         String value = IDialogSettingsUtil.get(property, key);
         return checked && StringUtils.isBlank(value);
     }

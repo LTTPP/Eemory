@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.prairie.eevernote.Constants;
+import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.dom.Attribute;
 import com.prairie.eevernote.dom.DOMException;
 import com.prairie.eevernote.dom.Element;
@@ -57,10 +59,10 @@ public class ElementImpl extends NodeImpl implements Element, ConstantsUtil {
     @Override
     public Attribute setAttributeNode(final Attribute newAttr) throws DOMException {
         if (!newAttr.getOwnerDocument().isSameNode(this)) {
-            throw new DOMException(DOMException.WRONG_DOCUMENT_ERR, "attribute was created from a different document than the one that created the element");
+            throw new DOMException(DOMException.WRONG_DOCUMENT_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR2));
         }
         if (getOwnerDocument() != null) {
-            throw new DOMException(DOMException.INUSE_ATTRIBUTE_ERR, "attribute is already an attribute of another Element object. The DOM user must explicitly clone Attr nodes to re-use them in other elements");
+            throw new DOMException(DOMException.INUSE_ATTRIBUTE_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR3));
         }
         Attribute oldAttr = (Attribute) attrs.get(newAttr);
         if (oldAttr != null) {
@@ -75,7 +77,7 @@ public class ElementImpl extends NodeImpl implements Element, ConstantsUtil {
     public Attribute removeAttributeNode(final Attribute oldAttr) throws DOMException {
         AttributeImpl attr = (AttributeImpl) attrs.get(oldAttr);
         if (attr == null) {
-            throw new DOMException(DOMException.NOT_FOUND_ERR, "attribute is not an attribute of the element");
+            throw new DOMException(DOMException.NOT_FOUND_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR4));
         } else {
             ((AttributeImpl) oldAttr).setOwnerElement(null);
         }

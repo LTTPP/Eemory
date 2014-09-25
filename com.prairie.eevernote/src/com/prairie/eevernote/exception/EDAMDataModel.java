@@ -1,28 +1,30 @@
 package com.prairie.eevernote.exception;
 
+import com.prairie.eevernote.Constants;
+
 public enum EDAMDataModel {
 
     Note_noteGuid {
         @Override
         public String toString() {
-            return "Note.guid";
+            return Constants.ENML_MODEL_NOTE_NOTEGUID;
         }
 
         @Override
         public String toReadableString() {
-            return "Note";
+            return Constants.ENML_MODEL_NOTE_NOTEGUID_READABLE;
         }
     },
 
     Note_notebookGuid {
         @Override
         public String toString() {
-            return "Note.notebookGuid";
+            return Constants.ENML_MODEL_NOTE_NOTEBOOKGUID;
         }
 
         @Override
         public String toReadableString() {
-            return "Notebook";
+            return Constants.ENML_MODEL_NOTE_NOTEBOOKGUID_READABLE;
         }
     };
 
@@ -35,6 +37,6 @@ public enum EDAMDataModel {
                 return value;
             }
         }
-        throw new IllegalArgumentException("Illegal Enum name: " + name);
+        throw new IllegalArgumentException(Constants.IllegalArgumentExceptionMsg + name);
     }
 }

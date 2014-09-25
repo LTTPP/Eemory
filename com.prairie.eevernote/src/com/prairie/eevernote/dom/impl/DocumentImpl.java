@@ -8,6 +8,8 @@ import java.util.Set;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 
+import com.prairie.eevernote.Constants;
+import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.dom.Attribute;
 import com.prairie.eevernote.dom.DOMException;
 import com.prairie.eevernote.dom.Document;
@@ -145,7 +147,7 @@ public class DocumentImpl extends NodeImpl implements Document, ConstantsUtil {
     @Override
     public Node importNode(final Node sourceNode, final boolean deep) throws DOMException {
         if (!canImport(sourceNode)) {
-            throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "the type of node being adopted is not supported");
+            throw new DOMException(DOMException.NOT_SUPPORTED_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR0));
         }
 
         Node clonedNode = sourceNode.cloneNode(deep);
@@ -170,7 +172,7 @@ public class DocumentImpl extends NodeImpl implements Document, ConstantsUtil {
     @Override
     public Node adoptNode(final Node sourceNode) throws DOMException {
         if (canAdopt(sourceNode)) {
-            throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "the type of node being adopted is not supported");
+            throw new DOMException(DOMException.NOT_SUPPORTED_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR1));
         }
         Node parent = sourceNode.getParentNode();
         if (parent != null) {
@@ -206,8 +208,8 @@ public class DocumentImpl extends NodeImpl implements Document, ConstantsUtil {
 
     @Override
     public String toString() {
-        String standalone = this.standalone ? StringUtils.EMPTY : StringUtils.SPACE + STANDALONE + EQUAL + DOUBLE_QUOTATION_MARK + NO + DOUBLE_QUOTATION_MARK;
-        String head = LEFT_ANGLE_BRACKET + QUESTION_MARK + XML + StringUtils.SPACE + VERSION + EQUAL + DOUBLE_QUOTATION_MARK + xmlVersion + DOUBLE_QUOTATION_MARK + StringUtils.SPACE + ENCODING + EQUAL + DOUBLE_QUOTATION_MARK + encoding + DOUBLE_QUOTATION_MARK + standalone + QUESTION_MARK + RIGHT_ANGLE_BRACKET;
+        String standalone = this.standalone ? StringUtils.EMPTY : StringUtils.SPACE + STANDALONE + EQUAL + DOUBLE_QUOTATION + Constants.NO + DOUBLE_QUOTATION;
+        String head = LEFT_ANGLE_BRACKET + QUESTION_MARK + XML + StringUtils.SPACE + VERSION + EQUAL + DOUBLE_QUOTATION + xmlVersion + DOUBLE_QUOTATION + StringUtils.SPACE + ENCODING + EQUAL + DOUBLE_QUOTATION + encoding + DOUBLE_QUOTATION + standalone + QUESTION_MARK + RIGHT_ANGLE_BRACKET;
 
         String body = StringUtils.EMPTY;
         Node doctype = null;

@@ -43,25 +43,25 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
 
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
-        if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CONFIGURATIONS)) {
+        if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CONFIGURATIONS)) {
             configurationsClicked(event);
         } else {
             // check token
-            if (StringUtils.isBlank(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN))) {
-                int opt = EclipseUtil.openWarningWithMultipleButtons(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter("com.prairie.eevernote.command.parameter"), "Token is not configured, please first configure token in Configurations dialog.", ArrayUtils.toArray("Configure", OK_CAPS));
+            if (StringUtils.isBlank(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN))) {
+                int opt = EclipseUtil.openWarningWithMultipleButtons(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter(PLUGIN_COMMAND_PARAM_ID), Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_MESSAGE), ArrayUtils.toArray(Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONFIGURE), OK_CAPS));
                 if (opt == ZERO) {
                     configurationsClicked(event);
                 }
                 return null;
             }
             // clip
-            if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE)) {
+            if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE)) {
                 // TODO
-            } else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE)) {
+            } else if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE)) {
                 clipSelectionClicked(event);
-            } else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE)) {
+            } else if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE)) {
                 clipFileClicked(event);
-            } else if (event.getCommand().getId().equals(EEPLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE)) {
+            } else if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE)) {
                 clipScreenshotClicked(event);
             }
         }
@@ -84,13 +84,13 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                 args.setName(FileUtil.concatNameOfFiles(args.getAttachments()));
             }
 
-            Job job = new Job(Messages.getString(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
+            Job job = new Job(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE)) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE), TWO);
+                    monitor.beginTask(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE), TWO);
                     EEClipper clipper = null;
                     try {
-                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
+                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN), false);
                         monitor.worked(ONE);
 
                         if (monitor.isCanceled()) {
@@ -100,7 +100,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                         monitor.worked(TWO);
                     } catch (EDAMNotFoundException e) {
                         // try to auto fix EDAMNotFoundException
-                        boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
+                        boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
                         if (fixed) {
                             try {
                                 clipper.clipFile(args);
@@ -144,13 +144,13 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             }
             args.setContent(EclipseUtil.getSelectedStyleText(styledText));
 
-            Job job = new Job(Messages.getString(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE)) {
+            Job job = new Job(Messages.getString(PLUGIN_RUNTIME_ADDSELECTIONTOEVERNOTE_MESSAGE)) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDSELECTIONTOEVERNOTE_MESSAGE), TWO);
+                    monitor.beginTask(Messages.getString(PLUGIN_RUNTIME_ADDSELECTIONTOEVERNOTE_MESSAGE), TWO);
                     EEClipper clipper = null;
                     try {
-                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
+                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN), false);
                         monitor.worked(ONE);
 
                         if (monitor.isCanceled()) {
@@ -159,7 +159,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                         clipper.clipSelection(args);
                         monitor.worked(TWO);
                     } catch (EDAMNotFoundException e) {
-                        boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
+                        boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
                         if (fixed) {
                             try {
                                 clipper.clipFile(args);
@@ -202,22 +202,22 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             if (screenshot == null) {
                 return;
             }
-            final File file = File.createTempFile(DateTimeUtil.formatCurrentTime(FileNamePartSimpleDateFormat), FILENAME_DELIMITER + IMG_PNG);
+            final File file = File.createTempFile(DateTimeUtil.formatCurrentTime(FileNamePartSimpleDateFormat), DOT + IMG_PNG);
             if (StringUtils.isBlank(args.getName())) {
-                args.setName(DateTimeUtil.timestamp() + FILENAME_DELIMITER + IMG_PNG);
+                args.setName(DateTimeUtil.timestamp() + DOT + IMG_PNG);
             }
             args.setAttachments(ListUtil.list(file));
 
-            Job job = new Job(Messages.getString(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE)) {
+            Job job = new Job(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE)) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_MESSAGE), THREE);
+                    monitor.beginTask(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE), THREE);
                     EEClipper clipper = null;
                     try {
                         ImageIO.write(screenshot, IMG_PNG, file);
                         monitor.worked(ONE);
 
-                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN), false);
+                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN), false);
                         monitor.worked(TWO);
 
                         if (monitor.isCanceled()) {
@@ -226,7 +226,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                         clipper.clipFile(args);
                         monitor.worked(THREE);
                     } catch (EDAMNotFoundException e) {
-                        boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
+                        boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
                         if (fixed) {
                             try {
                                 clipper.clipFile(args);
@@ -264,29 +264,29 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
     private ENNote createENNote() {
         ENNote args = new ENNoteImpl();
 
-        String value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID);
+        String value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID);
         if (!StringUtils.isBlank(value)) {
             args.getNotebook().setGuid(value);
         }
-        value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_NAME);
+        value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_NAME);
         if (!StringUtils.isBlank(value)) {
             args.getNotebook().setName(value);
         }
 
-        value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID);
+        value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID);
         if (!StringUtils.isBlank(value)) {
             args.setGuid(value);
         }
-        value = IDialogSettingsUtil.get(SETTINGS_SECTION_NOTE, SETTINGS_KEY_NAME);
+        value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_NAME);
         if (!StringUtils.isBlank(value)) {
             args.setName(value);
         }
 
-        value = IDialogSettingsUtil.get(SETTINGS_SECTION_TAGS, SETTINGS_KEY_NAME);
+        value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_TAGS, PLUGIN_SETTINGS_KEY_NAME);
         if (!StringUtils.isBlank(value)) {
-            args.setTags(ListUtil.toList(value.split(ConstantsUtil.TAGS_SEPARATOR)));
+            args.setTags(ListUtil.toList(value.split(TAGS_SEPARATOR)));
         }
-        value = IDialogSettingsUtil.get(SETTINGS_SECTION_COMMENTS, SETTINGS_KEY_NAME);
+        value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_COMMENTS, PLUGIN_SETTINGS_KEY_NAME);
         if (!StringUtils.isBlank(value)) {
             args.setComments(value);
         }
@@ -296,10 +296,10 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
 
     private void saveIfNeeded(final ENNote args) {
         if (args.getNotebook().isGuidReset() && !args.getNotebook().isGuidAdopt()) {
-            IDialogSettingsUtil.set(SETTINGS_SECTION_NOTEBOOK, SETTINGS_KEY_GUID, args.getNotebook().getGuid());
+            IDialogSettingsUtil.set(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID, args.getNotebook().getGuid());
         }
         if (args.isGuidReset() && !args.isGuidAdopt()) {
-            IDialogSettingsUtil.set(SETTINGS_SECTION_NOTE, SETTINGS_KEY_GUID, args.getGuid());
+            IDialogSettingsUtil.set(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID, args.getGuid());
         }
     }
 

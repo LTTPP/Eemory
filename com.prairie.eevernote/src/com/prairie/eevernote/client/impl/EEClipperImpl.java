@@ -24,6 +24,7 @@ import com.evernote.edam.type.Notebook;
 import com.evernote.edam.type.Tag;
 import com.evernote.thrift.TException;
 import com.evernote.thrift.transport.TTransportException;
+import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.ENNote;
 import com.prairie.eevernote.exception.OutOfDateException;
@@ -33,6 +34,7 @@ import com.prairie.eevernote.util.ListStringizer;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapStringizer;
 import com.prairie.eevernote.util.MapUtil;
+import com.prairie.eevernote.util.StringUtil;
 
 public class EEClipperImpl extends EEClipper {
 
@@ -168,7 +170,7 @@ public class EEClipperImpl extends EEClipper {
             filter.setNotebookGuid(args.getNotebook().getGuid());
         }
         if (!StringUtils.isBlank(args.getName())) {
-            filter.setWords("intitle" + ConstantsUtil.COLON + ConstantsUtil.DOUBLE_QUOTATION_MARK + args.getName() + ConstantsUtil.DOUBLE_QUOTATION_MARK);
+            filter.setWords(Constants.EDAM_SYNTAX_INTITLE + StringUtil.toQuotedString(args.getName()));
         }
 
         NotesMetadataResultSpec resultSpec = new NotesMetadataResultSpec();

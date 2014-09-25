@@ -69,7 +69,7 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
                             isCaptureFullScreenViaClick = true;
                             rectangle.getStartPoint().setLocation(ZERO, ZERO);
                             rectangle.getEndPoint().setLocation(new Double(Toolkit.getDefaultToolkit().getScreenSize().getWidth()).intValue(), new Double(Toolkit.getDefaultToolkit().getScreenSize().getHeight()).intValue());
-                            maskFullScreen(EEPLUGIN_SCREENSHOT_MASK_FULLSCREEN_SCALEFACTOR);
+                            maskFullScreen(PLUGIN_SCREENSHOT_MASK_FULLSCREEN_SCALEFACTOR);
                             repaint();
                             isCaptured = true;
                         }
@@ -118,7 +118,7 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
             public void mouseDragged(final MouseEvent e) {
                 if (isCapturing) {
                     if (times.hasTimes()) {
-                        maskFullScreen(EEPLUGIN_SCREENSHOT_MASK_FULLSCREEN_SCALEFACTOR);
+                        maskFullScreen(PLUGIN_SCREENSHOT_MASK_FULLSCREEN_SCALEFACTOR);
                     }
                     rectangle.getEndPoint().setLocation(e.getX(), e.getY());
                     if (rectangle.isRealRectangle()) {
@@ -217,13 +217,13 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
 
             // draw hint
             GeomPoint p = rectangle.getTopLeftPoint();
-            if (p.getY() - (EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO) < ZERO) {
-                p = new GeomPoint(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY() + EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO);
+            if (p.getY() - (PLUGIN_SCREENSHOT_HINT_HEIGHT + TWO) < ZERO) {
+                p = new GeomPoint(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY() + PLUGIN_SCREENSHOT_HINT_HEIGHT + TWO);
             }
-            g2.drawImage(ImageUtil.mask(fullScreen.getSubimage(p.getX(), p.getY() - (EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO), EEPLUGIN_SCREENSHOT_HINT_WIDTH, EEPLUGIN_SCREENSHOT_HINT_HEIGHT), EEPLUGIN_SCREENSHOT_HINT_SCALEFACTOR), p.getX(), p.getY() - (EEPLUGIN_SCREENSHOT_HINT_HEIGHT + TWO), null);
+            g2.drawImage(ImageUtil.mask(fullScreen.getSubimage(p.getX(), p.getY() - (PLUGIN_SCREENSHOT_HINT_HEIGHT + TWO), PLUGIN_SCREENSHOT_HINT_WIDTH, PLUGIN_SCREENSHOT_HINT_HEIGHT), PLUGIN_SCREENSHOT_HINT_SCALEFACTOR), p.getX(), p.getY() - (PLUGIN_SCREENSHOT_HINT_HEIGHT + TWO), null);
             g2.setColor(Color.WHITE);
             g2.setFont(getFont().deriveFont(Font.BOLD));
-            g2.drawString(Messages.getString(EECLIPPERPLUGIN_ACTIONDELEGATE_CLIPSCREENSHOTTOEVERNOTE_HINT), p.getX() + EEPLUGIN_SCREENSHOT_HINT_TEXT_START_X, p.getY() + EEPLUGIN_SCREENSHOT_HINT_TEXT_START_Y);
+            g2.drawString(Messages.getString(PLUGIN_RUNTIME_CLIPSCREENSHOTTOEVERNOTE_HINT), p.getX() + PLUGIN_SCREENSHOT_HINT_TEXT_START_X, p.getY() + PLUGIN_SCREENSHOT_HINT_TEXT_START_Y);
         }
     }
 

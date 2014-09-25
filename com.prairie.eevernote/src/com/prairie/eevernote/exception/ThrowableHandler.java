@@ -17,10 +17,10 @@ import com.prairie.eevernote.util.LogUtil;
 
 public class ThrowableHandler implements Constants {
 
-    private static String OUT_OF_DATE_ERROR = EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + Messages.getString(EECLIPPERPLUGIN_ACTIONDELEGATE_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE);
+    private static String OUT_OF_DATE_ERROR = EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE);
 
     public static void openError(final Shell shell, final String message) {
-        EclipseUtil.openErrorSync(shell, Messages.getString(EECLIPPERPLUGIN_CONFIGURATIONS_ERROROCCURRED), message);
+        EclipseUtil.openErrorSync(shell, Messages.getString(PLUGIN_ERROR_OCCURRED), message);
     }
 
     public static void handleDesignTimeErr(final Shell shell, final Throwable e) {
@@ -44,9 +44,9 @@ public class ThrowableHandler implements Constants {
             if (clipper != null) {
                 clipper.setInvalid();
             }
-            openError(shell, ExceptionUtils.getRootCauseMessage(e) + (fatal ? StringUtils.EMPTY : ", but not fatal, you can continue"));
+            openError(shell, ExceptionUtils.getRootCauseMessage(e) + (fatal ? StringUtils.EMPTY : Messages.getString(Constants.PLUGIN_THROWABLE_NOTFATAL_MESSAGE)));
         } else {
-            openError(shell, ExceptionUtils.getRootCauseMessage(e) + (fatal ? StringUtils.EMPTY : ", but not fatal, you can continue"));
+            openError(shell, ExceptionUtils.getRootCauseMessage(e) + (fatal ? StringUtils.EMPTY : Messages.getString(Constants.PLUGIN_THROWABLE_NOTFATAL_MESSAGE)));
         }
     }
 

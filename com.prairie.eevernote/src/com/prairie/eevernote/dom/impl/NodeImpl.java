@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.prairie.eevernote.Constants;
+import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.dom.DOMException;
 import com.prairie.eevernote.dom.Document;
 import com.prairie.eevernote.dom.Node;
@@ -128,16 +130,16 @@ public class NodeImpl implements Node, ConstantsUtil, Cloneable {
     @Override
     public Node insertBefore(final Node newChild, final Node refChild) throws DOMException {
         if (!canHaveChild(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, "An attempt is made to insert a node where it is not permitted");
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR5));
         }
         if (isAncestor(newChild) || isSelf(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, "An attempt is made to insert a node where it is not permitted");
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR5));
         }
         if (!isSameDocument(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, "An attempt is made to insert a node which was created from a different document than the one that created this node");
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR6));
         }
         if (!find(refChild)) {
-            throw new DOMException(DOMException.NOT_FOUND_ERR, "An attempt is made to reference a node in a context where it does not exist");
+            throw new DOMException(DOMException.NOT_FOUND_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR7));
         }
 
         List<Node> sibling = getChildNodes();
@@ -198,16 +200,16 @@ public class NodeImpl implements Node, ConstantsUtil, Cloneable {
     @Override
     public Node replaceChild(final Node newChild, final Node oldChild) {
         if (!canHaveChild(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, "An attempt is made to insert a node where it is not permitted");
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR5));
         }
         if (isAncestor(newChild) || isSelf(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, "An attempt is made to insert a node where it is not permitted");
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR5));
         }
         if (!isSameDocument(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, "An attempt is made to insert a node which was created from a different document than the one that created this node");
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR6));
         }
         if (!find(oldChild)) {
-            throw new DOMException(DOMException.NOT_FOUND_ERR, "An attempt is made to reference a node in a context where it does not exist");
+            throw new DOMException(DOMException.NOT_FOUND_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR7));
         }
         if (hasChildNode(newChild)) {
             removeChild(newChild);
@@ -227,7 +229,7 @@ public class NodeImpl implements Node, ConstantsUtil, Cloneable {
     @Override
     public Node removeChild(final Node oldChild) {
         if (!find(oldChild)) {
-            throw new DOMException(DOMException.NOT_FOUND_ERR, "An attempt is made to reference a node in a context where it does not exist");
+            throw new DOMException(DOMException.NOT_FOUND_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR7));
         }
         children.remove(oldChild);
         ((NodeImpl) oldChild).setParentNode(null);
@@ -241,13 +243,13 @@ public class NodeImpl implements Node, ConstantsUtil, Cloneable {
     @Override
     public Node appendChild(final Node newChild) {
         if (!canHaveChild(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, "An attempt is made to insert a node where it is not permitted");
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR5));
         }
         if (isAncestor(newChild) || isSelf(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, "An attempt is made to insert a node where it is not permitted");
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR5));
         }
         if (!isSameDocument(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, "An attempt is made to insert a node which was created from a different document than the one that created this node");
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR6));
         }
         if (hasChildNode(newChild)) {
             removeChild(newChild);

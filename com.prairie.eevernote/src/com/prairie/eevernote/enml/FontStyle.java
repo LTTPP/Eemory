@@ -1,52 +1,56 @@
 package com.prairie.eevernote.enml;
 
+import com.prairie.eevernote.Constants;
+import com.prairie.eevernote.util.ConstantsUtil;
+import com.prairie.eevernote.util.HTMLUtil;
+
 public enum FontStyle {
 
     NORMAL {
         @Override
         public String toString() {
-            return "normal";
+            return HTMLUtil.FONT_STYLE_NORMAL;
         }
 
         @Override
         public int toNumber() {
-            return 0;
+            return ConstantsUtil.ZERO;
         }
 
     },
     BOLD {
         @Override
         public String toString() {
-            return "bold";
+            return HTMLUtil.FONT_STYLE_BOLD;
         }
 
         @Override
         public int toNumber() {
-            return 1;
+            return ConstantsUtil.ONE;
         }
 
     },
     ITALIC {
         @Override
         public String toString() {
-            return "italic";
+            return HTMLUtil.FONT_STYLE_ITALIC;
         }
 
         @Override
         public int toNumber() {
-            return 2;
+            return ConstantsUtil.TWO;
         }
 
     },
     BOLD_ITALIC {
         @Override
         public String toString() {
-            return "bold-italic";
+            return HTMLUtil.FONT_STYLE_BOLD_ITALIC;
         }
 
         @Override
         public int toNumber() {
-            return 3;
+            return ConstantsUtil.THREE;
         }
 
     };
@@ -60,7 +64,6 @@ public enum FontStyle {
                 return value;
             }
         }
-        // TODO remove later on, maybe just return NORMAL by default
-        throw new IllegalArgumentException("Illegal font style code: " + code);
+        throw new IllegalArgumentException(Constants.IllegalArgumentExceptionMsg + code);
     }
 }

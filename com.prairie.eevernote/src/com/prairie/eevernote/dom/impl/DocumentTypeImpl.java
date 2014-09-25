@@ -2,11 +2,12 @@ package com.prairie.eevernote.dom.impl;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.dom.DocumentType;
 import com.prairie.eevernote.dom.Node;
 import com.prairie.eevernote.util.ConstantsUtil;
 
-public class DocumentTypeImpl extends NodeImpl implements DocumentType, ConstantsUtil {
+public class DocumentTypeImpl extends NodeImpl implements DocumentType, Constants, ConstantsUtil {
 
     private String name;
     private String publicId;
@@ -64,9 +65,9 @@ public class DocumentTypeImpl extends NodeImpl implements DocumentType, Constant
     @Override
     public String toString() {
         if (StringUtils.isBlank(publicId)) {
-            return LEFT_ANGLE_BRACKET + EXCLAMATION_MARK + ENML_DOCTYPE + StringUtils.SPACE + name + StringUtils.SPACE + ENML_DOCTYPE_SYSTEM + StringUtils.SPACE + DOUBLE_QUOTATION_MARK + systemId + DOUBLE_QUOTATION_MARK + RIGHT_ANGLE_BRACKET;
+            return LEFT_ANGLE_BRACKET + EXCLAMATION + ENML_DOCTYPE + StringUtils.SPACE + name + StringUtils.SPACE + ENML_DOCTYPE_SYSTEM + StringUtils.SPACE + DOUBLE_QUOTATION + systemId + DOUBLE_QUOTATION + RIGHT_ANGLE_BRACKET;
         } else {
-            return LEFT_ANGLE_BRACKET + EXCLAMATION_MARK + ENML_DOCTYPE + StringUtils.SPACE + name + StringUtils.SPACE + ENML_DOCTYPE_PUBLIC + StringUtils.SPACE + DOUBLE_QUOTATION_MARK + publicId + DOUBLE_QUOTATION_MARK + StringUtils.SPACE + DOUBLE_QUOTATION_MARK + systemId + DOUBLE_QUOTATION_MARK + RIGHT_ANGLE_BRACKET;
+            return LEFT_ANGLE_BRACKET + EXCLAMATION + ENML_DOCTYPE + StringUtils.SPACE + name + StringUtils.SPACE + ENML_DOCTYPE_PUBLIC + StringUtils.SPACE + DOUBLE_QUOTATION + publicId + DOUBLE_QUOTATION + StringUtils.SPACE + DOUBLE_QUOTATION + systemId + DOUBLE_QUOTATION + RIGHT_ANGLE_BRACKET;
         }
     }
 
