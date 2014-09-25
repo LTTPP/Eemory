@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.Platform;
  * @author Liu, Jianwei
  *
  */
-public final class StringUtil implements ConstantsUtil {
+public final class StringUtil {
 
     public static final String CRLF = org.apache.commons.lang3.StringUtils.CR + org.apache.commons.lang3.StringUtils.LF;
 
@@ -81,10 +81,10 @@ public final class StringUtil implements ConstantsUtil {
         }
         String escapedXml = StringEscapeUtils.escapeXml10(string);
 
-        escapedXml = escapedXml.replaceAll(StringUtils.SPACE, HTML_NBSP);
+        escapedXml = escapedXml.replaceAll(StringUtils.SPACE, ConstantsUtil.HTML_NBSP);
 
-        int tabWidth = Platform.getPreferencesService().getInt(PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME, PLUGIN_ORG_ECLIPSE_JDT_CORE_PREF_FORMATTER_TABULATION_SIZE, ZERO, null);
-        escapedXml = escapedXml.replaceAll(TAB, org.apache.commons.lang3.StringUtils.repeat(HTML_NBSP, tabWidth));
+        int tabWidth = Platform.getPreferencesService().getInt(ConstantsUtil.PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME, ConstantsUtil.PLUGIN_ORG_ECLIPSE_JDT_CORE_PREF_FORMATTER_TABULATION_SIZE, 0, null);
+        escapedXml = escapedXml.replaceAll(ConstantsUtil.TAB, org.apache.commons.lang3.StringUtils.repeat(ConstantsUtil.HTML_NBSP, tabWidth));
 
         return escapedXml;
     }
@@ -109,7 +109,7 @@ public final class StringUtil implements ConstantsUtil {
 
         boolean find = matcher.find();
 
-        return find ? matcher.end() : NEGATIVE;
+        return find ? matcher.end() : -1;
     }
 
     public static String[] splitByMultipleSeparatorsPreserveAllTokens(final String str, final String[] separators) {
@@ -136,12 +136,12 @@ public final class StringUtil implements ConstantsUtil {
      * <pre>
      * StringUtil.toQuotedString("abc") = ""abc"";
      * </pre>
-     * 
+     *
      * @param str
      *            string to quote, may be null.
      * @return quoted string
      */
     public static String toQuotedString(final String str) {
-        return DOUBLE_QUOTATION + str + DOUBLE_QUOTATION;
+        return ConstantsUtil.DOUBLE_QUOTATION + str + ConstantsUtil.DOUBLE_QUOTATION;
     }
 }

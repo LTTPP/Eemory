@@ -7,10 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.medsea.mimeutil.MimeUtil;
 
-public class FileUtil implements ConstantsUtil {
+public class FileUtil {
 
     public static String concatNameOfFiles(final List<File> files) {
-        return concatNameOfFilesWithSeparator(files, PLUS);
+        return concatNameOfFilesWithSeparator(files, ConstantsUtil.PLUS);
     }
 
     public static String concatNameOfFilesWithSeparator(final List<File> files, final String separator) {
@@ -25,8 +25,8 @@ public class FileUtil implements ConstantsUtil {
     }
 
     public static String mimeType(final File file) {
-        if (MimeUtil.getMimeDetector(MimeDetector) == null) {
-            MimeUtil.registerMimeDetector(MimeDetector);
+        if (MimeUtil.getMimeDetector(ConstantsUtil.MimeDetector) == null) {
+            MimeUtil.registerMimeDetector(ConstantsUtil.MimeDetector);
         }
         return MimeUtil.getMimeTypes(file).toString();
     }
@@ -36,7 +36,7 @@ public class FileUtil implements ConstantsUtil {
         for (byte hashByte : bytes) {
             int intVal = 0xff & hashByte;
             if (intVal < 0x10) {
-                sb.append(String.valueOf(ZERO));
+                sb.append(String.valueOf(0));
             }
             sb.append(Integer.toHexString(intVal));
         }

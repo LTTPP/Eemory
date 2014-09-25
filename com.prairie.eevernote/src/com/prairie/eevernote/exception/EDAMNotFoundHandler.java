@@ -11,11 +11,10 @@ import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.ENNote;
 import com.prairie.eevernote.client.impl.ENNoteImpl;
-import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.LogUtil;
 
-public class EDAMNotFoundHandler implements ConstantsUtil {
+public class EDAMNotFoundHandler {
 
     private final String token;
 
@@ -74,14 +73,14 @@ public class EDAMNotFoundHandler implements ConstantsUtil {
         List<String> titles = ListUtil.list();
         for (Entry<String, ENNote> e : noteMap.entrySet()) {
             if (e.getValue().getName().equals(name)) {
-                if (titles.size() != ZERO) {
+                if (titles.size() != 0) {
                     return null;
                 }
                 titles.add(e.getKey());
             }
         }
-        if (titles.size() == ONE) {
-            return noteMap.get(titles.get(ZERO));
+        if (titles.size() == 1) {
+            return noteMap.get(titles.get(0));
         }
         return null;
     }

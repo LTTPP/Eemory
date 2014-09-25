@@ -20,20 +20,6 @@ public interface ConstantsUtil {
     public static final String LEFT_ANGLE_BRACKET = LESS_THAN;
     public static final String IMG_PNG = "png";
     public static final String IMG_JPG = "jpg";
-    public static final int ZERO = 0;
-    public static final int ONE = 1;
-    public static final int TWO = 2;
-    public static final int THREE = 3;
-    public static final int FOUR = 4;
-    public static final int FIVE = 5;
-    public static final int SIX = 6;
-    public static final int SEVEN = 7;
-    public static final int EIGHT = 8;
-    public static final int NINE = 9;
-    public static final int TEN = 10;
-    public static final int HUNDRED = TEN * TEN;
-    public static final int THOUSAND = TEN * TEN * TEN;
-    public static final int NEGATIVE = -1;
     public static final String PLUS = "+";
     public static final String MINUS = "-";
     public static final String EQUAL = "=";
@@ -46,10 +32,6 @@ public interface ConstantsUtil {
     public static final String HTML_NBSP = "&nbsp;";
 
     // XML
-    public static String XML = "xml";
-    public static String VERSION = "version";
-    public static String ENCODING = "encoding";
-    public static String STANDALONE = "standalone";
     public static final String XHTML_1_0_LATIN_1_ENT = "xhtml-lat1.ent";
     public static final String XHTML_1_0_SYMBOL_ENT = "xhtml-symbol.ent";
     public static final String XHTML_1_0_SPECIAL_ENT = "xhtml-special.ent";

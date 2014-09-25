@@ -50,10 +50,9 @@ import com.prairie.eevernote.util.HTMLUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapUtil;
-import com.prairie.eevernote.util.NumberUtil;
 import com.prairie.eevernote.util.StringUtil;
 
-public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUtil, Constants {
+public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
     private final Shell shell;
 
@@ -111,14 +110,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
         Composite area = (Composite) super.createDialogArea(parent);
         Composite container = new Composite(area, SWT.NONE);
         // container.setLayoutData(new GridData(GridData.FILL_BOTH));
-        container.setLayout(new GridLayout(ONE, false));
+        container.setLayout(new GridLayout(1, false));
         container.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
 
         // ----------------------
 
         Group groupAuth = new Group(container, SWT.NONE);
         groupAuth.setText(getString(PLUGIN_CONFIGS_OAUTH));
-        groupAuth.setLayout(new GridLayout(TWO, false));
+        groupAuth.setLayout(new GridLayout(2, false));
         groupAuth.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
 
         TextField tokenField = createLabelHyperlinkTextField(groupAuth, PLUGIN_CONFIGS_TOKEN, EDAM_OAUTH_ADDRESS, Messages.getString(PLUGIN_CONFIGS_CLICKTOAUTH));
@@ -139,7 +138,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
         Group groupPref = new Group(container, SWT.NONE);
         groupPref.setText(getString(PLUGIN_CONFIGS_ORGANIZE));
-        groupPref.setLayout(new GridLayout(TWO, false));
+        groupPref.setLayout(new GridLayout(2, false));
         groupPref.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 
         // ----------------------
@@ -324,7 +323,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_AUTHENTICATING), ONE);
+                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_AUTHENTICATING), 1);
                     try {
                         globalClipper = EEClipperFactory.getInstance().getEEClipper(token, false);
                     } catch (Throwable e) {
@@ -347,7 +346,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGNOTEBOOKS), ONE);
+                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGNOTEBOOKS), 1);
                     try {
                         notebooks = globalClipper.listNotebooks();
                     } catch (Throwable e) {
@@ -371,7 +370,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGNOTES), ONE);
+                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGNOTES), 1);
                     try {
                         notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(notebook)));
                     } catch (Throwable e) {
@@ -394,7 +393,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGTAGS), ONE);
+                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGTAGS), 1);
                     try {
                         tags = globalClipper.listTags();
                     } catch (Throwable e) {
@@ -528,7 +527,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     @Override
     protected Point getInitialSize() {
-        return new Point(NumberUtil.number(FIVE, FIVE, ZERO), NumberUtil.number(FOUR, ZERO, ZERO));
+        return new Point(550, 400);
     }
 
     public static int show(final Shell shell) {
@@ -619,7 +618,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     protected LabelCheckTextField createLabelCheckTextField(final Composite container, final String labelText) {
         final Button button = new Button(container, SWT.CHECK);
-        button.setText(getString(labelText) + COLON);
+        button.setText(getString(labelText) + ConstantsUtil.COLON);
         button.setSelection(true);
 
         final Text text = new Text(container, SWT.BORDER);
@@ -646,7 +645,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     protected TextField createLabelTextField(final Composite container, final String labelText) {
         Label label = new Label(container, SWT.NONE);
-        label.setText(getString(labelText) + COLON);
+        label.setText(getString(labelText) + ConstantsUtil.COLON);
 
         Text text = new Text(container, SWT.BORDER);
         text.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
@@ -656,7 +655,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements ConstantsUt
 
     protected TextField createLabelHyperlinkTextField(final Composite container, final String labelText, final String hyperlink, final String tip) {
         Link link = new Link(container, SWT.NONE);
-        link.setText(HTMLUtil.hyperlink(getString(labelText) + COLON, hyperlink));
+        link.setText(HTMLUtil.hyperlink(getString(labelText) + ConstantsUtil.COLON, hyperlink));
         link.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent event) {

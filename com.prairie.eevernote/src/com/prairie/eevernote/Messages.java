@@ -29,8 +29,8 @@ public class Messages {
 
     public static String getString(final String key, final String... replacements) {
         String value = getString(key);
-        for (int i = ConstantsUtil.ZERO; i < replacements.length; i++) {
-            value = value.replace(ConstantsUtil.LEFT_BRACE + (i + ConstantsUtil.ONE) + ConstantsUtil.RIGHT_BRACE, replacements[i]);
+        for (int i = 0; i < replacements.length; i++) {
+            value = value.replace(ConstantsUtil.LEFT_BRACE + (i + 1) + ConstantsUtil.RIGHT_BRACE, replacements[i]);
         }
         return value;
     }

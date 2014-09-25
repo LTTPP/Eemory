@@ -28,7 +28,7 @@ import com.prairie.eevernote.util.DomUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.StringUtil;
 
-public class ENML implements Constants, ConstantsUtil {
+public class ENML implements Constants {
 
     // used to create new note
     private final Document document;
@@ -41,7 +41,7 @@ public class ENML implements Constants, ConstantsUtil {
         document = DomUtil.getBuilder().newDocument();
         document.setXmlStandalone(true);
         document.setXMLEncoding(CharEncoding.UTF_8);
-        document.setXmlVersion(XML_VERSION_1_0);
+        document.setXmlVersion(ConstantsUtil.XML_VERSION_1_0);
 
         document.appendChild(document.createDocumentType(ENML_TAG_EN_NOTE, null, ENML_DOCTYPE_DECLARATION_SYSTEM_ID));
 
@@ -68,7 +68,7 @@ public class ENML implements Constants, ConstantsUtil {
     public void addComment(final String comments) throws DOMException, ParserConfigurationException {
         if (!StringUtils.isBlank(comments)) {
             Element div = div();
-            div.setTextContent(StringUtil.escapeEnml(comments) + COLON);
+            div.setTextContent(StringUtil.escapeEnml(comments) + ConstantsUtil.COLON);
             newAddedNodes.add(div);
         }
     }
@@ -151,7 +151,7 @@ public class ENML implements Constants, ConstantsUtil {
         font.appendChild(span(text, size, fontStyle));
         font.setAttribute(ENML_ATTR_FACE, face);
         font.setAttribute(ENML_ATTR_COLOR, color);
-        font.setAttribute(ENML_ATTR_SIZE, String.valueOf(TWO));
+        font.setAttribute(ENML_ATTR_SIZE, String.valueOf(2));//TODO why
         return font;
     }
 
@@ -219,11 +219,11 @@ public class ENML implements Constants, ConstantsUtil {
             public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException, IOException {
                 if (systemId.endsWith(ENML_DTD)) {
                     return new InputSource(getClass().getResourceAsStream(ENML_DTD_LOCATION));
-                } else if (systemId.endsWith(XHTML_1_0_LATIN_1_ENT)) {
+                } else if (systemId.endsWith(ConstantsUtil.XHTML_1_0_LATIN_1_ENT)) {
                     return new InputSource(getClass().getResourceAsStream(XHTML_1_0_LATIN_1_ENT_LOCATION));
-                } else if (systemId.endsWith(XHTML_1_0_SYMBOL_ENT)) {
+                } else if (systemId.endsWith(ConstantsUtil.XHTML_1_0_SYMBOL_ENT)) {
                     return new InputSource(getClass().getResourceAsStream(XHTML_1_0_SYMBOL_ENT_LOCATION));
-                } else if (systemId.endsWith(XHTML_1_0_SPECIAL_ENT)) {
+                } else if (systemId.endsWith(ConstantsUtil.XHTML_1_0_SPECIAL_ENT)) {
                     return new InputSource(getClass().getResourceAsStream(XHTML_1_0_SPECIAL_ENT_LOCATION));
                 } else {
                     return null;

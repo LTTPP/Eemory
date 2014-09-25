@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
 
-public class ArrayUtil implements ConstantsUtil {
+public class ArrayUtil {
 
     public static boolean isEqualArray(final Object[] ones, final Object[] others) {
         return isEqualArray(ones, others, false);
@@ -22,7 +22,7 @@ public class ArrayUtil implements ConstantsUtil {
             return false;
         }
         if (compareOrder) {
-            for (int i = ZERO; i < ones.length; i++) {
+            for (int i = 0; i < ones.length; i++) {
                 if (!ObjectUtil.isEqualObject(ones[i], others[i])) {
                     return false;
                 }
@@ -30,7 +30,7 @@ public class ArrayUtil implements ConstantsUtil {
         } else {
             List<Integer> matchedIndex = ListUtil.list();
             andContinue: for (Object o1 : ones) {
-                for (int i = ZERO; i < others.length; i++) {
+                for (int i = 0; i < others.length; i++) {
                     if (matchedIndex.contains(i)) {
                         continue;
                     }
@@ -70,11 +70,11 @@ public class ArrayUtil implements ConstantsUtil {
         int length = Array.getLength(source);
         clone = Array.newInstance(componentType, length);
         if (componentType.isPrimitive() || componentType == String.class) {
-            while (length-- > ZERO) {
+            while (length-- > 0) {
                 Array.set(clone, length, Array.get(source, length));
             }
         } else {
-            while (length-- > ZERO) {
+            while (length-- > 0) {
                 Array.set(clone, length, ObjectUtil.cloneObject(Array.get(source, length), deep));
             }
         }

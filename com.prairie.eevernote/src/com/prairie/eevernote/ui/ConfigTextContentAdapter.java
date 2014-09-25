@@ -7,30 +7,30 @@ import org.eclipse.swt.widgets.Text;
 
 public class ConfigTextContentAdapter extends TextContentAdapter {
 
-	private String byOperator;
+    private String byOperator;
 
-	@Override
-	public void insertControlContents(Control control, String text, int cursorPosition) {
-		if (!StringUtils.isEmpty(byOperator)) {
-			String existingText = ((Text) control).getText();
-			if (existingText.contains(byOperator)) {
-				((Text) control).setText(existingText.substring(0, existingText.lastIndexOf(byOperator) + 1));
-			} else {
-				((Text) control).setText(StringUtils.EMPTY);
-			}
-			int newCursorPosition = ((Text) control).getText().length();
-			((Text) control).setSelection(newCursorPosition, newCursorPosition);
-		}
+    @Override
+    public void insertControlContents(final Control control, final String text, final int cursorPosition) {
+        if (!StringUtils.isEmpty(byOperator)) {
+            String existingText = ((Text) control).getText();
+            if (existingText.contains(byOperator)) {
+                ((Text) control).setText(existingText.substring(0, existingText.lastIndexOf(byOperator) + 1));
+            } else {
+                ((Text) control).setText(StringUtils.EMPTY);
+            }
+            int newCursorPosition = ((Text) control).getText().length();
+            ((Text) control).setSelection(newCursorPosition, newCursorPosition);
+        }
 
-		super.insertControlContents(control, text, cursorPosition);
-	}
+        super.insertControlContents(control, text, cursorPosition);
+    }
 
-	public String getByOperator() {
-		return byOperator;
-	}
+    public String getByOperator() {
+        return byOperator;
+    }
 
-	public void setByOperator(String byOperator) {
-		this.byOperator = byOperator;
-	}
+    public void setByOperator(final String byOperator) {
+        this.byOperator = byOperator;
+    }
 
 }

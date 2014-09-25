@@ -7,7 +7,7 @@ import com.prairie.eevernote.dom.Element;
 import com.prairie.eevernote.dom.Node;
 import com.prairie.eevernote.util.ConstantsUtil;
 
-public class AttributeImpl extends NodeImpl implements Attribute, ConstantsUtil {
+public class AttributeImpl extends NodeImpl implements Attribute {
 
     private String value;
     private Element ownerElement;
@@ -84,7 +84,7 @@ public class AttributeImpl extends NodeImpl implements Attribute, ConstantsUtil 
 
     @Override
     public String toString() {
-        return getName() + EQUAL + DOUBLE_QUOTATION + getValue() + DOUBLE_QUOTATION;
+        return getName() + ConstantsUtil.EQUAL + ConstantsUtil.DOUBLE_QUOTATION + getValue() + ConstantsUtil.DOUBLE_QUOTATION;
     }
 
 }

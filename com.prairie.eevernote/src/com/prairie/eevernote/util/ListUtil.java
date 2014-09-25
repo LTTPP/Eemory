@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.ObjectUtils;
 
-public final class ListUtil implements ConstantsUtil {
+public final class ListUtil {
 
     public static String[] toStringArray(final Collection<String> list) {
         if (list == null) {
@@ -24,7 +24,7 @@ public final class ListUtil implements ConstantsUtil {
             return null;
         }
         String[] array = new String[list.size()];
-        for (int i = ZERO; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             array[i] = stringizer.element(list.get(i));
         }
         return array;
@@ -35,7 +35,7 @@ public final class ListUtil implements ConstantsUtil {
             return null;
         }
         List<String> strList = list();
-        for (int i = ZERO; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             strList.add(stringizer.element(list.get(i)));
         }
         return strList;
@@ -46,7 +46,7 @@ public final class ListUtil implements ConstantsUtil {
             return null;
         }
         Map<String, String> map = MapUtil.map();
-        for (int i = ZERO; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             map.put(stringizer.key(list.get(i)), stringizer.value(list.get(i)));
         }
         return map;
@@ -74,7 +74,7 @@ public final class ListUtil implements ConstantsUtil {
     }
 
     public static boolean isNullOrEmptyList(final List<?> list) {
-        return list == null || list.size() == ZERO;
+        return list == null || list.size() == 0;
     }
 
     public static boolean isNullList(final Collection<?> list) {
@@ -82,7 +82,7 @@ public final class ListUtil implements ConstantsUtil {
     }
 
     public static <T> boolean isIndexOutOfBounds(final List<T> list, final int index) {
-        return isNullList(list) || index >= ZERO && index < list.size();
+        return isNullList(list) || index >= 0 && index < list.size();
     }
 
     public static <T> void replace(final List<T> list, final T newElement, final int index) {
@@ -117,7 +117,7 @@ public final class ListUtil implements ConstantsUtil {
         } else {
             List<Integer> matchedIndex = ListUtil.list();
             andContinue: for (Object o1 : one) {
-                for (int i = ZERO; i < other.size(); i++) {
+                for (int i = 0; i < other.size(); i++) {
                     if (matchedIndex.contains(i)) {
                         continue;
                     }

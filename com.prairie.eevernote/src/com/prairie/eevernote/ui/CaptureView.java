@@ -25,13 +25,11 @@ import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.ui.GeomRectangle.Position;
 import com.prairie.eevernote.util.ColorUtil;
-import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.ImageUtil;
-import com.prairie.eevernote.util.NumberUtil;
 import com.prairie.eevernote.util.Times;
 
 @SuppressWarnings("serial")
-public class CaptureView extends JFrame implements ConstantsUtil, Constants {
+public class CaptureView extends JFrame implements Constants {
 
     private final BufferedImage fullScreen;
     private final GeomRectangle rectangle = new GeomRectangle();
@@ -64,21 +62,21 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    if (e.getClickCount() == ONE) {
+                    if (e.getClickCount() == 1) {
                         if (!isCaptured) {
                             isCaptureFullScreenViaClick = true;
-                            rectangle.getStartPoint().setLocation(ZERO, ZERO);
+                            rectangle.getStartPoint().setLocation(0, 0);
                             rectangle.getEndPoint().setLocation(new Double(Toolkit.getDefaultToolkit().getScreenSize().getWidth()).intValue(), new Double(Toolkit.getDefaultToolkit().getScreenSize().getHeight()).intValue());
                             maskFullScreen(PLUGIN_SCREENSHOT_MASK_FULLSCREEN_SCALEFACTOR);
                             repaint();
                             isCaptured = true;
                         }
-                    } else if (e.getClickCount() == TWO) {
+                    } else if (e.getClickCount() == 2) {
                         setVisible(false);
                         dispose();
                     }
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
-                    if (e.getClickCount() == ONE) {
+                    if (e.getClickCount() == 1) {
                         if (isCaptured) {
                             resetView();
                             isCaptured = false;
@@ -98,7 +96,7 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
                 if (!isCaptured && e.getButton() == MouseEvent.BUTTON1) {
                     rectangle.getStartPoint().setLocation(e.getX(), e.getY());
                     isCapturing = true;
-                    times.resetTimes(ONE);
+                    times.resetTimes(1);
                 } else if (isResize()) {
                     datumPoint = new GeomPoint(e.getX(), e.getY());
                 }
@@ -109,7 +107,7 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
                 if (isCapturing && e.getButton() == MouseEvent.BUTTON1) {
                     rectangle.getEndPoint().setLocation(e.getX(), e.getY());
                     isCapturing = false;
-                    isCaptured = rectangle.getWidth() > ZERO && rectangle.getHeight() > ZERO;
+                    isCaptured = rectangle.getWidth() > 0 && rectangle.getHeight() > 0;
                 }
             }
         });
@@ -126,13 +124,13 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
                     }
                 } else if (isResize()) {
                     if (getCursor() == Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR)) {
-                        rectangle.resize(Position.EAST, e.getX() - datumPoint.getX(), ZERO);
+                        rectangle.resize(Position.EAST, e.getX() - datumPoint.getX(), 0);
                     } else if (getCursor() == Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR)) {
-                        rectangle.resize(Position.SOUTH, ZERO, e.getY() - datumPoint.getY());
+                        rectangle.resize(Position.SOUTH, 0, e.getY() - datumPoint.getY());
                     } else if (getCursor() == Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR)) {
-                        rectangle.resize(Position.WEST, e.getX() - datumPoint.getX(), ZERO);
+                        rectangle.resize(Position.WEST, e.getX() - datumPoint.getX(), 0);
                     } else if (getCursor() == Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR)) {
-                        rectangle.resize(Position.NORTH, ZERO, e.getY() - datumPoint.getY());
+                        rectangle.resize(Position.NORTH, 0, e.getY() - datumPoint.getY());
                     } else if (getCursor() == Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR)) {
                         rectangle.resize(Position.NORTHEAST, e.getX() - datumPoint.getX(), e.getY() - datumPoint.getY());
                     } else if (getCursor() == Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR)) {
@@ -217,10 +215,10 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
 
             // draw hint
             GeomPoint p = rectangle.getTopLeftPoint();
-            if (p.getY() - (PLUGIN_SCREENSHOT_HINT_HEIGHT + TWO) < ZERO) {
-                p = new GeomPoint(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY() + PLUGIN_SCREENSHOT_HINT_HEIGHT + TWO);
+            if (p.getY() - (PLUGIN_SCREENSHOT_HINT_HEIGHT + 2) < 0) {
+                p = new GeomPoint(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY() + PLUGIN_SCREENSHOT_HINT_HEIGHT + 2);
             }
-            g2.drawImage(ImageUtil.mask(fullScreen.getSubimage(p.getX(), p.getY() - (PLUGIN_SCREENSHOT_HINT_HEIGHT + TWO), PLUGIN_SCREENSHOT_HINT_WIDTH, PLUGIN_SCREENSHOT_HINT_HEIGHT), PLUGIN_SCREENSHOT_HINT_SCALEFACTOR), p.getX(), p.getY() - (PLUGIN_SCREENSHOT_HINT_HEIGHT + TWO), null);
+            g2.drawImage(ImageUtil.mask(fullScreen.getSubimage(p.getX(), p.getY() - (PLUGIN_SCREENSHOT_HINT_HEIGHT + 2), PLUGIN_SCREENSHOT_HINT_WIDTH, PLUGIN_SCREENSHOT_HINT_HEIGHT), PLUGIN_SCREENSHOT_HINT_SCALEFACTOR), p.getX(), p.getY() - (PLUGIN_SCREENSHOT_HINT_HEIGHT + 2), null);
             g2.setColor(Color.WHITE);
             g2.setFont(getFont().deriveFont(Font.BOLD));
             g2.drawString(Messages.getString(PLUGIN_RUNTIME_CLIPSCREENSHOTTOEVERNOTE_HINT), p.getX() + PLUGIN_SCREENSHOT_HINT_TEXT_START_X, p.getY() + PLUGIN_SCREENSHOT_HINT_TEXT_START_Y);
@@ -236,7 +234,7 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
             @Override
             public void paintComponent(final Graphics graphics) {
                 super.paintComponent(graphics);
-                ((Graphics2D) graphics).drawImage(ImageUtil.mask(fullScreen, scaleFactor), ZERO, ZERO, null);
+                ((Graphics2D) graphics).drawImage(ImageUtil.mask(fullScreen, scaleFactor), 0, 0, null);
             }
         });
         requestFocus();
@@ -250,10 +248,10 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
             public void paintComponent(final Graphics graphics) {
                 super.paintComponent(graphics);
                 Graphics2D g2 = (Graphics2D) graphics;
-                g2.drawImage(fullScreen, ZERO, ZERO, null);
+                g2.drawImage(fullScreen, 0, 0, null);
                 g2.setColor(ColorUtil.AWT_EVERNOTE_GREEN);
-                g2.setStroke(new BasicStroke(SIX));
-                g2.drawRect(ZERO, ZERO, new Double(Toolkit.getDefaultToolkit().getScreenSize().getWidth()).intValue(), new Double(Toolkit.getDefaultToolkit().getScreenSize().getHeight()).intValue());
+                g2.setStroke(new BasicStroke(6));
+                g2.drawRect(0, 0, new Double(Toolkit.getDefaultToolkit().getScreenSize().getWidth()).intValue(), new Double(Toolkit.getDefaultToolkit().getScreenSize().getHeight()).intValue());
             }
         });
         setAlwaysOnTop(true);
@@ -273,7 +271,7 @@ public class CaptureView extends JFrame implements ConstantsUtil, Constants {
         view.setVisible(true);
         view.setCursor(DRAW_CURSOR);
         while (view.isVisible()) {
-            Thread.sleep(NumberUtil.number(ONE, ZERO, ZERO));
+            Thread.sleep(100);
         }
         return view.getScreenshot();
     }

@@ -18,7 +18,7 @@ import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapUtil;
 
-public class ElementImpl extends NodeImpl implements Element, ConstantsUtil {
+public class ElementImpl extends NodeImpl implements Element {
 
     private Map<String, Node> attrs;
 
@@ -59,10 +59,10 @@ public class ElementImpl extends NodeImpl implements Element, ConstantsUtil {
     @Override
     public Attribute setAttributeNode(final Attribute newAttr) throws DOMException {
         if (!newAttr.getOwnerDocument().isSameNode(this)) {
-            throw new DOMException(DOMException.WRONG_DOCUMENT_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR2));
+            throw new DOMException(DOMException.WRONG_DOCUMENT_ERR, Messages.getString(Constants.DOM_ERROR2));
         }
         if (getOwnerDocument() != null) {
-            throw new DOMException(DOMException.INUSE_ATTRIBUTE_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR3));
+            throw new DOMException(DOMException.INUSE_ATTRIBUTE_ERR, Messages.getString(Constants.DOM_ERROR3));
         }
         Attribute oldAttr = (Attribute) attrs.get(newAttr);
         if (oldAttr != null) {
@@ -77,7 +77,7 @@ public class ElementImpl extends NodeImpl implements Element, ConstantsUtil {
     public Attribute removeAttributeNode(final Attribute oldAttr) throws DOMException {
         AttributeImpl attr = (AttributeImpl) attrs.get(oldAttr);
         if (attr == null) {
-            throw new DOMException(DOMException.NOT_FOUND_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR4));
+            throw new DOMException(DOMException.NOT_FOUND_ERR, Messages.getString(Constants.DOM_ERROR4));
         } else {
             ((AttributeImpl) oldAttr).setOwnerElement(null);
         }
@@ -95,7 +95,7 @@ public class ElementImpl extends NodeImpl implements Element, ConstantsUtil {
 
     @Override
     public List<Node> getElementsByTagName(final String name) {
-        if (name.equals(STAR)) {
+        if (name.equals(ConstantsUtil.STAR)) {
             return getChildNodes();
         } else {
             List<Node> matched = ListUtil.list();

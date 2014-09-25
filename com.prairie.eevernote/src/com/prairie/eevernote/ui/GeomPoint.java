@@ -4,13 +4,13 @@ import java.awt.Toolkit;
 
 import com.prairie.eevernote.util.ConstantsUtil;
 
-public class GeomPoint implements ConstantsUtil {
+public class GeomPoint {
 
     private int x;
     private int y;
 
     public GeomPoint() {
-        this(ZERO, ZERO);
+        this(0, 0);
     }
 
     public GeomPoint(final int x, final int y) {
@@ -45,7 +45,7 @@ public class GeomPoint implements ConstantsUtil {
     }
 
     public boolean isMovable(final int x, final int y) {
-        if (getX() + x >= ZERO && getX() + x <= Toolkit.getDefaultToolkit().getScreenSize().getWidth() && getY() + y >= ZERO && getY() + y <= Toolkit.getDefaultToolkit().getScreenSize().getHeight()) {
+        if (getX() + x >= 0 && getX() + x <= Toolkit.getDefaultToolkit().getScreenSize().getWidth() && getY() + y >= 0 && getY() + y <= Toolkit.getDefaultToolkit().getScreenSize().getHeight()) {
             return true;
         }
         return false;
@@ -60,8 +60,8 @@ public class GeomPoint implements ConstantsUtil {
     }
 
     public void clear() {
-        x = ZERO;
-        y = ZERO;
+        x = 0;
+        y = 0;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class GeomPoint implements ConstantsUtil {
 
     @Override
     public String toString() {
-        return LEFT_PARENTHESIS + getX() + COMMA + getY() + RIGHT_PARENTHESIS;
+        return ConstantsUtil.LEFT_PARENTHESIS + getX() + ConstantsUtil.COMMA + getY() + ConstantsUtil.RIGHT_PARENTHESIS;
     }
 
 }

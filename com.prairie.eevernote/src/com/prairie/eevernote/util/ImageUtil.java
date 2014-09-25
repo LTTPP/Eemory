@@ -12,7 +12,7 @@ public class ImageUtil {
     private static Robot robot;
 
     public static BufferedImage mask(final BufferedImage image, final float scaleFactor) {
-        RescaleOp ro = new RescaleOp(scaleFactor, ConstantsUtil.ZERO, null);
+        RescaleOp ro = new RescaleOp(scaleFactor, 0, null);
         BufferedImage rescaledScreenshot = ro.filter(image, null);
         return rescaledScreenshot;
     }

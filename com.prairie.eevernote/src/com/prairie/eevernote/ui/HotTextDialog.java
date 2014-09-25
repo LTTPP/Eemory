@@ -41,7 +41,7 @@ import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.StringUtil;
 
-public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
+public class HotTextDialog extends Dialog implements Constants {
 
     public static final int SHOULD_NOT_SHOW = PLUGIN_CONFIGS_HOTSET_SHOULD_NOT_SHOW_ID;
 
@@ -163,7 +163,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_AUTHENTICATING), ONE);
+                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_AUTHENTICATING), 1);
                     try {
                         clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN), false);
                     } catch (Throwable e) {
@@ -188,7 +188,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGNOTEBOOKS), ONE);
+                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGNOTEBOOKS), 1);
                     try {
                         notebooks = clipper.listNotebooks();
                     } catch (Throwable e) {
@@ -211,7 +211,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGNOTES), ONE);
+                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGNOTES), 1);
                     try {
                         notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)));
                     } catch (Throwable e) {
@@ -234,7 +234,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGTAGS), ONE);
+                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGTAGS), 1);
                     try {
                         tags = clipper.listTags();
                     } catch (Throwable e) {
@@ -350,7 +350,7 @@ public class HotTextDialog extends Dialog implements ConstantsUtil, Constants {
 
     protected Text createLabelTextField(final Composite container, final String labelText) {
         Label label = new Label(container, SWT.NONE);
-        label.setText(Messages.getString(labelText) + COLON);
+        label.setText(Messages.getString(labelText) + ConstantsUtil.COLON);
 
         Text text = new Text(container, SWT.BORDER);
         text.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));

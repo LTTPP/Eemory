@@ -3,9 +3,8 @@ package com.prairie.eevernote.enml;
 import org.apache.commons.lang3.StringUtils;
 
 import com.prairie.eevernote.util.ColorUtil;
-import com.prairie.eevernote.util.ConstantsUtil;
 
-public class StyleText implements ConstantsUtil {
+public class StyleText {
 
     private String text;
     private String face;
@@ -16,9 +15,9 @@ public class StyleText implements ConstantsUtil {
     public StyleText(final String text) {
         this.text = text;
         face = StringUtils.EMPTY;
-        colorHexCode = ColorUtil.toHexCode(ZERO, ZERO, ZERO);
+        colorHexCode = ColorUtil.toHexCode(0, 0, 0);
         fontStyle = FontStyle.NORMAL;
-        size = String.valueOf(TEN);
+        size = String.valueOf(10);//TODO
     }
 
     public StyleText(final String text, final String face, final String colorHexCode, final String size, final FontStyle fontStyle) {

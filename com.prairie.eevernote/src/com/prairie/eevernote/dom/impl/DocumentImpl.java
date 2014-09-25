@@ -22,7 +22,7 @@ import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.DomUtil;
 import com.prairie.eevernote.util.ListUtil;
 
-public class DocumentImpl extends NodeImpl implements Document, ConstantsUtil {
+public class DocumentImpl extends NodeImpl implements Document {
 
     private boolean standalone;
     private String xmlVersion;
@@ -30,7 +30,7 @@ public class DocumentImpl extends NodeImpl implements Document, ConstantsUtil {
 
     protected DocumentImpl() {
         standalone = true;
-        xmlVersion = XML_VERSION_1_0;
+        xmlVersion = ConstantsUtil.XML_VERSION_1_0;
         encoding = CharEncoding.UTF_8;
     }
 
@@ -76,7 +76,7 @@ public class DocumentImpl extends NodeImpl implements Document, ConstantsUtil {
 
     @Override
     public List<Node> getElementsByTagName(final String name) {
-        if (name.equals(STAR)) {
+        if (name.equals(ConstantsUtil.STAR)) {
             return getChildNodes();
         } else {
             List<Node> matched = ListUtil.list();
@@ -147,7 +147,7 @@ public class DocumentImpl extends NodeImpl implements Document, ConstantsUtil {
     @Override
     public Node importNode(final Node sourceNode, final boolean deep) throws DOMException {
         if (!canImport(sourceNode)) {
-            throw new DOMException(DOMException.NOT_SUPPORTED_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR0));
+            throw new DOMException(DOMException.NOT_SUPPORTED_ERR, Messages.getString(Constants.DOM_ERROR0));
         }
 
         Node clonedNode = sourceNode.cloneNode(deep);
@@ -172,7 +172,7 @@ public class DocumentImpl extends NodeImpl implements Document, ConstantsUtil {
     @Override
     public Node adoptNode(final Node sourceNode) throws DOMException {
         if (canAdopt(sourceNode)) {
-            throw new DOMException(DOMException.NOT_SUPPORTED_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR1));
+            throw new DOMException(DOMException.NOT_SUPPORTED_ERR, Messages.getString(Constants.DOM_ERROR1));
         }
         Node parent = sourceNode.getParentNode();
         if (parent != null) {
@@ -208,8 +208,8 @@ public class DocumentImpl extends NodeImpl implements Document, ConstantsUtil {
 
     @Override
     public String toString() {
-        String standalone = this.standalone ? StringUtils.EMPTY : StringUtils.SPACE + STANDALONE + EQUAL + DOUBLE_QUOTATION + Constants.NO + DOUBLE_QUOTATION;
-        String head = LEFT_ANGLE_BRACKET + QUESTION_MARK + XML + StringUtils.SPACE + VERSION + EQUAL + DOUBLE_QUOTATION + xmlVersion + DOUBLE_QUOTATION + StringUtils.SPACE + ENCODING + EQUAL + DOUBLE_QUOTATION + encoding + DOUBLE_QUOTATION + standalone + QUESTION_MARK + RIGHT_ANGLE_BRACKET;
+        String standalone = this.standalone ? StringUtils.EMPTY : StringUtils.SPACE + Constants.STANDALONE + ConstantsUtil.EQUAL + ConstantsUtil.DOUBLE_QUOTATION + Constants.NO + ConstantsUtil.DOUBLE_QUOTATION;
+        String head = ConstantsUtil.LEFT_ANGLE_BRACKET + ConstantsUtil.QUESTION_MARK + Constants.XML + StringUtils.SPACE + Constants.VERSION + ConstantsUtil.EQUAL + ConstantsUtil.DOUBLE_QUOTATION + xmlVersion + ConstantsUtil.DOUBLE_QUOTATION + StringUtils.SPACE + Constants.ENCODING + ConstantsUtil.EQUAL + ConstantsUtil.DOUBLE_QUOTATION + encoding + ConstantsUtil.DOUBLE_QUOTATION + standalone + ConstantsUtil.QUESTION_MARK + ConstantsUtil.RIGHT_ANGLE_BRACKET;
 
         String body = StringUtils.EMPTY;
         Node doctype = null;

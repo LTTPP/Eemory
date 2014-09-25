@@ -18,7 +18,7 @@ import com.prairie.eevernote.util.DomUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapUtil;
 
-public class NodeImpl implements Node, ConstantsUtil, Cloneable {
+public class NodeImpl implements Node, Cloneable {
 
     private Document document;
     private String name;
@@ -96,26 +96,26 @@ public class NodeImpl implements Node, ConstantsUtil, Cloneable {
 
     @Override
     public Node getFirstChild() {
-        return children.get(ZERO);
+        return children.get(0);
     }
 
     @Override
     public Node getLastChild() {
-        return children.get(children.size() - ONE);
+        return children.get(children.size() - 1);
     }
 
     @Override
     public Node getPreviousSibling() {
         List<Node> sibling = parent.getChildNodes();
-        int i = sibling.indexOf(this) - ONE;
-        return i >= ZERO && i < sibling.size() ? sibling.get(i) : null;
+        int i = sibling.indexOf(this) - 1;
+        return i >= 0 && i < sibling.size() ? sibling.get(i) : null;
     }
 
     @Override
     public Node getNextSibling() {
         List<Node> sibling = parent.getChildNodes();
-        int i = sibling.indexOf(this) + ONE;
-        return i >= ZERO && i < sibling.size() ? sibling.get(i) : null;
+        int i = sibling.indexOf(this) + 1;
+        return i >= 0 && i < sibling.size() ? sibling.get(i) : null;
     }
 
     @Override
@@ -130,16 +130,16 @@ public class NodeImpl implements Node, ConstantsUtil, Cloneable {
     @Override
     public Node insertBefore(final Node newChild, final Node refChild) throws DOMException {
         if (!canHaveChild(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR5));
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.DOM_ERROR5));
         }
         if (isAncestor(newChild) || isSelf(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR5));
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.DOM_ERROR5));
         }
         if (!isSameDocument(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR6));
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.DOM_ERROR6));
         }
         if (!find(refChild)) {
-            throw new DOMException(DOMException.NOT_FOUND_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR7));
+            throw new DOMException(DOMException.NOT_FOUND_ERR, Messages.getString(Constants.DOM_ERROR7));
         }
 
         List<Node> sibling = getChildNodes();
@@ -200,16 +200,16 @@ public class NodeImpl implements Node, ConstantsUtil, Cloneable {
     @Override
     public Node replaceChild(final Node newChild, final Node oldChild) {
         if (!canHaveChild(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR5));
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.DOM_ERROR5));
         }
         if (isAncestor(newChild) || isSelf(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR5));
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.DOM_ERROR5));
         }
         if (!isSameDocument(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR6));
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.DOM_ERROR6));
         }
         if (!find(oldChild)) {
-            throw new DOMException(DOMException.NOT_FOUND_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR7));
+            throw new DOMException(DOMException.NOT_FOUND_ERR, Messages.getString(Constants.DOM_ERROR7));
         }
         if (hasChildNode(newChild)) {
             removeChild(newChild);
@@ -229,7 +229,7 @@ public class NodeImpl implements Node, ConstantsUtil, Cloneable {
     @Override
     public Node removeChild(final Node oldChild) {
         if (!find(oldChild)) {
-            throw new DOMException(DOMException.NOT_FOUND_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR7));
+            throw new DOMException(DOMException.NOT_FOUND_ERR, Messages.getString(Constants.DOM_ERROR7));
         }
         children.remove(oldChild);
         ((NodeImpl) oldChild).setParentNode(null);
@@ -243,13 +243,13 @@ public class NodeImpl implements Node, ConstantsUtil, Cloneable {
     @Override
     public Node appendChild(final Node newChild) {
         if (!canHaveChild(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR5));
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.DOM_ERROR5));
         }
         if (isAncestor(newChild) || isSelf(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR5));
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.DOM_ERROR5));
         }
         if (!isSameDocument(newChild)) {
-            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.PLUGIN_DOM_ERROR6));
+            throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, Messages.getString(Constants.DOM_ERROR6));
         }
         if (hasChildNode(newChild)) {
             removeChild(newChild);
@@ -262,7 +262,7 @@ public class NodeImpl implements Node, ConstantsUtil, Cloneable {
 
     @Override
     public boolean hasChildNodes() {
-        return children.size() > ZERO;
+        return children.size() > 0;
     }
 
     @Override
@@ -295,11 +295,11 @@ public class NodeImpl implements Node, ConstantsUtil, Cloneable {
                     removeChild(textChild);
                     continue;
                 }
-                Node adjacentChild = getChildNode(i + ONE);
+                Node adjacentChild = getChildNode(i + 1);
                 if (adjacentChild != null && adjacentChild.getNodeType() == TEXT_NODE) {
                     textChild.appendText(adjacentChild.getTextContent());
                     removeChild(adjacentChild);
-                    i -= ONE;
+                    i -= 1;
                 }
             } else {
                 child.normalize();
@@ -363,16 +363,16 @@ public class NodeImpl implements Node, ConstantsUtil, Cloneable {
 
     @Override
     public String toString() {
-        String string = LEFT_ANGLE_BRACKET + getNodeName();
+        String string = ConstantsUtil.LEFT_ANGLE_BRACKET + getNodeName();
         for (Entry<String, Node> e : getAttributes().entrySet()) {
             String tempStr = DomUtil.toString(e.getValue());
             string += !StringUtils.isEmpty(tempStr) ? StringUtils.SPACE + tempStr : tempStr;
         }
-        string += RIGHT_ANGLE_BRACKET;
+        string += ConstantsUtil.RIGHT_ANGLE_BRACKET;
         for (Node child : getChildNodes()) {
             string += DomUtil.toString(child);
         }
-        string += LEFT_ANGLE_BRACKET + SLASH + getNodeName() + RIGHT_ANGLE_BRACKET;
+        string += ConstantsUtil.LEFT_ANGLE_BRACKET + ConstantsUtil.SLASH + getNodeName() + ConstantsUtil.RIGHT_ANGLE_BRACKET;
         return string;
     }
 

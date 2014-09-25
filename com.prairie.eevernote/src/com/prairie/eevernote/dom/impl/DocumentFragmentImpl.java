@@ -20,7 +20,7 @@ public class DocumentFragmentImpl extends NodeImpl implements DocumentFragment {
 
     @Override
     public String getNodeName() {
-        return Constants.PLUGIN_DOM_FRAGMENT_NAME;
+        return Constants.DOM_FRAGMENT_NAME;
     }
 
     @Override

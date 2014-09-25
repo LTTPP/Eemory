@@ -128,21 +128,25 @@ public interface Constants {
     public static final String PLUGIN_THROWABLE_LINKNOTOPENABLE_MESSAGE = "Plugin.Throwable.LinkNotOpenable.Message";
 
     // DOM
-    public static final String PLUGIN_DOM_FRAGMENT_NAME = "#document-fragment";
-    public static final String PLUGIN_DOM_ERROR0 = "Plugin.DOM.Error0";
-    public static final String PLUGIN_DOM_ERROR1 = "Plugin.DOM.Error1";
-    public static final String PLUGIN_DOM_ERROR2 = "Plugin.DOM.Error2";
-    public static final String PLUGIN_DOM_ERROR3 = "Plugin.DOM.Error3";
-    public static final String PLUGIN_DOM_ERROR4 = "Plugin.DOM.Error4";
-    public static final String PLUGIN_DOM_ERROR5 = "Plugin.DOM.Error5";
-    public static final String PLUGIN_DOM_ERROR6 = "Plugin.DOM.Error6";
-    public static final String PLUGIN_DOM_ERROR7 = "Plugin.DOM.Error7";
-    public static final String PLUGIN_DOM_ERROR8 = "Plugin.DOM.Error8";
-    public static final String PLUGIN_DOM_ERROR9 = "Plugin.DOM.Error9";
+    public static String XML = "xml";
+    public static String VERSION = "version";
+    public static String ENCODING = "encoding";
+    public static String STANDALONE = "standalone";
+    public static final String DOM_FRAGMENT_NAME = "#document-fragment";
+    public static final String DOM_ERROR0 = "DOM.Error0";
+    public static final String DOM_ERROR1 = "DOM.Error1";
+    public static final String DOM_ERROR2 = "DOM.Error2";
+    public static final String DOM_ERROR3 = "DOM.Error3";
+    public static final String DOM_ERROR4 = "DOM.Error4";
+    public static final String DOM_ERROR5 = "DOM.Error5";
+    public static final String DOM_ERROR6 = "DOM.Error6";
+    public static final String DOM_ERROR7 = "DOM.Error7";
+    public static final String DOM_ERROR8 = "DOM.Error8";
+    public static final String DOM_ERROR9 = "DOM.Error9";
 
     // others
     public static final String BUNDLE_NAME = "messages";
-    public static final String IllegalArgumentExceptionMsg = "Illegal argument: ";
+    public static final String ILLEGAL_ARGUMENT_EXCEPTION_MSG = "Throwable.IllegalArgumentException.Message";
     public static final String FileNamePartSimpleDateFormat = "yyyy-MM-dd'T'HH-mm-ss-";
     public static final String TAGS_SEPARATOR = ConstantsUtil.COMMA;
     public static String NO = "no";

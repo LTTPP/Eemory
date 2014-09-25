@@ -23,7 +23,7 @@ import com.prairie.eevernote.EEPlugin;
 import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.exception.OutOfDateException;
 
-public class EvernoteUtil implements ConstantsUtil {
+public class EvernoteUtil {
 
     public static NoteStoreClient getNoteStoreClient(final String token) throws TException, OutOfDateException, EDAMUserException, EDAMSystemException {
         ClientFactory factory = auth(token);
@@ -69,7 +69,7 @@ public class EvernoteUtil implements ConstantsUtil {
         // Create a new Data object to contain the file contents
         Data data = new Data();
         data.setSize(body.length);
-        data.setBodyHash(MessageDigest.getInstance(MD5).digest(body));
+        data.setBodyHash(MessageDigest.getInstance(ConstantsUtil.MD5).digest(body));
         data.setBody(body);
 
         return data;

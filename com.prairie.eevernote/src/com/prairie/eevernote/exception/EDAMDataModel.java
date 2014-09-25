@@ -1,6 +1,7 @@
 package com.prairie.eevernote.exception;
 
 import com.prairie.eevernote.Constants;
+import com.prairie.eevernote.Messages;
 
 public enum EDAMDataModel {
 
@@ -37,6 +38,6 @@ public enum EDAMDataModel {
                 return value;
             }
         }
-        throw new IllegalArgumentException(Constants.IllegalArgumentExceptionMsg + name);
+        throw new IllegalArgumentException(Messages.getString(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MSG) + name);
     }
 }

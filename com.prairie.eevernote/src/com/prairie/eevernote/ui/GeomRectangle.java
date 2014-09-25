@@ -1,7 +1,7 @@
 package com.prairie.eevernote.ui;
 
 import com.prairie.eevernote.util.ConstantsUtil;
-import com.prairie.eevernote.util.NumberUtil;
+
 
 /*
  * ......                   ......                   ......
@@ -21,7 +21,7 @@ import com.prairie.eevernote.util.NumberUtil;
  * ......		             ......                  ......
  *
  */
-public class GeomRectangle implements ConstantsUtil {
+public class GeomRectangle {
 
     private GeomPoint startPoint;
     private GeomPoint endPoint;
@@ -77,62 +77,62 @@ public class GeomRectangle implements ConstantsUtil {
     }
 
     public GeomPoint getTopPoint() {
-        return new GeomPoint((getTopLeftPoint().getX() + getBottomRightPoint().getX()) / TWO, getTopLeftPoint().getY());
+        return new GeomPoint((getTopLeftPoint().getX() + getBottomRightPoint().getX()) / 2, getTopLeftPoint().getY());
     }
 
     public GeomPoint getLeftPoint() {
-        return new GeomPoint(getTopLeftPoint().getX(), (getTopLeftPoint().getY() + getBottomRightPoint().getY()) / TWO);
+        return new GeomPoint(getTopLeftPoint().getX(), (getTopLeftPoint().getY() + getBottomRightPoint().getY()) / 2);
     }
 
     public GeomPoint getBottomPoint() {
-        return new GeomPoint((getTopLeftPoint().getX() + getBottomRightPoint().getX()) / TWO, getBottomRightPoint().getY());
+        return new GeomPoint((getTopLeftPoint().getX() + getBottomRightPoint().getX()) / 2, getBottomRightPoint().getY());
     }
 
     public GeomPoint getRightPoint() {
-        return new GeomPoint(getBottomRightPoint().getX(), (getTopLeftPoint().getY() + getBottomRightPoint().getY()) / TWO);
+        return new GeomPoint(getBottomRightPoint().getX(), (getTopLeftPoint().getY() + getBottomRightPoint().getY()) / 2);
     }
 
     public GeomRectangle getTopRectangle() {
-        return new GeomRectangle(new GeomPoint(getTopPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(getTopPoint()).move(TWO, TWO));
+        return new GeomRectangle(new GeomPoint(getTopPoint()).move(-2, -2), new GeomPoint(getTopPoint()).move(2, 2));
     }
 
     public GeomRectangle getBottomRectangle() {
-        return new GeomRectangle(new GeomPoint(getBottomPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(getBottomPoint()).move(TWO, TWO));
+        return new GeomRectangle(new GeomPoint(getBottomPoint()).move(-2, -2), new GeomPoint(getBottomPoint()).move(2, 2));
     }
 
     public GeomRectangle getLeftRectangle() {
-        return new GeomRectangle(new GeomPoint(getLeftPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(getLeftPoint()).move(TWO, TWO));
+        return new GeomRectangle(new GeomPoint(getLeftPoint()).move(-2, -2), new GeomPoint(getLeftPoint()).move(2, 2));
     }
 
     public GeomRectangle getRightRectangle() {
-        return new GeomRectangle(new GeomPoint(getRightPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(getRightPoint()).move(TWO, TWO));
+        return new GeomRectangle(new GeomPoint(getRightPoint()).move(-2, -2), new GeomPoint(getRightPoint()).move(2, 2));
     }
 
     public GeomRectangle getTopLeftRectangle() {
-        return new GeomRectangle(new GeomPoint(getTopLeftPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(getTopLeftPoint()).move(TWO, TWO));
+        return new GeomRectangle(new GeomPoint(getTopLeftPoint()).move(-2, -2), new GeomPoint(getTopLeftPoint()).move(2, 2));
     }
 
     public GeomRectangle getTopRightRectangle() {
-        return new GeomRectangle(new GeomPoint(getTopRightPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(getTopRightPoint()).move(TWO, TWO));
+        return new GeomRectangle(new GeomPoint(getTopRightPoint()).move(-2, -2), new GeomPoint(getTopRightPoint()).move(2, 2));
     }
 
     public GeomRectangle getBottomLeftRectangle() {
-        return new GeomRectangle(new GeomPoint(getBottomLeftPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(getBottomLeftPoint()).move(TWO, TWO));
+        return new GeomRectangle(new GeomPoint(getBottomLeftPoint()).move(-2, -2), new GeomPoint(getBottomLeftPoint()).move(2, 2));
     }
 
     public GeomRectangle getBottomRightRectangle() {
-        return new GeomRectangle(new GeomPoint(getBottomRightPoint()).move(NumberUtil.signedNumber(TWO, NEGATIVE), NumberUtil.signedNumber(TWO, NEGATIVE)), new GeomPoint(getBottomRightPoint()).move(TWO, TWO));
+        return new GeomRectangle(new GeomPoint(getBottomRightPoint()).move(-2, -2), new GeomPoint(getBottomRightPoint()).move(2, 2));
     }
 
     public GeomPoint pointAt(final Position position) {
         if (position == Position.EAST) {
-            return new GeomPoint(getBottomRightPoint().getX(), (getTopLeftPoint().getY() + getBottomRightPoint().getY()) / TWO);
+            return new GeomPoint(getBottomRightPoint().getX(), (getTopLeftPoint().getY() + getBottomRightPoint().getY()) / 2);
         } else if (position == Position.SOUTH) {
-            return new GeomPoint((getTopLeftPoint().getX() + getBottomRightPoint().getX()) / TWO, getBottomRightPoint().getY());
+            return new GeomPoint((getTopLeftPoint().getX() + getBottomRightPoint().getX()) / 2, getBottomRightPoint().getY());
         } else if (position == Position.WEST) {
-            return new GeomPoint(getTopLeftPoint().getX(), (getTopLeftPoint().getY() + getBottomRightPoint().getY()) / TWO);
+            return new GeomPoint(getTopLeftPoint().getX(), (getTopLeftPoint().getY() + getBottomRightPoint().getY()) / 2);
         } else if (position == Position.NORTH) {
-            return new GeomPoint((getTopLeftPoint().getX() + getBottomRightPoint().getX()) / TWO, getTopLeftPoint().getY());
+            return new GeomPoint((getTopLeftPoint().getX() + getBottomRightPoint().getX()) / 2, getTopLeftPoint().getY());
         } else if (position == Position.SOUTHEAST) {
             return getBottomRightPoint();
         } else if (position == Position.SOUTHWEST) {
@@ -270,7 +270,7 @@ public class GeomRectangle implements ConstantsUtil {
 
     @Override
     public String toString() {
-        return LEFT_PARENTHESIS + getTopLeftPoint() + COMMA + getWidth() + COMMA + getHeight() + RIGHT_PARENTHESIS;
+        return ConstantsUtil.LEFT_PARENTHESIS + getTopLeftPoint() + ConstantsUtil.COMMA + getWidth() + ConstantsUtil.COMMA + getHeight() + ConstantsUtil.RIGHT_PARENTHESIS;
     }
 
     enum Position {

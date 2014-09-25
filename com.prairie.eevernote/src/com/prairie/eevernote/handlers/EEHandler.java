@@ -37,9 +37,8 @@ import com.prairie.eevernote.util.FileUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.LogUtil;
-import com.prairie.eevernote.util.NumberUtil;
 
-public class EEHandler extends AbstractHandler implements ConstantsUtil, Constants {
+public class EEHandler extends AbstractHandler implements Constants {
 
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
@@ -49,7 +48,7 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             // check token
             if (StringUtils.isBlank(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN))) {
                 int opt = EclipseUtil.openWarningWithMultipleButtons(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter(PLUGIN_COMMAND_PARAM_ID), Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_MESSAGE), ArrayUtils.toArray(Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONFIGURE), OK_CAPS));
-                if (opt == ZERO) {
+                if (opt == 0) {
                     configurationsClicked(event);
                 }
                 return null;
@@ -87,17 +86,17 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             Job job = new Job(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE)) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE), TWO);
+                    monitor.beginTask(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE), 2);
                     EEClipper clipper = null;
                     try {
                         clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN), false);
-                        monitor.worked(ONE);
+                        monitor.worked(1);
 
                         if (monitor.isCanceled()) {
                             return LogUtil.cancel();
                         }
                         clipper.clipFile(args);
-                        monitor.worked(TWO);
+                        monitor.worked(2);
                     } catch (EDAMNotFoundException e) {
                         // try to auto fix EDAMNotFoundException
                         boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
@@ -140,24 +139,24 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
             IEditorPart editor = HandlerUtil.getActiveEditor(event);
             StyledText styledText = (StyledText) editor.getAdapter(Control.class);
             if (StringUtils.isBlank(args.getName())) {
-                args.setName(editor.getTitle() + MINUS + DateTimeUtil.timestamp());
+                args.setName(editor.getTitle() + ConstantsUtil.MINUS + DateTimeUtil.timestamp());
             }
             args.setContent(EclipseUtil.getSelectedStyleText(styledText));
 
             Job job = new Job(Messages.getString(PLUGIN_RUNTIME_ADDSELECTIONTOEVERNOTE_MESSAGE)) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_RUNTIME_ADDSELECTIONTOEVERNOTE_MESSAGE), TWO);
+                    monitor.beginTask(Messages.getString(PLUGIN_RUNTIME_ADDSELECTIONTOEVERNOTE_MESSAGE), 2);
                     EEClipper clipper = null;
                     try {
                         clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN), false);
-                        monitor.worked(ONE);
+                        monitor.worked(1);
 
                         if (monitor.isCanceled()) {
                             return LogUtil.cancel();
                         }
                         clipper.clipSelection(args);
-                        monitor.worked(TWO);
+                        monitor.worked(2);
                     } catch (EDAMNotFoundException e) {
                         boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
                         if (fixed) {
@@ -196,35 +195,35 @@ public class EEHandler extends AbstractHandler implements ConstantsUtil, Constan
                 return;
             }
 
-            Thread.sleep(NumberUtil.number(FOUR, ZERO, ZERO)); // wait for right click menu to hide
+            Thread.sleep(400); // wait for right click menu to hide
 
             final BufferedImage screenshot = CaptureView.showView();
             if (screenshot == null) {
                 return;
             }
-            final File file = File.createTempFile(DateTimeUtil.formatCurrentTime(FileNamePartSimpleDateFormat), DOT + IMG_PNG);
+            final File file = File.createTempFile(DateTimeUtil.formatCurrentTime(FileNamePartSimpleDateFormat), ConstantsUtil.DOT + ConstantsUtil.IMG_PNG);
             if (StringUtils.isBlank(args.getName())) {
-                args.setName(DateTimeUtil.timestamp() + DOT + IMG_PNG);
+                args.setName(DateTimeUtil.timestamp() + ConstantsUtil.DOT + ConstantsUtil.IMG_PNG);
             }
             args.setAttachments(ListUtil.list(file));
 
             Job job = new Job(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE)) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE), THREE);
+                    monitor.beginTask(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE), 3);
                     EEClipper clipper = null;
                     try {
-                        ImageIO.write(screenshot, IMG_PNG, file);
-                        monitor.worked(ONE);
+                        ImageIO.write(screenshot, ConstantsUtil.IMG_PNG, file);
+                        monitor.worked(1);
 
                         clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN), false);
-                        monitor.worked(TWO);
+                        monitor.worked(2);
 
                         if (monitor.isCanceled()) {
                             return LogUtil.cancel();
                         }
                         clipper.clipFile(args);
-                        monitor.worked(THREE);
+                        monitor.worked(3);
                     } catch (EDAMNotFoundException e) {
                         boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
                         if (fixed) {

@@ -176,7 +176,7 @@ public class EEClipperImpl extends EEClipper {
         NotesMetadataResultSpec resultSpec = new NotesMetadataResultSpec();
         resultSpec.setIncludeTitle(true);
 
-        NotesMetadataList notesMetadataList = noteStoreClient.findNotesMetadata(filter, ConstantsUtil.ZERO, com.evernote.edam.limits.Constants.EDAM_USER_NOTES_MAX, resultSpec);
+        NotesMetadataList notesMetadataList = noteStoreClient.findNotesMetadata(filter, 0, com.evernote.edam.limits.Constants.EDAM_USER_NOTES_MAX, resultSpec);
         List<NoteMetadata> noteList = notesMetadataList.getNotes();
 
         Map<String, ENNote> map = MapUtil.map();

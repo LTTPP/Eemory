@@ -38,7 +38,7 @@ import com.prairie.eevernote.enml.StyleText;
 import com.prairie.eevernote.ui.ConfigContentProposalProvider;
 import com.prairie.eevernote.ui.ConfigTextContentAdapter;
 
-public class EclipseUtil implements ConstantsUtil {
+public class EclipseUtil {
 
     public static List<File> getSelectedFiles(final ExecutionEvent event) {
         ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
@@ -86,16 +86,16 @@ public class EclipseUtil implements ConstantsUtil {
         }
 
         String face = StringUtils.EMPTY;
-        int size = TEN;//TODO why ten
+        int size = 10;//TODO why ten
         FontData[] fontDatas = styledText.getFont().getFontData(); // TODO why array here
-        if (fontDatas != null && fontDatas.length > ZERO) {
-            face = fontDatas[ZERO].getName();
-            size = fontDatas[ZERO].getHeight();
+        if (fontDatas != null && fontDatas.length > 0) {
+            face = fontDatas[0].getName();
+            size = fontDatas[0].getHeight();
         }
 
         List<List<StyleText>> list = ListUtil.list();
-        int start = ZERO;
-        while (start >= ZERO) {
+        int start = 0;
+        while (start >= 0) {
             int end = StringUtil.indexOfAny(selectionText, ArrayUtils.toArray(StringUtil.CRLF, StringUtils.CR, StringUtils.LF), start);
 
             String line = selectionText.substring(start, end < 0 ? selectionText.length() : end);
@@ -105,7 +105,7 @@ public class EclipseUtil implements ConstantsUtil {
             List<StyleText> textRanges = parseLine(line, ranges, offset, face, String.valueOf(size));
             list.add(textRanges);
 
-            start = end < ZERO ? end : end + (selectionText.startsWith(StringUtil.CRLF, end) ? StringUtil.CRLF.length() : selectionText.startsWith(StringUtils.CR, end) ? StringUtils.CR.length() : StringUtils.LF.length());
+            start = end < 0 ? end : end + (selectionText.startsWith(StringUtil.CRLF, end) ? StringUtil.CRLF.length() : selectionText.startsWith(StringUtils.CR, end) ? StringUtils.CR.length() : StringUtils.LF.length());
         }
 
         return list;
@@ -121,7 +121,7 @@ public class EclipseUtil implements ConstantsUtil {
             return textRanges;
         }
 
-        int count = ZERO;
+        int count = 0;
         for (StyleRange styleRange : styleRanges) {
             int start = styleRange.start - offset;
 
@@ -187,12 +187,12 @@ public class EclipseUtil implements ConstantsUtil {
     }
 
     public static int openWarningWithMultipleButtons(final Shell shell, final String title, final String message, final String[] buttons) {
-        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.WARNING, buttons, ZERO);
+        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.WARNING, buttons, 0);
         return dialog.open();
     }
 
     public static int openErrorWithMultipleButtons(final Shell shell, final String title, final String message, final String[] buttons) {
-        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.WARNING, buttons, ZERO);
+        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.WARNING, buttons, 0);
         return dialog.open();
     }
 

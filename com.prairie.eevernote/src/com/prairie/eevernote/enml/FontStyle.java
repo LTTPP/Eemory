@@ -1,7 +1,7 @@
 package com.prairie.eevernote.enml;
 
 import com.prairie.eevernote.Constants;
-import com.prairie.eevernote.util.ConstantsUtil;
+import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.util.HTMLUtil;
 
 public enum FontStyle {
@@ -14,7 +14,7 @@ public enum FontStyle {
 
         @Override
         public int toNumber() {
-            return ConstantsUtil.ZERO;
+            return 0;
         }
 
     },
@@ -26,7 +26,7 @@ public enum FontStyle {
 
         @Override
         public int toNumber() {
-            return ConstantsUtil.ONE;
+            return 1;
         }
 
     },
@@ -38,7 +38,7 @@ public enum FontStyle {
 
         @Override
         public int toNumber() {
-            return ConstantsUtil.TWO;
+            return 2;
         }
 
     },
@@ -50,7 +50,7 @@ public enum FontStyle {
 
         @Override
         public int toNumber() {
-            return ConstantsUtil.THREE;
+            return 3;
         }
 
     };
@@ -64,6 +64,6 @@ public enum FontStyle {
                 return value;
             }
         }
-        throw new IllegalArgumentException(Constants.IllegalArgumentExceptionMsg + code);
+        throw new IllegalArgumentException(Messages.getString(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MSG) + code);
     }
 }

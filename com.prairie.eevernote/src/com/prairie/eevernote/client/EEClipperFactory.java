@@ -15,8 +15,6 @@ import com.prairie.eevernote.util.MapUtil;
 /**
  * Factory to create <code>EEclipper</code>.
  *
- * @author Liu, Jianwei
- * @version 1.0
  */
 public class EEClipperFactory {
 
