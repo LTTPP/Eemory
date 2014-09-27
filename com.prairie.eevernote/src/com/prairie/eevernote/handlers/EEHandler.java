@@ -195,7 +195,7 @@ public class EEHandler extends AbstractHandler implements Constants {
                 return;
             }
 
-            Thread.sleep(400); // wait for right click menu to hide
+            Thread.sleep(500); // wait for right click menu to hide
 
             final BufferedImage screenshot = CaptureView.showView();
             if (screenshot == null) {
