@@ -186,6 +186,13 @@ public class EEHandler extends AbstractHandler implements Constants {
 
     public void clipScreenshotClicked(final ExecutionEvent event) throws ExecutionException {
         try {
+            Thread.sleep(500); // wait for right click menu to hide
+
+            final BufferedImage screenshot = CaptureView.showView();
+            if (screenshot == null) {
+                return;
+            }
+
             final ENNote args = createENNote();
 
             int option = HotTextDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
@@ -195,12 +202,6 @@ public class EEHandler extends AbstractHandler implements Constants {
                 return;
             }
 
-            Thread.sleep(500); // wait for right click menu to hide
-
-            final BufferedImage screenshot = CaptureView.showView();
-            if (screenshot == null) {
-                return;
-            }
             final File file = File.createTempFile(DateTimeUtil.formatCurrentTime(FileNamePartSimpleDateFormat), ConstantsUtil.DOT + ConstantsUtil.IMG_PNG);
             if (StringUtils.isBlank(args.getName())) {
                 args.setName(DateTimeUtil.timestamp() + ConstantsUtil.DOT + ConstantsUtil.IMG_PNG);
