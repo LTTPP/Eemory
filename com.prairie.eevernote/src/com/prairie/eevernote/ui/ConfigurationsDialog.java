@@ -582,24 +582,28 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         if (label.equals(PLUGIN_CONFIGS_TOKEN)) {
             if (!StringUtils.isBlank(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))) {
                 setFieldValue(PLUGIN_CONFIGS_TOKEN, IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN));
+                setHasInput(PLUGIN_CONFIGS_TOKEN, true);
             }
         } else if (label.equals(PLUGIN_CONFIGS_NOTEBOOK)) {
             editableField(PLUGIN_CONFIGS_NOTEBOOK, IDialogSettingsUtil.getBoolean(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_NAME);
             if (isFieldEditable(PLUGIN_CONFIGS_NOTEBOOK) && !StringUtils.isBlank(value)) {
                 setFieldValue(PLUGIN_CONFIGS_NOTEBOOK, value);
+                setHasInput(PLUGIN_CONFIGS_NOTEBOOK, true);
             }
         } else if (label.equals(PLUGIN_CONFIGS_NOTE)) {
             editableField(PLUGIN_CONFIGS_NOTE, IDialogSettingsUtil.getBoolean(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_UUID);
             if (isFieldEditable(PLUGIN_CONFIGS_NOTE) && !StringUtils.isBlank(value)) {
                 setFieldValue(PLUGIN_CONFIGS_NOTE, value);
+                setHasInput(PLUGIN_CONFIGS_NOTE, true);
             }
         } else if (label.equals(PLUGIN_CONFIGS_TAGS)) {
             editableField(PLUGIN_CONFIGS_TAGS, IDialogSettingsUtil.getBoolean(PLUGIN_SETTINGS_SECTION_TAGS, PLUGIN_SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_TAGS, PLUGIN_SETTINGS_KEY_NAME);
             if (isFieldEditable(PLUGIN_CONFIGS_TAGS) && !StringUtils.isBlank(value)) {
                 setFieldValue(PLUGIN_CONFIGS_TAGS, value);
+                setHasInput(PLUGIN_CONFIGS_TAGS, true);
             }
         } else if (label.equals(PLUGIN_CONFIGS_COMMENTS)) {
             editableField(PLUGIN_CONFIGS_COMMENTS, IDialogSettingsUtil.getBoolean(PLUGIN_SETTINGS_SECTION_COMMENTS, PLUGIN_SETTINGS_KEY_CHECKED));
@@ -728,11 +732,11 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         return has == null ? false : has;
     }
 
-    protected void setHasInput(final String property, final boolean inputed) {
+    protected void setHasInput(final String property, final boolean hasInput) {
         if (inputMatrix == null) {
             inputMatrix = MapUtil.map();
         }
-        inputMatrix.put(property, inputed);
+        inputMatrix.put(property, hasInput);
     }
 
     protected String getString(final String key) {
