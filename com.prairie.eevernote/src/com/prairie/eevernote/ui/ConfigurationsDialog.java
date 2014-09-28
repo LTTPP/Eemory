@@ -504,12 +504,10 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
      */
     private void refreshGuidByName(final String nName) {
         // recreate, delete cases
-        ENNote noteFound = EDAMNotFoundHandler.findNote(notes, nName); // NOTICE: pass in uuid here, so should not work for duplicate name case
+        ENNote noteFound = EDAMNotFoundHandler.findNote(notes, nName); // NOTICE: pass in uuid here, so should not work for name repetition case
         if (noteFound != null && !StringUtils.isBlank(noteFound.getGuid())) {
             notes.put(nName, noteFound);
             saveNoteSettings(nName);
-        } else {
-            notes.put(nName, null);
         }
     }
 
