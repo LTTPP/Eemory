@@ -499,12 +499,17 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         return StringUtils.isBlank(nName) || notes.containsKey(nName) && (StringUtils.equals(notes.get(nName).getName(), IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_NAME)) || StringUtils.isBlank(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_NAME))) && (StringUtils.equals(notes.get(nName).getGuid(), IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID)) || StringUtils.isBlank(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID)));
     }
 
+    /*
+     * @param nName uuid of note
+     */
     private void refreshGuidByName(final String nName) {
         // recreate, delete cases
-        ENNote noteFound = EDAMNotFoundHandler.findNote(notes, nName); // pass in uuid here, so should not work for duplicate name case
+        ENNote noteFound = EDAMNotFoundHandler.findNote(notes, nName); // NOTICE: pass in uuid here, so should not work for duplicate name case
         if (noteFound != null && !StringUtils.isBlank(noteFound.getGuid())) {
             notes.put(nName, noteFound);
             saveNoteSettings(nName);
+        } else {
+            notes.put(nName, null);
         }
     }
 
