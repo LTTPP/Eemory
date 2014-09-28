@@ -97,7 +97,7 @@ public class EDAMNotFoundHandler {
 
     private boolean fixNotFoundNoteGuid(final ENNote args) {
         ENNote found = findNoteByName(args.getNotebook().getGuid(), args.getName());
-        if (!StringUtils.isBlank(found.getGuid())) {
+        if (found != null && !StringUtils.isBlank(found.getGuid())) {
             args.setGuid(found.getGuid());
             args.setGuidReset(true);
             return true;
