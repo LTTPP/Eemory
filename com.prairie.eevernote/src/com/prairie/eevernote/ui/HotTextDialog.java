@@ -273,7 +273,7 @@ public class HotTextDialog extends Dialog implements Constants {
         boolean confirm = false;
         String msg = StringUtils.EMPTY;
         if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getGuid())) {
-            msg = StringUtils.isBlank(quickSettings.getName()) ? Messages.getString(PLUGIN_RUNTIME_CREATENEWNOTE) : Messages.getString(PLUGIN_RUNTIME_CREATENEWNOTE, quickSettings.getName());
+            msg = StringUtils.isBlank(quickSettings.getName()) ? Messages.getString(PLUGIN_RUNTIME_CREATENEWNOTE) : Messages.getString(PLUGIN_RUNTIME_CREATENEWNOTEWITHGIVENNAME, quickSettings.getName());
             confirm = true;
         } else if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getNotebook().getGuid())) {
             msg = Messages.getString(PLUGIN_RUNTIME_CLIPTODEFAULT);
