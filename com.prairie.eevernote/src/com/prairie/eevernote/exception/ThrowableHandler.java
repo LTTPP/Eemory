@@ -17,8 +17,6 @@ import com.prairie.eevernote.util.LogUtil;
 
 public class ThrowableHandler implements Constants {
 
-    private static String OUT_OF_DATE_ERROR = EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE);
-
     public static void openError(final Shell shell, final String message) {
         EclipseUtil.openErrorSync(shell, Messages.getString(PLUGIN_ERROR_OCCURRED), message);
     }
@@ -39,7 +37,7 @@ public class ThrowableHandler implements Constants {
         if (e instanceof EDAMUserException) {
             new EDAMUserExceptionHandler().handleDesingTime(shell, (EDAMUserException) e);
         } else if (e instanceof OutOfDateException) {
-            openError(shell, OUT_OF_DATE_ERROR);
+            openError(shell, EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE));
         } else if (e instanceof TTransportException) {
             if (clipper != null) {
                 clipper.setInvalid();
@@ -58,7 +56,7 @@ public class ThrowableHandler implements Constants {
         if (e instanceof EDAMUserException) {
             return new EDAMUserExceptionHandler().handleRuntime((EDAMUserException) e);
         } else if (e instanceof OutOfDateException) {
-            return LogUtil.error(OUT_OF_DATE_ERROR);
+            return LogUtil.error(EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE));
         } else if (e instanceof TTransportException) {
             if (clipper != null) {
                 clipper.setInvalid();
@@ -75,7 +73,7 @@ public class ThrowableHandler implements Constants {
 
     public static ExecutionException handleExecErr(final Throwable e, final EEClipper clipper) {
         if (e instanceof OutOfDateException) {
-            return new ExecutionException(OUT_OF_DATE_ERROR);
+            return new ExecutionException(EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_OUTOFDATEMESSAGE));
         } else if (e instanceof TTransportException) {
             if (clipper != null) {
                 clipper.setInvalid();
