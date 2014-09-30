@@ -186,7 +186,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 
     public void clipScreenshotClicked(final ExecutionEvent event) throws ExecutionException {
         try {
-            Thread.sleep(500); // wait for right click menu to hide
+            Thread.sleep(800); // wait for right click menu to hide
 
             final BufferedImage screenshot = CaptureView.showView();
             if (screenshot == null) {
