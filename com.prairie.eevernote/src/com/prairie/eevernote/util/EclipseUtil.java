@@ -92,7 +92,9 @@ public class EclipseUtil {
             size = fontDatas[0].getHeight();
             List<String> fontFamily = ListUtil.list();
             for (FontData f : fontDatas) {
-                fontFamily.add(f.getName());
+                if (StringUtils.isNoneBlank(f.getName())) {
+                    fontFamily.add(f.getName());
+                }
             }
             face = StringUtils.join(fontFamily, ConstantsUtil.COMMA);
         }
