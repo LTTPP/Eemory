@@ -7,7 +7,6 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.TransformerException;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +25,7 @@ import com.prairie.eevernote.dom.Node;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.DomUtil;
 import com.prairie.eevernote.util.ListUtil;
+import com.prairie.eevernote.util.LogUtil;
 import com.prairie.eevernote.util.StringUtil;
 
 public class ENML implements Constants {
@@ -85,9 +85,8 @@ public class ENML implements Constants {
      * @throws ParserConfigurationException
      * @throws SAXException
      * @throws IOException
-     * @throws TransformerException
      */
-    public String get() throws ParserConfigurationException, SAXException, IOException, TransformerException {
+    public String get() throws ParserConfigurationException, SAXException, IOException {
         if (isCreateNew()) {
             for (Node n : newAddedNodes) {
                 root.appendChild(n);
@@ -102,8 +101,11 @@ public class ENML implements Constants {
                 newAddedNodes.add(div);
             }
 
-            String beginPart = existingEnml.substring(0, StringUtil.find(existingEnml, ENML_TAG_EN_NOTE_START_REGEX));
-            existingEnml = existingEnml.replace(beginPart, beginPart + DomUtil.toString(newAddedNodes));
+            // open self-closing en-note tag <en-note ... /> to <en-note ... ></en-note> for following processing
+            existingEnml = StringUtils.replacePattern(existingEnml, ENML_TAG_EN_NOTE_SELF_CLOSING_REGEX, ENML_TAG_EN_NOTE_SELF_CLOSING_REPLACEMENT);
+            // insert new nodes
+            existingEnml = StringUtils.replacePattern(existingEnml, ENML_TAG_EN_NOTE_START_REGEX, ENML_TAG_EN_NOTE_START_REPLACEMENT_P1 + DomUtil.toString(newAddedNodes) + ENML_TAG_EN_NOTE_START_REPLACEMENT_P2);
+
             validateENML(existingEnml);
             return existingEnml;
         }
@@ -123,7 +125,7 @@ public class ENML implements Constants {
 
     private Element media(final String hashHex, final String mimeType) throws DOMException, ParserConfigurationException {
         Element media = document.createElement(ENML_TAG_EN_MEDIA);
-        //media.setAttribute(ENML_ATTR_ALIGN, Alignment.LEFT.toString()); // should not have this for correct view
+        //media.setAttribute(ENML_ATTR_ALIGN, Alignment.LEFT.toString()); // should not have this which break display in browser
         media.setAttribute(ENML_ATTR_TYPE, mimeType);
         media.setAttribute(ENML_ATTR_HASH, hashHex);
         return media;
@@ -233,16 +235,19 @@ public class ENML implements Constants {
         reader.setErrorHandler(new ErrorHandler() {
             @Override
             public void warning(final SAXParseException exception) throws SAXException {
+                LogUtil.logWarning(enml);
                 throw exception;
             }
 
             @Override
             public void fatalError(final SAXParseException exception) throws SAXException {
+                LogUtil.logError(enml);
                 throw exception;
             }
 
             @Override
             public void error(final SAXParseException exception) throws SAXException {
+                LogUtil.logError(enml);
                 throw exception;
             }
         });

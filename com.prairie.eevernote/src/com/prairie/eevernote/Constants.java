@@ -41,7 +41,6 @@ public interface Constants {
     public static final String ENML_DOCTYPE_DECLARATION_SYSTEM_ID = "http://xml.evernote.com/pub/enml2.dtd";
     public static final String ENML_DTD = "enml2.dtd";
     public static final String ENML_DTD_LOCATION = "dtd/enml2.dtd";
-    public static final String ENML_TAG_EN_NOTE_START_REGEX = "<en-note[^>]*>";
 
     public static final String ENML_VALUE_PT = "pt";
     public static final String ENML_VALUE_FONT_SIZE = "font-size:";
@@ -63,6 +62,12 @@ public interface Constants {
     public static final String ENML_DOCTYPE_PUBLIC = "PUBLIC";
     public static final String ENML_DOCTYPE_SYSTEM = "SYSTEM";
     public static final String ENML_DOCTYPE = "DOCTYPE";
+    /* Regex */
+    public static final String ENML_TAG_EN_NOTE_START_REGEX = "(<en-note[^>[\"[\\s\\S]*>[\\s\\S]*\"]*]*>)([\\s\\S]*)";
+    public static final String ENML_TAG_EN_NOTE_START_REPLACEMENT_P1 = "$1";
+    public static final String ENML_TAG_EN_NOTE_START_REPLACEMENT_P2 = "$2";
+    public static final String ENML_TAG_EN_NOTE_SELF_CLOSING_REGEX = "([\\s\\S]*<" + ENML_TAG_EN_NOTE + "[^>[\"[\\s\\S]*>[\\s\\S]*\"]*]*)/>";
+    public static final String ENML_TAG_EN_NOTE_SELF_CLOSING_REPLACEMENT = "$1></" + ENML_TAG_EN_NOTE + ">";
 
     public static final String ENML_MODEL_NOTE_NOTEGUID = "Note.guid";
     public static final String ENML_MODEL_NOTE_NOTEGUID_READABLE = "Note";
