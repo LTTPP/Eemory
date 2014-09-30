@@ -467,11 +467,11 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
     }
 
     private void diagnoseNotebook(final String nbName) {
-        if (!StringUtils.isBlank(nbName)) {
+        if (StringUtils.isNotBlank(nbName)) {
             if (!notebooks.containsKey(nbName) && notebooks.containsValue(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID))) {
                 // rename case
                 String key = MapUtil.getKey(notebooks, IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID));
-                if (!StringUtils.isBlank(nbName) && isHasInput(PLUGIN_CONFIGS_NOTEBOOK) && !nbName.equals(key)) {
+                if (StringUtils.isNotBlank(nbName) && isHasInput(PLUGIN_CONFIGS_NOTEBOOK) && !nbName.equals(key)) {
                     setFieldValue(PLUGIN_CONFIGS_NOTEBOOK, key);
                 }
             }
@@ -505,7 +505,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
     private void refreshGuidByName(final String nName) {
         // recreate, delete cases
         ENNote noteFound = EDAMNotFoundHandler.findNote(notes, nName); // NOTICE: pass in uuid here, so should not work for name repetition case
-        if (noteFound != null && !StringUtils.isBlank(noteFound.getGuid())) {
+        if (noteFound != null && StringUtils.isNotBlank(noteFound.getGuid())) {
             notes.put(nName, noteFound);
             saveNoteSettings(nName);
         }
@@ -583,35 +583,35 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
     private void restoreSettings(final String label) {
         if (label.equals(PLUGIN_CONFIGS_TOKEN)) {
-            if (!StringUtils.isBlank(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))) {
+            if (StringUtils.isNotBlank(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))) {
                 setFieldValue(PLUGIN_CONFIGS_TOKEN, IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN));
                 setHasInput(PLUGIN_CONFIGS_TOKEN, true);
             }
         } else if (label.equals(PLUGIN_CONFIGS_NOTEBOOK)) {
             editableField(PLUGIN_CONFIGS_NOTEBOOK, IDialogSettingsUtil.getBoolean(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_NAME);
-            if (isFieldEditable(PLUGIN_CONFIGS_NOTEBOOK) && !StringUtils.isBlank(value)) {
+            if (isFieldEditable(PLUGIN_CONFIGS_NOTEBOOK) && StringUtils.isNotBlank(value)) {
                 setFieldValue(PLUGIN_CONFIGS_NOTEBOOK, value);
                 setHasInput(PLUGIN_CONFIGS_NOTEBOOK, true);
             }
         } else if (label.equals(PLUGIN_CONFIGS_NOTE)) {
             editableField(PLUGIN_CONFIGS_NOTE, IDialogSettingsUtil.getBoolean(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_UUID);
-            if (isFieldEditable(PLUGIN_CONFIGS_NOTE) && !StringUtils.isBlank(value)) {
+            if (isFieldEditable(PLUGIN_CONFIGS_NOTE) && StringUtils.isNotBlank(value)) {
                 setFieldValue(PLUGIN_CONFIGS_NOTE, value);
                 setHasInput(PLUGIN_CONFIGS_NOTE, true);
             }
         } else if (label.equals(PLUGIN_CONFIGS_TAGS)) {
             editableField(PLUGIN_CONFIGS_TAGS, IDialogSettingsUtil.getBoolean(PLUGIN_SETTINGS_SECTION_TAGS, PLUGIN_SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_TAGS, PLUGIN_SETTINGS_KEY_NAME);
-            if (isFieldEditable(PLUGIN_CONFIGS_TAGS) && !StringUtils.isBlank(value)) {
+            if (isFieldEditable(PLUGIN_CONFIGS_TAGS) && StringUtils.isNotBlank(value)) {
                 setFieldValue(PLUGIN_CONFIGS_TAGS, value);
                 setHasInput(PLUGIN_CONFIGS_TAGS, true);
             }
         } else if (label.equals(PLUGIN_CONFIGS_COMMENTS)) {
             editableField(PLUGIN_CONFIGS_COMMENTS, IDialogSettingsUtil.getBoolean(PLUGIN_SETTINGS_SECTION_COMMENTS, PLUGIN_SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_COMMENTS, PLUGIN_SETTINGS_KEY_NAME);
-            if (isFieldEditable(PLUGIN_CONFIGS_COMMENTS) && !StringUtils.isBlank(value)) {
+            if (isFieldEditable(PLUGIN_CONFIGS_COMMENTS) && StringUtils.isNotBlank(value)) {
                 setFieldValue(PLUGIN_CONFIGS_COMMENTS, value);
             }
         }

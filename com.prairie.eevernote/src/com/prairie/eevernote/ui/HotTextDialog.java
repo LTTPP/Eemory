@@ -293,7 +293,7 @@ public class HotTextDialog extends Dialog implements Constants {
         quickSettings.setGuid(note != null ? note.getGuid() : null);
 
         String tags = getFieldValue(PLUGIN_CONFIGS_TAGS);
-        if (!StringUtils.isBlank(tags)) {
+        if (StringUtils.isNotBlank(tags)) {
             quickSettings.setTags(ListUtil.toList(tags.split(TAGS_SEPARATOR)));
         }
 

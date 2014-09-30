@@ -16,7 +16,7 @@ public class FileUtil {
     public static String concatNameOfFilesWithSeparator(final List<File> files, final String separator) {
         String name = StringUtils.EMPTY;
         for (File f : files) {
-            if (!StringUtils.isBlank(name)) {
+            if (StringUtils.isNotBlank(name)) {
                 name += separator;
             }
             name += f.getName();

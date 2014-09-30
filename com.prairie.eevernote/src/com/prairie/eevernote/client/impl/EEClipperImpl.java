@@ -163,10 +163,10 @@ public class EEClipperImpl extends EEClipper {
     public Map<String, ENNote> listNotesWithinNotebook(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, OutOfDateException {
         NoteFilter filter = new NoteFilter();
         filter.setInactive(false);
-        if (!StringUtils.isBlank(args.getNotebook().getGuid())) {
+        if (StringUtils.isNotBlank(args.getNotebook().getGuid())) {
             filter.setNotebookGuid(args.getNotebook().getGuid());
         }
-        if (!StringUtils.isBlank(args.getName())) {
+        if (StringUtils.isNotBlank(args.getName())) {
             filter.setWords(Constants.EDAM_SYNTAX_INTITLE + StringUtil.toQuotedString(args.getName()));
         }
 

@@ -265,29 +265,29 @@ public class EEHandler extends AbstractHandler implements Constants {
         ENNote args = new ENNoteImpl();
 
         String value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID);
-        if (!StringUtils.isBlank(value)) {
+        if (StringUtils.isNotBlank(value)) {
             args.getNotebook().setGuid(value);
         }
         value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_NAME);
-        if (!StringUtils.isBlank(value)) {
+        if (StringUtils.isNotBlank(value)) {
             args.getNotebook().setName(value);
         }
 
         value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID);
-        if (!StringUtils.isBlank(value)) {
+        if (StringUtils.isNotBlank(value)) {
             args.setGuid(value);
         }
         value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_NAME);
-        if (!StringUtils.isBlank(value)) {
+        if (StringUtils.isNotBlank(value)) {
             args.setName(value);
         }
 
         value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_TAGS, PLUGIN_SETTINGS_KEY_NAME);
-        if (!StringUtils.isBlank(value)) {
+        if (StringUtils.isNotBlank(value)) {
             args.setTags(ListUtil.toList(value.split(TAGS_SEPARATOR)));
         }
         value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_COMMENTS, PLUGIN_SETTINGS_KEY_NAME);
-        if (!StringUtils.isBlank(value)) {
+        if (StringUtils.isNotBlank(value)) {
             args.setComments(value);
         }
 

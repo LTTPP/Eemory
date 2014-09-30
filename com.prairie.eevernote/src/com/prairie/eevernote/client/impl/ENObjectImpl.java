@@ -47,11 +47,11 @@ public class ENObjectImpl implements ENObject {
 
     @Override
     public void adopt(final ENObject note) {
-        if (!StringUtils.isBlank(note.getName())) {
+        if (StringUtils.isNotBlank(note.getName())) {
             setName(note.getName());
         }
 
-        if (!StringUtils.isBlank(note.getGuid())) {
+        if (StringUtils.isNotBlank(note.getGuid())) {
             setGuid(note.getGuid());
             setGuidAdopt(true);
         }

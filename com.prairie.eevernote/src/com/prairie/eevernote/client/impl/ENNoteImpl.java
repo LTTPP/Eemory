@@ -117,7 +117,7 @@ public class ENNoteImpl extends ENObjectImpl implements ENNote {
             setTags(note.getTags());
         }
 
-        if (!StringUtils.isBlank(note.getComments())) {
+        if (StringUtils.isNotBlank(note.getComments())) {
             setComments(note.getComments());
         }
     }

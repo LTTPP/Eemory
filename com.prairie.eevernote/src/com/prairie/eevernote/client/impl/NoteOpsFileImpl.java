@@ -50,7 +50,7 @@ public class NoteOpsFileImpl extends NoteOps {
     private void create(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, OutOfDateException {
         Note note = new Note();
         note.setTitle(StringUtils.abbreviate(args.getName(), EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX));
-        if (!StringUtils.isBlank(args.getNotebook().getGuid())) {
+        if (StringUtils.isNotBlank(args.getNotebook().getGuid())) {
             note.setNotebookGuid(args.getNotebook().getGuid());
         }
 
@@ -72,7 +72,7 @@ public class NoteOpsFileImpl extends NoteOps {
 
         // create tags
         for (String tagName : args.getTags()) {
-            if (!StringUtils.isBlank(tagName)) {
+            if (StringUtils.isNotBlank(tagName)) {
                 note.addToTagNames(tagName);
             }
         }
@@ -109,7 +109,7 @@ public class NoteOpsFileImpl extends NoteOps {
 
         // update tags
         for (String tagName : args.getTags()) {
-            if (!StringUtils.isBlank(tagName)) {
+            if (StringUtils.isNotBlank(tagName)) {
                 note.addToTagNames(tagName);
             }
         }
@@ -118,7 +118,7 @@ public class NoteOpsFileImpl extends NoteOps {
     }
 
     private boolean shouldUpdate(final ENNote args) {
-        return !StringUtils.isBlank(args.getGuid());
+        return StringUtils.isNotBlank(args.getGuid());
     }
 
 }

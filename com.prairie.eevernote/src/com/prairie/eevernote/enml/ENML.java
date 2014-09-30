@@ -58,7 +58,7 @@ public class ENML implements Constants {
     }
 
     public void addResource(final String hashHex, final String mimeType) throws DOMException, ParserConfigurationException {
-        if (!StringUtils.isBlank(hashHex)) {
+        if (StringUtils.isNotBlank(hashHex)) {
             Element div = div();
             div.appendChild(media(hashHex, mimeType));
             newAddedNodes.add(div);
@@ -66,7 +66,7 @@ public class ENML implements Constants {
     }
 
     public void addComment(final String comments) throws DOMException, ParserConfigurationException {
-        if (!StringUtils.isBlank(comments)) {
+        if (StringUtils.isNotBlank(comments)) {
             Element div = div();
             div.setTextContent(StringEscapeUtil.escapeEnml(comments) + ConstantsUtil.COLON);
             newAddedNodes.add(div);
