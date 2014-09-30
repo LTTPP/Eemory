@@ -157,4 +157,6 @@ public interface Constants {
     public static String NO = "no";
     public static String OK_CAPS = "OK";
 
+    public static final String PLUGIN_DEBUG_MODE = "com.prairie.eevernote.debug";
+
 }

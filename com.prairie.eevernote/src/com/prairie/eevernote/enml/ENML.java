@@ -93,6 +93,7 @@ public class ENML implements Constants {
             }
             String newEnml = DomUtil.toString(document);
             validateENML(newEnml);
+            LogUtil.debug(newEnml);
             return newEnml;
         } else {
             if (!ListUtil.isNullOrEmptyList(newAddedNodes)) {
@@ -107,6 +108,7 @@ public class ENML implements Constants {
             existingEnml = StringUtils.replacePattern(existingEnml, ENML_TAG_EN_NOTE_START_REGEX, ENML_TAG_EN_NOTE_START_REPLACEMENT_P1 + DomUtil.toString(newAddedNodes) + ENML_TAG_EN_NOTE_START_REPLACEMENT_P2);
 
             validateENML(existingEnml);
+            LogUtil.debug(existingEnml);
             return existingEnml;
         }
     }

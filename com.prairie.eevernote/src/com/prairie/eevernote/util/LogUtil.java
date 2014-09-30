@@ -1,15 +1,24 @@
 package com.prairie.eevernote.util;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
+import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEPlugin;
 
 public class LogUtil {
 
     private static final ILog log = EEPlugin.getDefault().getLog();
+
+    public static void debug(final String message) {
+        String debug = System.getProperty(Constants.PLUGIN_DEBUG_MODE);
+        if (BooleanUtils.toBoolean(debug)) {
+            logInfo(message);
+        }
+    }
 
     public static void logInfo(final Throwable exception) {
         log.log(info(exception));
