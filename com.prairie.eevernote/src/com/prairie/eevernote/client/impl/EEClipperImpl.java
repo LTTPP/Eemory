@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.DOMException;
@@ -66,7 +65,6 @@ public class EEClipperImpl extends EEClipper {
      *            guid, tags, comments and file itself.
      * @throws OutOfDateException
      *             This plug-in is out of date
-     * @throws TransformerException
      * @throws SAXException
      * @throws ParserConfigurationException
      * @throws IOException
@@ -81,7 +79,7 @@ public class EEClipperImpl extends EEClipper {
      * @throws NoSuchAlgorithmException
      */
     @Override
-    public void clipFile(final ENNote args) throws NoSuchAlgorithmException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
+    public void clipFile(final ENNote args) throws NoSuchAlgorithmException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, IOException, ParserConfigurationException, SAXException, OutOfDateException {
         new NoteOpsFileImpl(noteStoreClient).updateOrCreate(args);
     }
 
@@ -93,7 +91,6 @@ public class EEClipperImpl extends EEClipper {
      *            guid, tags, comments and selection itself.
      * @throws OutOfDateException
      *             This plug-in is out of date
-     * @throws TransformerException
      * @throws IOException
      * @throws SAXException
      * @throws ParserConfigurationException
@@ -109,7 +106,7 @@ public class EEClipperImpl extends EEClipper {
      *
      */
     @Override
-    public void clipSelection(final ENNote args) throws DOMException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, TransformerException, OutOfDateException {
+    public void clipSelection(final ENNote args) throws DOMException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, OutOfDateException {
         new NoteOpsTextImpl(noteStoreClient).updateOrCreate(args);
     }
 
@@ -145,7 +142,7 @@ public class EEClipperImpl extends EEClipper {
     }
 
     /**
-     * return a user's all notes inside the specified notebook.
+     * return a user's all notes(uuid-ENNote) inside the specified notebook.
      *
      * @param args
      *            all things needed to list notes, such as notebook guid.

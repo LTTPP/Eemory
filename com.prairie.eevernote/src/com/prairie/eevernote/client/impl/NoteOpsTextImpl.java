@@ -3,7 +3,6 @@ package com.prairie.eevernote.client.impl;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.DOMException;
@@ -32,7 +31,7 @@ public class NoteOpsTextImpl extends NoteOps {
     }
 
     @Override
-    public void updateOrCreate(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, TransformerException, DOMException, OutOfDateException {
+    public void updateOrCreate(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, DOMException, OutOfDateException {
         if (ListUtil.isNullOrEmptyList(args.getContent())) {
             return;
         }
@@ -43,7 +42,7 @@ public class NoteOpsTextImpl extends NoteOps {
         }
     }
 
-    private void create(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, TransformerException, OutOfDateException {
+    private void create(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, OutOfDateException {
         Note note = new Note();
         note.setTitle(StringUtils.abbreviate(args.getName(), EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX));
         if (!StringUtils.isBlank(args.getNotebook().getGuid())) {
@@ -65,7 +64,7 @@ public class NoteOpsTextImpl extends NoteOps {
         noteStoreClient.createNote(note);
     }
 
-    private void update(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, DOMException, ParserConfigurationException, SAXException, IOException, TransformerException, OutOfDateException {
+    private void update(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, DOMException, ParserConfigurationException, SAXException, IOException, OutOfDateException {
         Note note = noteStoreClient.getNote(args.getGuid(), true, false, false, false);
         if (!note.isActive()) {
             EDAMNotFoundException e = new EDAMNotFoundException();

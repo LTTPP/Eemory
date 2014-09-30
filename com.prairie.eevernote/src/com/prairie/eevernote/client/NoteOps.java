@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import org.xml.sax.SAXException;
 
@@ -16,6 +15,6 @@ import com.prairie.eevernote.exception.OutOfDateException;
 
 public abstract class NoteOps {
 
-    public abstract void updateOrCreate(ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException;
+    public abstract void updateOrCreate(ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, OutOfDateException;
 
 }

@@ -6,7 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
@@ -37,7 +36,7 @@ public class NoteOpsFileImpl extends NoteOps {
     }
 
     @Override
-    public void updateOrCreate(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
+    public void updateOrCreate(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, OutOfDateException {
         if (ListUtil.isNullOrEmptyList(args.getAttachments())) {
             return;
         }
@@ -48,7 +47,7 @@ public class NoteOpsFileImpl extends NoteOps {
         }
     }
 
-    private void create(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
+    private void create(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, OutOfDateException {
         Note note = new Note();
         note.setTitle(StringUtils.abbreviate(args.getName(), EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX));
         if (!StringUtils.isBlank(args.getNotebook().getGuid())) {
@@ -81,7 +80,7 @@ public class NoteOpsFileImpl extends NoteOps {
         noteStoreClient.createNote(note);
     }
 
-    private void update(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, TransformerException, OutOfDateException {
+    private void update(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, OutOfDateException {
         Note note = noteStoreClient.getNote(args.getGuid(), true, false, false, false);
         if (!note.isActive()) {
             EDAMNotFoundException e = new EDAMNotFoundException();
