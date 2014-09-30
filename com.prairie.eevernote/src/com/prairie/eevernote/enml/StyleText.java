@@ -17,7 +17,7 @@ public class StyleText {
         face = StringUtils.EMPTY;
         colorHexCode = ColorUtil.toHexCode(0, 0, 0);
         fontStyle = FontStyle.NORMAL;
-        size = String.valueOf(10);//TODO
+        size = StringUtils.EMPTY;
     }
 
     public StyleText(final String text, final String face, final String colorHexCode, final String size, final FontStyle fontStyle) {
