@@ -69,7 +69,7 @@ public class EclipseUtil {
         } else if (selection instanceof ITextSelection) {
             IEditorPart editorPart = HandlerUtil.getActiveEditor(event);
             IFile iFile = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
-            if (iFile != null) {// TODO iFile == null: how to handle this case in XML file
+            if (iFile != null) {// TODO how to handle iFile = null case
                 File file = iFile.getLocation().makeAbsolute().toFile();
                 files.add(file);
             }
@@ -85,12 +85,16 @@ public class EclipseUtil {
             return ListUtil.list();
         }
 
+        int size = 10; // 10 as default value in eclipse, will be overwritten by custom
         String face = StringUtils.EMPTY;
-        int size = 10;//TODO why ten
-        FontData[] fontDatas = styledText.getFont().getFontData(); // TODO why array here
-        if (fontDatas != null && fontDatas.length > 0) {
-            face = fontDatas[0].getName();
+        FontData[] fontDatas = styledText.getFont().getFontData(); // On Windows, only one FontData will be returned per font. On X however, a Font object may be composed of multiple X fonts.
+        if (ArrayUtils.isNotEmpty(fontDatas)) {
             size = fontDatas[0].getHeight();
+            List<String> fontFamily = ListUtil.list();
+            for (FontData f : fontDatas) {
+                fontFamily.add(f.getName());
+            }
+            face = StringUtils.join(fontFamily, ConstantsUtil.COMMA);
         }
 
         List<List<StyleText>> list = ListUtil.list();
