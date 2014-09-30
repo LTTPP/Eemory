@@ -26,7 +26,7 @@ import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.DomUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.LogUtil;
-import com.prairie.eevernote.util.StringUtil;
+import com.prairie.eevernote.util.StringEscapeUtil;
 
 public class ENML implements Constants {
 
@@ -68,7 +68,7 @@ public class ENML implements Constants {
     public void addComment(final String comments) throws DOMException, ParserConfigurationException {
         if (!StringUtils.isBlank(comments)) {
             Element div = div();
-            div.setTextContent(StringUtil.escapeEnml(comments) + ConstantsUtil.COLON);
+            div.setTextContent(StringEscapeUtil.escapeEnml(comments) + ConstantsUtil.COLON);
             newAddedNodes.add(div);
         }
     }
@@ -142,7 +142,7 @@ public class ENML implements Constants {
     private Node div(final List<StyleText> styleTextBlocks) throws DOMException, ParserConfigurationException {
         Element div = document.createElement(ENML_TAG_DIV);
         for (StyleText styletext : styleTextBlocks) {
-            String escapedXml = StringUtil.escapeEnml(styletext.getText());
+            String escapedXml = StringEscapeUtil.escapeEnml(styletext.getText());
             div.appendChild(font(escapedXml, styletext.getFace(), styletext.getColorHexCode(), styletext.getSize(), styletext.getFontStyle()));
         }
         return div;
