@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <description name="EEvernote Update Site" url="https://github.com/prairie/EEvernote">
-      Eclipse Update Site for EEvernote Plug-in
+   <description name="EAlways Update Site" url="https://github.com/prairie/EAlways">
+      Eclipse Update Site for EAlways Plug-in
    </description>
    <feature url="features/com.prairie.eevernote.feature_1.0.0.201402181129.jar" id="com.prairie.eevernote.feature" version="1.0.0.201402181129">
-      <category name="EEvernote"/>
+      <category name="EAlways"/>
    </feature>
-   <category-def name="EEvernote" label="EEvernote"/>
+   <category-def name="EAlways" label="EAlways"/>
 </site>

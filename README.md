@@ -1,4 +1,4 @@
-EEvernote
+EAlways
 =========
 
-Evernote Eclipse Plugin
+Eclipse Plug-in for Evernote

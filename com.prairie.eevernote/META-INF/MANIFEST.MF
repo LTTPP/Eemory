@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: EEvernote
+Bundle-Name: EAlways
 Bundle-SymbolicName: com.prairie.eevernote; singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.prairie.eevernote.EEPlugin

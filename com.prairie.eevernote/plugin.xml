@@ -3,7 +3,7 @@
 <plugin>
 
     <extension point="org.eclipse.ui.commands">
-        <category name="EEvernote Category" id="com.prairie.eevernote.commands.category">
+        <category name="EAlways Category" id="com.prairie.eevernote.commands.category">
         </category>
         <command name="Clip to Evernote" categoryId="com.prairie.eevernote.commands.category" id="com.prairie.eevernote.commands.ClipToEvernote">
             <commandParameter id="com.prairie.eevernote.command.parameter" name="Command Parameter" optional="true">
@@ -30,7 +30,7 @@
     icon="icons/icon_file_16x16.png"/> <image commandId="com.prairie.eevernote.commands.ClipSelectionToEvernote"
     icon="icons/icon_selection_16x16.png"/> </extension -->
     <extension point="org.eclipse.ui.handlers">
-        <handler name="EEvernote Handler" commandId="com.prairie.eevernote.commands.ClipToEvernote" class="com.prairie.eevernote.handlers.EEHandler">
+        <handler name="EAlways Handler" commandId="com.prairie.eevernote.commands.ClipToEvernote" class="com.prairie.eevernote.handlers.EEHandler">
             <enabledWhen>
                 <or>
                     <with variable="selection">
@@ -47,18 +47,18 @@
                 </or>
             </enabledWhen>
         </handler>
-        <handler name="EEvernote Handler" commandId="com.prairie.eevernote.commands.ClipFileToEvernote" class="com.prairie.eevernote.handlers.EEHandler">
+        <handler name="EAlways Handler" commandId="com.prairie.eevernote.commands.ClipFileToEvernote" class="com.prairie.eevernote.handlers.EEHandler">
         </handler>
-        <handler name="EEvernote Handler" commandId="com.prairie.eevernote.commands.ClipSelectionToEvernote" class="com.prairie.eevernote.handlers.EEHandler">
+        <handler name="EAlways Handler" commandId="com.prairie.eevernote.commands.ClipSelectionToEvernote" class="com.prairie.eevernote.handlers.EEHandler">
             <enabledWhen>
                 <with variable="selection">
                     <instanceof value="org.eclipse.jface.text.ITextSelection" />
                 </with>
             </enabledWhen>
         </handler>
-        <handler name="EEvernote Handler" commandId="com.prairie.eevernote.commands.ClipScreenshotToEvernote" class="com.prairie.eevernote.handlers.EEHandler">
+        <handler name="EAlways Handler" commandId="com.prairie.eevernote.commands.ClipScreenshotToEvernote" class="com.prairie.eevernote.handlers.EEHandler">
         </handler>
-        <handler name="EEvernote Handler" commandId="com.prairie.eevernote.commands.Configurations" class="com.prairie.eevernote.handlers.EEHandler">
+        <handler name="EAlways Handler" commandId="com.prairie.eevernote.commands.Configurations" class="com.prairie.eevernote.handlers.EEHandler">
         </handler>
     </extension>
     <!--extension point="org.eclipse.ui.bindings"> <key commandId="com.prairie.eevernote.commands.ClipFileToEvernote"
