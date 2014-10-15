@@ -29,7 +29,7 @@ import com.prairie.eevernote.exception.EDAMNotFoundHandler;
 import com.prairie.eevernote.exception.ThrowableHandler;
 import com.prairie.eevernote.ui.CaptureView;
 import com.prairie.eevernote.ui.ConfigurationsDialog;
-import com.prairie.eevernote.ui.HotTextDialog;
+import com.prairie.eevernote.ui.QuickOrganizeDialog;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.DateTimeUtil;
 import com.prairie.eevernote.util.EclipseUtil;
@@ -71,10 +71,10 @@ public class EEHandler extends AbstractHandler implements Constants {
         try {
             final ENNote args = createENNote();
 
-            int option = HotTextDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
-            if (option == HotTextDialog.OK) {
-                args.adopt(HotTextDialog.getThis().getQuickSettings());
-            } else if (option == HotTextDialog.CANCEL) {
+            int option = QuickOrganizeDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
+            if (option == QuickOrganizeDialog.OK) {
+                args.adopt(QuickOrganizeDialog.getThis().getQuickSettings());
+            } else if (option == QuickOrganizeDialog.CANCEL) {
                 return;
             }
 
@@ -129,10 +129,10 @@ public class EEHandler extends AbstractHandler implements Constants {
         try {
             final ENNote args = createENNote();
 
-            int option = HotTextDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
-            if (option == HotTextDialog.OK) {
-                args.adopt(HotTextDialog.getThis().getQuickSettings());
-            } else if (option == HotTextDialog.CANCEL) {
+            int option = QuickOrganizeDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
+            if (option == QuickOrganizeDialog.OK) {
+                args.adopt(QuickOrganizeDialog.getThis().getQuickSettings());
+            } else if (option == QuickOrganizeDialog.CANCEL) {
                 return;
             }
 
@@ -195,10 +195,10 @@ public class EEHandler extends AbstractHandler implements Constants {
 
             final ENNote args = createENNote();
 
-            int option = HotTextDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
-            if (option == HotTextDialog.OK) {
-                args.adopt(HotTextDialog.getThis().getQuickSettings());
-            } else if (option == HotTextDialog.CANCEL) {
+            int option = QuickOrganizeDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
+            if (option == QuickOrganizeDialog.OK) {
+                args.adopt(QuickOrganizeDialog.getThis().getQuickSettings());
+            } else if (option == QuickOrganizeDialog.CANCEL) {
                 return;
             }
 

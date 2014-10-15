@@ -41,12 +41,12 @@ import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapUtil;
 import com.prairie.eevernote.util.StringUtil;
 
-public class HotTextDialog extends Dialog implements Constants {
+public class QuickOrganizeDialog extends Dialog implements Constants {
 
     public static final int SHOULD_NOT_SHOW = PLUGIN_CONFIGS_HOTSET_SHOULD_NOT_SHOW_ID;
 
     private final Shell shell;
-    private static HotTextDialog thisDialog;
+    private static QuickOrganizeDialog thisDialog;
 
     private EEClipper clipper;
 
@@ -65,7 +65,7 @@ public class HotTextDialog extends Dialog implements Constants {
 
     private boolean canceled = false;
 
-    public HotTextDialog(final Shell parentShell) {
+    public QuickOrganizeDialog(final Shell parentShell) {
         super(parentShell);
         shell = parentShell;
         notebooks = MapUtil.map();
@@ -326,11 +326,11 @@ public class HotTextDialog extends Dialog implements Constants {
 
     public static int show(final Shell shell) {
         if (shouldShow()) {
-            thisDialog = new HotTextDialog(shell);
+            thisDialog = new QuickOrganizeDialog(shell);
             thisDialog.authInProgress();
             return thisDialog.fatal ? CANCEL : thisDialog.open();
         }
-        return HotTextDialog.SHOULD_NOT_SHOW;
+        return QuickOrganizeDialog.SHOULD_NOT_SHOW;
     }
 
     protected static boolean shouldShow() {
@@ -380,7 +380,7 @@ public class HotTextDialog extends Dialog implements Constants {
         fields.put(key, value);
     }
 
-    public static HotTextDialog getThis() {
+    public static QuickOrganizeDialog getThis() {
         return thisDialog;
     }
 
