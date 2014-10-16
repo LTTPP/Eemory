@@ -61,8 +61,6 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
     // <Field Property, <Field Property, Field Value>>
     private Map<String, Map<String, String>> matrix;
 
-    private boolean fatal = false;// TODO may remove
-
     private boolean canceled = false;
 
     public QuickOrganizeDialog(final Shell parentShell) {
@@ -92,6 +90,10 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
         // container.setLayoutData(new GridData(GridData.FILL_BOTH));
         container.setLayout(new GridLayout(2, false));
         container.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
+
+        // ------------
+
+        authInProgress();
 
         // ------------
 
@@ -167,7 +169,6 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                     try {
                         clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN), false);
                     } catch (Throwable e) {
-                        fatal = true;
                         ThrowableHandler.handleDesignTimeErr(shell, e, true, clipper);
                     }
                     setCanceled(monitor.isCanceled());
@@ -175,7 +176,6 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                 }
             });
         } catch (Throwable e) {
-            fatal = true;
             ThrowableHandler.handleDesignTimeErr(shell, e, true);
         }
     }
@@ -327,8 +327,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
     public static int show(final Shell shell) {
         if (shouldShow()) {
             thisDialog = new QuickOrganizeDialog(shell);
-            thisDialog.authInProgress();
-            return thisDialog.fatal ? CANCEL : thisDialog.open();
+            return thisDialog.open();
         }
         return QuickOrganizeDialog.SHOULD_NOT_SHOW;
     }

@@ -55,7 +55,7 @@ public class EEHandler extends AbstractHandler implements Constants {
             }
             // clip
             if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE)) {
-                // TODO
+                clipSelectionClicked(event);
             } else if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE)) {
                 clipSelectionClicked(event);
             } else if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE)) {
