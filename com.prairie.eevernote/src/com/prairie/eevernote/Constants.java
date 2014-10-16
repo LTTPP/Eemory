@@ -62,12 +62,15 @@ public interface Constants {
     public static final String ENML_DOCTYPE_PUBLIC = "PUBLIC";
     public static final String ENML_DOCTYPE_SYSTEM = "SYSTEM";
     public static final String ENML_DOCTYPE = "DOCTYPE";
-    /* Regex */
-    public static final String ENML_TAG_EN_NOTE_START_REGEX = "(<en-note[^>[\"[\\s\\S]*>[\\s\\S]*\"]*]*>)([\\s\\S]*)";
-    public static final String ENML_TAG_EN_NOTE_START_REPLACEMENT_P1 = "$1";
-    public static final String ENML_TAG_EN_NOTE_START_REPLACEMENT_P2 = "$2";
-    public static final String ENML_TAG_EN_NOTE_SELF_CLOSING_REGEX = "([\\s\\S]*<" + ENML_TAG_EN_NOTE + "[^>[\"[\\s\\S]*>[\\s\\S]*\"]*]*)/>";
+    /*
+     * Regex: assume > does not appear in the value for the attributes, and the
+     * XML is valid.
+     */
+    public static final String ENML_TAG_EN_NOTE_SELF_CLOSING_REGEX = "(<"+ENML_TAG_EN_NOTE+"[^>]*)/>";
     public static final String ENML_TAG_EN_NOTE_SELF_CLOSING_REPLACEMENT = "$1></" + ENML_TAG_EN_NOTE + ">";
+    public static final String ENML_TAG_EN_NOTE_START_REGEX = "(<" + ENML_TAG_EN_NOTE + "[^>]*>)";
+    public static final String ENML_TAG_EN_NOTE_START_REPLACEMENT_P1 = "$1";
+    /* end */
 
     public static final String ENML_MODEL_NOTE_NOTEGUID = "Note.guid";
     public static final String ENML_MODEL_NOTE_NOTEGUID_READABLE = "Note";

@@ -105,7 +105,7 @@ public class ENML implements Constants {
             // open self-closing en-note tag <en-note ... /> to <en-note ... ></en-note> for following processing
             existingEnml = StringUtils.replacePattern(existingEnml, ENML_TAG_EN_NOTE_SELF_CLOSING_REGEX, ENML_TAG_EN_NOTE_SELF_CLOSING_REPLACEMENT);
             // insert new nodes
-            existingEnml = StringUtils.replacePattern(existingEnml, ENML_TAG_EN_NOTE_START_REGEX, ENML_TAG_EN_NOTE_START_REPLACEMENT_P1 + DomUtil.toString(newAddedNodes) + ENML_TAG_EN_NOTE_START_REPLACEMENT_P2);
+            existingEnml = StringUtils.replacePattern(existingEnml, ENML_TAG_EN_NOTE_START_REGEX, ENML_TAG_EN_NOTE_START_REPLACEMENT_P1 + DomUtil.toString(newAddedNodes));
 
             validateENML(existingEnml);
             LogUtil.debug(existingEnml);
@@ -155,7 +155,7 @@ public class ENML implements Constants {
         font.appendChild(span(text, size, fontStyle));
         font.setAttribute(ENML_ATTR_FACE, face);
         font.setAttribute(ENML_ATTR_COLOR, color);
-        font.setAttribute(ENML_ATTR_SIZE, String.valueOf(2));//TODO why
+        //font.setAttribute(ENML_ATTR_SIZE, String.valueOf(2));// does not work if style="font-size:xxpt" of span set
         return font;
     }
 
