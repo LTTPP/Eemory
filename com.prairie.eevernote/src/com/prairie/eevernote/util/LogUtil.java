@@ -28,6 +28,10 @@ public class LogUtil {
         log.log(warning(exception));
     }
 
+    public static void logWarning(final String message, final Throwable exception) {
+        log.log(warning(message, exception));
+    }
+
     public static void logCancel(final Throwable exception) {
         log.log(cancel(exception));
     }
@@ -58,6 +62,10 @@ public class LogUtil {
 
     public static IStatus warning(final Throwable exception) {
         return new Status(Status.WARNING, EEPlugin.PLUGIN_ID, ExceptionUtils.getRootCauseMessage(exception), exception);
+    }
+
+    public static IStatus warning(final String message, final Throwable exception) {
+        return new Status(Status.WARNING, EEPlugin.PLUGIN_ID, message, exception);
     }
 
     public static IStatus cancel(final Throwable exception) {

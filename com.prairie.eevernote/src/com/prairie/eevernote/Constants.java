@@ -161,5 +161,6 @@ public interface Constants {
     public static String OK_CAPS = "OK";
 
     public static final String PLUGIN_DEBUG_MODE = "com.prairie.eevernote.debug";
+    public static final String PLUGIN_RUN_ON_SANDBOX = "com.evernote.sandbox";
 
 }

@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.commons.lang3.BooleanUtils;
+
 import com.evernote.auth.EvernoteAuth;
 import com.evernote.auth.EvernoteService;
 import com.evernote.clients.ClientFactory;
@@ -32,7 +34,7 @@ public class EvernoteUtil {
     }
 
     private static ClientFactory auth(final String token) {
-        EvernoteAuth evernoteAuth = new EvernoteAuth(EvernoteService.SANDBOX, token);
+        EvernoteAuth evernoteAuth = new EvernoteAuth(evernoteService(), token);
         return new ClientFactory(evernoteAuth);
     }
 
@@ -73,6 +75,15 @@ public class EvernoteUtil {
         data.setBody(body);
 
         return data;
+    }
+
+    public static EvernoteService evernoteService() {
+        String runOnSandbox = System.getProperty(Constants.PLUGIN_RUN_ON_SANDBOX);
+        if (BooleanUtils.toBoolean(runOnSandbox)) {
+            return EvernoteService.SANDBOX;
+        } else {
+            return EvernoteService.PRODUCTION;
+        }
     }
 
 }
