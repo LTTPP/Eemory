@@ -6,7 +6,7 @@ public interface Constants {
 
     public static final String PLUGIN_ID = "com.prairie.eevernote";
     public static final String PLUGIN_COMMAND_PARAM_ID = "com.prairie.eevernote.command.parameter";
-    
+
     public static final String CONSUMER_KEY = "eevernote";
     public static final String CONSUMER_SECRET = "4a4879fd4c671f5b";
 
@@ -107,8 +107,7 @@ public interface Constants {
     public static final String PLUGIN_CONFIGS_OAUTH = "Plugin.Configurations.OAuth";
     public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONFIGURE = "Plugin.Configurations.TokenNotConfigured.Configure";
     public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_NOTNOW = "Plugin.Configurations.TokenNotConfigured.NotNow";
-    public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONTINUE = "Plugin.Configurations.TokenNotConfigured.Continue";
-    public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CANCEL = "Plugin.Configurations.TokenNotConfigured.Cancel";
+    public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONFIRM = "Plugin.Configurations.TokenNotConfigured.Confirm";
     public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_WAITING = "Plugin.Configurations.TokenNotConfigured.Waiting";
     public static final String PLUGIN_CONFIGS_AUTHENTICATING = "Plugin.Configurations.Authenticating";
     public static final String PLUGIN_CONFIGS_FETCHINGNOTEBOOKS = "Plugin.Configurations.FetchingNotebooks";
@@ -155,7 +154,7 @@ public interface Constants {
     public static final String DOM_ERROR7 = "DOM.Error7";
     public static final String DOM_ERROR8 = "DOM.Error8";
     public static final String DOM_ERROR9 = "DOM.Error9";
-    
+
     // OAuth
     public static final String JETTY_LOG_IMPL_CLASS = "org.eclipse.jetty.util.log.class";
     public static final String CALLBACK_URL = "/oauth/callback";
@@ -173,5 +172,5 @@ public interface Constants {
 
     public static final String PLUGIN_DEBUG_MODE = "com.prairie.eevernote.debug";
     public static final String PLUGIN_RUN_ON_SANDBOX = "com.evernote.sandbox";
-    
+
 }

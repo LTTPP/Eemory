@@ -192,8 +192,8 @@ public class EclipseUtil {
             }
         });
     }
-    
-    static int opt = 0;
+
+    private static int opt = 0;
 
     public static int openErrorSyncWithCustomButtons(final Shell shell, final String title, final String message, final String[] buttons) {
         Display.getDefault().syncExec(new Runnable() {
@@ -214,7 +214,7 @@ public class EclipseUtil {
         };
         return dialog.open();
     }
-    
+
     public static int openInformationWithCustomButtons(final Shell shell, final String title, final String message, final String[] buttons) {
         MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.INFORMATION, buttons, 0);
         return dialog.open();

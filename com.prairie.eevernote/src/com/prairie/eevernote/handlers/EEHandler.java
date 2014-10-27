@@ -13,6 +13,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.custom.StyledText;
@@ -55,8 +56,8 @@ public class EEHandler extends AbstractHandler implements Constants {
             if (StringUtils.isBlank(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))) {
                 return null;
             } else {
-                int opt = EclipseUtil.openCustomImageTypeWithCustomButtons(HandlerUtil.getActiveShellChecked(event), event.getParameter(PLUGIN_COMMAND_PARAM_ID), "Finished and continue?", null, ArrayUtils.toArray(Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONTINUE), Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CANCEL)));
-                if (opt != 0) {
+                boolean confirmed = MessageDialog.openConfirm(HandlerUtil.getActiveShellChecked(event), event.getParameter(PLUGIN_COMMAND_PARAM_ID), Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONFIRM));
+                if (!confirmed) {
                     return null;
                 }
             }
