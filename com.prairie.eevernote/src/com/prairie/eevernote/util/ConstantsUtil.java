@@ -1,6 +1,9 @@
 package com.prairie.eevernote.util;
 
-public interface ConstantsUtil {
+import org.apache.commons.lang3.StringUtils;
+
+
+public final class ConstantsUtil {
 
     // common
     public static final String COMMA = ",";
@@ -30,6 +33,7 @@ public interface ConstantsUtil {
     public static String QUESTION_MARK = "?";
     public static final String TAB = "\t";
     public static final String HTML_NBSP = "&nbsp;";
+    public static final String LOCALHOST = "localhost";
 
     // XML
     public static final String XHTML_1_0_LATIN_1_ENT = "xhtml-lat1.ent";
@@ -43,5 +47,9 @@ public interface ConstantsUtil {
     // Eclipse
     public static final String PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME = "org.eclipse.jdt.core";
     public static final String PLUGIN_ORG_ECLIPSE_JDT_CORE_PREF_FORMATTER_TABULATION_SIZE = "org.eclipse.jdt.core.formatter.tabulation.size";
+    
+    public static String url(String host, String port, String target, boolean isHttps) {
+        return (isHttps ? "https" : "http") + "://" + host + (StringUtils.isNotBlank(port) ? ":" + port : StringUtils.EMPTY) + target;
+    }
 
 }

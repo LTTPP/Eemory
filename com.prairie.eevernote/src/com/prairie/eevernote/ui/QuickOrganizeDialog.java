@@ -36,6 +36,7 @@ import com.prairie.eevernote.client.impl.ENNoteImpl;
 import com.prairie.eevernote.exception.ThrowableHandler;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.EclipseUtil;
+import com.prairie.eevernote.util.EncryptionUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapUtil;
@@ -167,7 +168,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_AUTHENTICATING), 1);
                     try {
-                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN), false);
+                        clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                     } catch (Throwable e) {
                         ThrowableHandler.handleDesignTimeErr(shell, e, true, clipper);
                     }

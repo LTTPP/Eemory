@@ -6,6 +6,9 @@ public interface Constants {
 
     public static final String PLUGIN_ID = "com.prairie.eevernote";
     public static final String PLUGIN_COMMAND_PARAM_ID = "com.prairie.eevernote.command.parameter";
+    
+    public static final String CONSUMER_KEY = "eevernote";
+    public static final String CONSUMER_SECRET = "4a4879fd4c671f5b";
 
     // Settings Keys
     public static final String PLUGIN_SETTINGS_KEY_TOKEN = "token";
@@ -88,8 +91,6 @@ public interface Constants {
     public static final String PLUGIN_CONFIGS_HOTSET_SHELL_TITLE = "Plugin.Configurations.Hotset.Shell.Title";
     public static final int PLUGIN_CONFIGS_HOTSET_SHOULD_NOT_SHOW_ID = -1;
 
-    public static final String PLUGIN_CONFIGS_OAUTH = "Plugin.Configurations.OAuth";
-    public static final String PLUGIN_CONFIGS_TOKEN = "Plugin.Configurations.Token";
     public static final String PLUGIN_CONFIGS_ORGANIZE = "Plugin.Configurations.Organize";
     public static final String PLUGIN_CONFIGS_NOTEBOOK = "Plugin.Configurations.Notebook";
     public static final String PLUGIN_CONFIGS_NOTE = "Plugin.Configurations.Note";
@@ -97,19 +98,22 @@ public interface Constants {
     public static final String PLUGIN_CONFIGS_TAGS_HINT = "Plugin.Configurations.Tags.HintMessage";
     public static final String PLUGIN_CONFIGS_NOTE_HINT = "Plugin.Configurations.Note.HintMessage";
     public static final String PLUGIN_CONFIGS_NOTEBOOK_HINT = "Plugin.Configurations.Notebook.HintMessage";
-    public static final String PLUGIN_CONFIGS_TOKEN_HINT = "Plugin.Configurations.Token.HintMessage";
     public static final String PLUGIN_CONFIGS_COMMENTS = "Plugin.Configurations.Comments";
 
     public static final int PLUGIN_CONFIGS_REFRESH_ID = -143259786; // random number
     public static final String PLUGIN_CONFIGS_REFRESH = "Plugin.Configurations.Refresh";
 
     public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_MESSAGE = "Plugin.Configurations.TokenNotConfigured.Message";
+    public static final String PLUGIN_CONFIGS_OAUTH = "Plugin.Configurations.OAuth";
     public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONFIGURE = "Plugin.Configurations.TokenNotConfigured.Configure";
+    public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_NOTNOW = "Plugin.Configurations.TokenNotConfigured.NotNow";
+    public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONTINUE = "Plugin.Configurations.TokenNotConfigured.Continue";
+    public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CANCEL = "Plugin.Configurations.TokenNotConfigured.Cancel";
+    public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_WAITING = "Plugin.Configurations.TokenNotConfigured.Waiting";
     public static final String PLUGIN_CONFIGS_AUTHENTICATING = "Plugin.Configurations.Authenticating";
     public static final String PLUGIN_CONFIGS_FETCHINGNOTEBOOKS = "Plugin.Configurations.FetchingNotebooks";
     public static final String PLUGIN_CONFIGS_FETCHINGNOTES = "Plugin.Configurations.FetchingNotes";
     public static final String PLUGIN_CONFIGS_FETCHINGTAGS = "Plugin.Configurations.FetchingTags";
-    public static final String PLUGIN_CONFIGS_CLICKTOAUTH = "Plugin.Configurations.ClickToAuth";
 
     public static final String PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE = "Plugin.Runtime.AddFileToEvernote.Message";
     public static final String PLUGIN_RUNTIME_ADDFILETOEVERNOTE_SUBTASK_MESSAGE = "Plugin.Runtime.AddFileToEvernote.Subtask.Message";
@@ -151,6 +155,13 @@ public interface Constants {
     public static final String DOM_ERROR7 = "DOM.Error7";
     public static final String DOM_ERROR8 = "DOM.Error8";
     public static final String DOM_ERROR9 = "DOM.Error9";
+    
+    // OAuth
+    public static final String JETTY_LOG_IMPL_CLASS = "org.eclipse.jetty.util.log.class";
+    public static final String CALLBACK_URL = "/oauth/callback";
+    public static final String OAUTH_VERIFIER = "oauth_verifier";
+    public static final String CALLBACK_HTML_META = "text/html;charset=utf-8";
+    public static final String OAUTH_EVERNOTE_TRADEMARK = "icons/evernote_32x32.png";
 
     // others
     public static final String BUNDLE_NAME = "messages";
@@ -162,5 +173,5 @@ public interface Constants {
 
     public static final String PLUGIN_DEBUG_MODE = "com.prairie.eevernote.debug";
     public static final String PLUGIN_RUN_ON_SANDBOX = "com.evernote.sandbox";
-
+    
 }

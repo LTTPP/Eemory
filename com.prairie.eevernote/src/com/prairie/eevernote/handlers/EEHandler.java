@@ -13,8 +13,13 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -27,12 +32,14 @@ import com.prairie.eevernote.client.ENNote;
 import com.prairie.eevernote.client.impl.ENNoteImpl;
 import com.prairie.eevernote.exception.EDAMNotFoundHandler;
 import com.prairie.eevernote.exception.ThrowableHandler;
+import com.prairie.eevernote.oauth.OAuth;
 import com.prairie.eevernote.ui.CaptureView;
 import com.prairie.eevernote.ui.ConfigurationsDialog;
 import com.prairie.eevernote.ui.QuickOrganizeDialog;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.DateTimeUtil;
 import com.prairie.eevernote.util.EclipseUtil;
+import com.prairie.eevernote.util.EncryptionUtil;
 import com.prairie.eevernote.util.FileUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
@@ -42,36 +49,62 @@ public class EEHandler extends AbstractHandler implements Constants {
 
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
+        // check token
+        if (StringUtils.isBlank(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))) {
+            oauth(event);
+            if (StringUtils.isBlank(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))) {
+                return null;
+            } else {
+                int opt = EclipseUtil.openCustomImageTypeWithCustomButtons(HandlerUtil.getActiveShellChecked(event), event.getParameter(PLUGIN_COMMAND_PARAM_ID), "Finished and continue?", null, ArrayUtils.toArray(Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONTINUE), Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CANCEL)));
+                if (opt != 0) {
+                    return null;
+                }
+            }
+        }
+        // clip
         if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CONFIGURATIONS)) {
             configurationsClicked(event);
-        } else {
-            // check token
-            if (StringUtils.isBlank(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN))) {
-                int opt = EclipseUtil.openWarningWithMultipleButtons(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell(), event.getParameter(PLUGIN_COMMAND_PARAM_ID), Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_MESSAGE), ArrayUtils.toArray(Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONFIGURE), OK_CAPS));
-                if (opt == 0) {
-                    configurationsClicked(event);
-                }
-                return null;
-            }
-            // clip
-            if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE)) {
-                clipSelectionClicked(event);
-            } else if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE)) {
-                clipSelectionClicked(event);
-            } else if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE)) {
-                clipFileClicked(event);
-            } else if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE)) {
-                clipScreenshotClicked(event);
-            }
+        } else if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE)) {
+            clipSelectionClicked(event);
+        } else if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE)) {
+            clipSelectionClicked(event);
+        } else if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE)) {
+            clipFileClicked(event);
+        } else if (event.getCommand().getId().equals(PLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE)) {
+            clipScreenshotClicked(event);
         }
         return null;
     }
 
-    public void clipFileClicked(final ExecutionEvent event) throws ExecutionException {
+    protected void oauth(final ExecutionEvent event) throws ExecutionException {
+        final Shell shell = HandlerUtil.getActiveShellChecked(event);
+        int opt = EclipseUtil.openCustomImageTypeWithCustomButtons(shell, Messages.getString(PLUGIN_CONFIGS_OAUTH), Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_MESSAGE), new Image(Display.getDefault(), getClass().getClassLoader().getResourceAsStream(OAUTH_EVERNOTE_TRADEMARK)), ArrayUtils.toArray(Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONFIGURE), Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_NOTNOW)));
+        if (opt == 0) {
+            try {
+                new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
+                    @Override
+                    public void run(final IProgressMonitor monitor) {
+                        monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_WAITING), IProgressMonitor.UNKNOWN);
+                        try {
+                            String token = new OAuth().auth();
+                            IDialogSettingsUtil.set(PLUGIN_SETTINGS_KEY_TOKEN, EncryptionUtil.encrypt(token));
+                        } catch (Throwable e) {
+                            ThrowableHandler.handleDesignTimeErr(shell, e);
+                        }
+                        monitor.done();
+                    }
+                });
+            } catch (Throwable e) {
+                throw ThrowableHandler.handleExecErr(e);
+            }
+        }
+    }
+
+    protected void clipFileClicked(final ExecutionEvent event) throws ExecutionException {
         try {
             final ENNote args = createENNote();
 
-            int option = QuickOrganizeDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
+            int option = QuickOrganizeDialog.show(HandlerUtil.getActiveShellChecked(event));
             if (option == QuickOrganizeDialog.OK) {
                 args.adopt(QuickOrganizeDialog.getThis().getQuickSettings());
             } else if (option == QuickOrganizeDialog.CANCEL) {
@@ -89,7 +122,7 @@ public class EEHandler extends AbstractHandler implements Constants {
                     monitor.beginTask(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE), 2);
                     EEClipper clipper = null;
                     try {
-                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN), false);
+                        clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                         monitor.worked(1);
 
                         if (monitor.isCanceled()) {
@@ -99,7 +132,7 @@ public class EEHandler extends AbstractHandler implements Constants {
                         monitor.worked(2);
                     } catch (EDAMNotFoundException e) {
                         // try to auto fix EDAMNotFoundException
-                        boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
+                        boolean fixed = new EDAMNotFoundHandler(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))).fixNotFoundException(e, args);
                         if (fixed) {
                             try {
                                 clipper.clipFile(args);
@@ -125,11 +158,11 @@ public class EEHandler extends AbstractHandler implements Constants {
         }
     }
 
-    public void clipSelectionClicked(final ExecutionEvent event) throws ExecutionException {
+    protected void clipSelectionClicked(final ExecutionEvent event) throws ExecutionException {
         try {
             final ENNote args = createENNote();
 
-            int option = QuickOrganizeDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
+            int option = QuickOrganizeDialog.show(HandlerUtil.getActiveShellChecked(event));
             if (option == QuickOrganizeDialog.OK) {
                 args.adopt(QuickOrganizeDialog.getThis().getQuickSettings());
             } else if (option == QuickOrganizeDialog.CANCEL) {
@@ -149,7 +182,7 @@ public class EEHandler extends AbstractHandler implements Constants {
                     monitor.beginTask(Messages.getString(PLUGIN_RUNTIME_ADDSELECTIONTOEVERNOTE_MESSAGE), 2);
                     EEClipper clipper = null;
                     try {
-                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN), false);
+                        clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                         monitor.worked(1);
 
                         if (monitor.isCanceled()) {
@@ -158,7 +191,7 @@ public class EEHandler extends AbstractHandler implements Constants {
                         clipper.clipSelection(args);
                         monitor.worked(2);
                     } catch (EDAMNotFoundException e) {
-                        boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
+                        boolean fixed = new EDAMNotFoundHandler(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))).fixNotFoundException(e, args);
                         if (fixed) {
                             try {
                                 clipper.clipFile(args);
@@ -184,7 +217,7 @@ public class EEHandler extends AbstractHandler implements Constants {
         }
     }
 
-    public void clipScreenshotClicked(final ExecutionEvent event) throws ExecutionException {
+    protected void clipScreenshotClicked(final ExecutionEvent event) throws ExecutionException {
         try {
             Thread.sleep(800); // wait for right click menu to hide
 
@@ -195,7 +228,7 @@ public class EEHandler extends AbstractHandler implements Constants {
 
             final ENNote args = createENNote();
 
-            int option = QuickOrganizeDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
+            int option = QuickOrganizeDialog.show(HandlerUtil.getActiveShellChecked(event));
             if (option == QuickOrganizeDialog.OK) {
                 args.adopt(QuickOrganizeDialog.getThis().getQuickSettings());
             } else if (option == QuickOrganizeDialog.CANCEL) {
@@ -217,7 +250,7 @@ public class EEHandler extends AbstractHandler implements Constants {
                         ImageIO.write(screenshot, ConstantsUtil.IMG_PNG, file);
                         monitor.worked(1);
 
-                        clipper = EEClipperFactory.getInstance().getEEClipper(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN), false);
+                        clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                         monitor.worked(2);
 
                         if (monitor.isCanceled()) {
@@ -226,7 +259,7 @@ public class EEHandler extends AbstractHandler implements Constants {
                         clipper.clipFile(args);
                         monitor.worked(3);
                     } catch (EDAMNotFoundException e) {
-                        boolean fixed = new EDAMNotFoundHandler(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN)).fixNotFoundException(e, args);
+                        boolean fixed = new EDAMNotFoundHandler(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))).fixNotFoundException(e, args);
                         if (fixed) {
                             try {
                                 clipper.clipFile(args);
@@ -257,8 +290,8 @@ public class EEHandler extends AbstractHandler implements Constants {
         }
     }
 
-    public void configurationsClicked(final ExecutionEvent event) throws ExecutionException {
-        ConfigurationsDialog.show(HandlerUtil.getActiveWorkbenchWindowChecked(event).getShell());
+    protected void configurationsClicked(final ExecutionEvent event) throws ExecutionException {
+        ConfigurationsDialog.show(HandlerUtil.getActiveShellChecked(event));
     }
 
     private ENNote createENNote() {

@@ -25,6 +25,7 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -191,14 +192,46 @@ public class EclipseUtil {
             }
         });
     }
+    
+    static int opt = 0;
 
-    public static int openWarningWithMultipleButtons(final Shell shell, final String title, final String message, final String[] buttons) {
+    public static int openErrorSyncWithCustomButtons(final Shell shell, final String title, final String message, final String[] buttons) {
+        Display.getDefault().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                opt = openErrorWithCustomButtons(shell, title, message, buttons);
+            }
+        });
+        return opt;
+    }
+
+    public static int openCustomImageTypeWithCustomButtons(final Shell shell, final String title, final String message, final Image dialogImage, final String[] buttons) {
+        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.NONE, buttons, 0) {
+            @Override
+            public Image getImage() {
+                return dialogImage;
+            }
+        };
+        return dialog.open();
+    }
+    
+    public static int openInformationWithCustomButtons(final Shell shell, final String title, final String message, final String[] buttons) {
+        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.INFORMATION, buttons, 0);
+        return dialog.open();
+    }
+
+    public static int openQuestionWithCustomButtons(final Shell shell, final String title, final String message, final String[] buttons) {
+        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.QUESTION_WITH_CANCEL, buttons, 0);
+        return dialog.open();
+    }
+
+    public static int openWarningWithCustomButtons(final Shell shell, final String title, final String message, final String[] buttons) {
         MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.WARNING, buttons, 0);
         return dialog.open();
     }
 
-    public static int openErrorWithMultipleButtons(final Shell shell, final String title, final String message, final String[] buttons) {
-        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.WARNING, buttons, 0);
+    public static int openErrorWithCustomButtons(final Shell shell, final String title, final String message, final String[] buttons) {
+        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.ERROR, buttons, 0);
         return dialog.open();
     }
 

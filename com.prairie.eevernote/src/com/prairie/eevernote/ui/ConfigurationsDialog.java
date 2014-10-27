@@ -46,6 +46,7 @@ import com.prairie.eevernote.exception.ThrowableHandler;
 import com.prairie.eevernote.util.ColorUtil;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.EclipseUtil;
+import com.prairie.eevernote.util.EncryptionUtil;
 import com.prairie.eevernote.util.HTMLUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
@@ -115,27 +116,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
         // ----------------------
 
-        Group groupAuth = new Group(container, SWT.NONE);
-        groupAuth.setText(getString(PLUGIN_CONFIGS_OAUTH));
-        groupAuth.setLayout(new GridLayout(2, false));
-        groupAuth.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
-
-        TextField tokenField = createLabelHyperlinkTextField(groupAuth, PLUGIN_CONFIGS_TOKEN, EDAM_OAUTH_ADDRESS, Messages.getString(PLUGIN_CONFIGS_CLICKTOAUTH));
-        addField(PLUGIN_CONFIGS_TOKEN, tokenField);
-        tokenField.getTextControl().addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(final FocusEvent e) {
-                clearHintText(PLUGIN_CONFIGS_TOKEN, PLUGIN_CONFIGS_TOKEN_HINT);
-            }
-            @Override
-            public void focusLost(final FocusEvent e) {
-                showHintText(PLUGIN_CONFIGS_TOKEN, PLUGIN_CONFIGS_TOKEN_HINT);
-            }
-        });
-        restoreSettings(PLUGIN_CONFIGS_TOKEN);
-
-        // ----------------------
-
         Group groupPref = new Group(container, SWT.NONE);
         groupPref.setText(getString(PLUGIN_CONFIGS_ORGANIZE));
         groupPref.setLayout(new GridLayout(2, false));
@@ -155,25 +135,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
             @Override
             public void focusGained(final FocusEvent event) {
                 clearHintText(PLUGIN_CONFIGS_NOTEBOOK, PLUGIN_CONFIGS_NOTEBOOK_HINT);
-                try {
-                    if (shouldRefresh(PLUGIN_CONFIGS_NOTEBOOK, PLUGIN_CONFIGS_TOKEN)) {
-                        final String hotoken = getFieldInput(PLUGIN_CONFIGS_TOKEN);
-                        BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-                            @Override
-                            public void run() {
-                                EEClipper clipper = null;
-                                try {
-                                    clipper = EEClipperFactory.getInstance().getEEClipper(hotoken, false);
-                                    notebooks = clipper.listNotebooks();
-                                } catch (Throwable e) {
-                                    ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
-                                }
-                            }
-                        });
-                    }
-                } catch (Throwable e) {
-                    ThrowableHandler.handleDesignTimeErr(shell, e);
-                }
                 String[] nbs = notebooks.keySet().toArray(new String[notebooks.size()]);
                 Arrays.sort(nbs);
                 notebookProposalProvider.setProposals(nbs);
@@ -206,17 +167,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
             public void focusGained(final FocusEvent e) {
                 clearHintText(PLUGIN_CONFIGS_NOTE, PLUGIN_CONFIGS_NOTE_HINT);
                 if (shouldRefresh(PLUGIN_CONFIGS_NOTE, PLUGIN_CONFIGS_NOTEBOOK)) {
-                    final String hotoken = getFieldInput(PLUGIN_CONFIGS_TOKEN);
                     final String hotebook = getFieldInput(PLUGIN_CONFIGS_NOTEBOOK);
                     BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                         @Override
                         public void run() {
-                            EEClipper clipper = null;
                             try {
-                                clipper = EEClipperFactory.getInstance().getEEClipper(hotoken, false);
-                                notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
+                                notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
                             } catch (Throwable e) {
-                                ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
+                                ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
                             }
                         }
                     });
@@ -252,25 +210,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
             @Override
             public void focusGained(final FocusEvent event) {
                 clearHintText(PLUGIN_CONFIGS_TAGS, PLUGIN_CONFIGS_TAGS_HINT);
-                try {
-                    if (shouldRefresh(PLUGIN_CONFIGS_TAGS, PLUGIN_CONFIGS_TOKEN)) {
-                        final String hotoken = getFieldInput(PLUGIN_CONFIGS_TOKEN);
-                        BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-                            @Override
-                            public void run() {
-                                EEClipper clipper = null;
-                                try {
-                                    clipper = EEClipperFactory.getInstance().getEEClipper(hotoken, false);
-                                    tags = clipper.listTags();
-                                } catch (Throwable e) {
-                                    ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
-                                }
-                            }
-                        });
-                    }
-                } catch (Throwable e) {
-                    ThrowableHandler.handleDesignTimeErr(shell, e);
-                }
                 String[] tagArray = tags.toArray(new String[tags.size()]);
                 Arrays.sort(tagArray);
                 tagsProposalProvider.setProposals(tagArray);
@@ -311,21 +250,19 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         hintPropMap.put(PLUGIN_CONFIGS_NOTEBOOK, PLUGIN_CONFIGS_NOTEBOOK_HINT);
         hintPropMap.put(PLUGIN_CONFIGS_NOTE, PLUGIN_CONFIGS_NOTE_HINT);
         hintPropMap.put(PLUGIN_CONFIGS_TAGS, PLUGIN_CONFIGS_TAGS_HINT);
-        hintPropMap.put(PLUGIN_CONFIGS_TOKEN, PLUGIN_CONFIGS_TOKEN_HINT);
     }
 
     private void authInProgress() {
         if (isCanceled()) {
             return;
         }
-        final String token = getFieldInput(PLUGIN_CONFIGS_TOKEN);
         try {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_AUTHENTICATING), 1);
                     try {
-                        globalClipper = EEClipperFactory.getInstance().getEEClipper(token, false);
+                        globalClipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                     } catch (Throwable e) {
                         ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
                     }
@@ -559,8 +496,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
     }
 
     private void saveSettings() {
-        IDialogSettingsUtil.set(PLUGIN_SETTINGS_KEY_TOKEN, getFieldInput(PLUGIN_CONFIGS_TOKEN));
-
         String notebookValue = getFieldInput(PLUGIN_CONFIGS_NOTEBOOK);
         setSection(PLUGIN_SETTINGS_SECTION_NOTEBOOK, notebookValue, isFieldEditable(PLUGIN_CONFIGS_NOTEBOOK), notebooks.get(notebookValue));
 
@@ -582,12 +517,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
     }
 
     private void restoreSettings(final String label) {
-        if (label.equals(PLUGIN_CONFIGS_TOKEN)) {
-            if (StringUtils.isNotBlank(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))) {
-                setFieldValue(PLUGIN_CONFIGS_TOKEN, IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN));
-                setHasInput(PLUGIN_CONFIGS_TOKEN, true);
-            }
-        } else if (label.equals(PLUGIN_CONFIGS_NOTEBOOK)) {
+        if (label.equals(PLUGIN_CONFIGS_NOTEBOOK)) {
             editableField(PLUGIN_CONFIGS_NOTEBOOK, IDialogSettingsUtil.getBoolean(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_CHECKED));
             String value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_NAME);
             if (isFieldEditable(PLUGIN_CONFIGS_NOTEBOOK) && StringUtils.isNotBlank(value)) {
