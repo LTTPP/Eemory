@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.prairie.eevernote.Constants;
+
 import eu.medsea.mimeutil.MimeUtil;
 
 public class FileUtil {
@@ -25,8 +27,8 @@ public class FileUtil {
     }
 
     public static String mimeType(final File file) {
-        if (MimeUtil.getMimeDetector(ConstantsUtil.MimeDetector) == null) {
-            MimeUtil.registerMimeDetector(ConstantsUtil.MimeDetector);
+        if (MimeUtil.getMimeDetector(Constants.MimeDetector) == null) {
+            MimeUtil.registerMimeDetector(Constants.MimeDetector);
         }
         return MimeUtil.getMimeTypes(file).toString();
     }

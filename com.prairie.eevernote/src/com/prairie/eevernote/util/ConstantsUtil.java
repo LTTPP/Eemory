@@ -1,11 +1,9 @@
 package com.prairie.eevernote.util;
 
-import org.apache.commons.lang3.StringUtils;
 
 
-public final class ConstantsUtil {
+public class ConstantsUtil {
 
-    // common
     public static final String COMMA = ",";
     public static final String COLON = ":";
     public static final String SEMICOLON = ";";
@@ -32,24 +30,5 @@ public final class ConstantsUtil {
     public static String BACKSLASH = "\\";
     public static String QUESTION_MARK = "?";
     public static final String TAB = "\t";
-    public static final String HTML_NBSP = "&nbsp;";
-    public static final String LOCALHOST = "localhost";
-
-    // XML
-    public static final String XHTML_1_0_LATIN_1_ENT = "xhtml-lat1.ent";
-    public static final String XHTML_1_0_SYMBOL_ENT = "xhtml-symbol.ent";
-    public static final String XHTML_1_0_SPECIAL_ENT = "xhtml-special.ent";
-    public static final String XML_VERSION_1_0 = "1.0";
-
-    // mime-util
-    public static final String MimeDetector = "eu.medsea.mimeutil.detector.MagicMimeMimeDetector";
-
-    // Eclipse
-    public static final String PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME = "org.eclipse.jdt.core";
-    public static final String PLUGIN_ORG_ECLIPSE_JDT_CORE_PREF_FORMATTER_TABULATION_SIZE = "org.eclipse.jdt.core.formatter.tabulation.size";
-    
-    public static String url(String host, String port, String target, boolean isHttps) {
-        return (isHttps ? "https" : "http") + "://" + host + (StringUtils.isNotBlank(port) ? ":" + port : StringUtils.EMPTY) + target;
-    }
 
 }

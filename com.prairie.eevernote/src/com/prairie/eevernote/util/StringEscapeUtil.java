@@ -4,6 +4,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Platform;
 
+import com.prairie.eevernote.Constants;
+
 public class StringEscapeUtil {
 
     /**
@@ -21,10 +23,10 @@ public class StringEscapeUtil {
         }
         String escapedXml = StringEscapeUtils.escapeXml10(string);
 
-        escapedXml = escapedXml.replaceAll(StringUtils.SPACE, ConstantsUtil.HTML_NBSP);
+        escapedXml = escapedXml.replaceAll(StringUtils.SPACE, Constants.HTML_NBSP);
 
-        int tabWidth = Platform.getPreferencesService().getInt(ConstantsUtil.PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME, ConstantsUtil.PLUGIN_ORG_ECLIPSE_JDT_CORE_PREF_FORMATTER_TABULATION_SIZE, 0, null);
-        escapedXml = escapedXml.replaceAll(ConstantsUtil.TAB, org.apache.commons.lang3.StringUtils.repeat(ConstantsUtil.HTML_NBSP, tabWidth));
+        int tabWidth = Platform.getPreferencesService().getInt(Constants.PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME, Constants.PLUGIN_ORG_ECLIPSE_JDT_CORE_PREF_FORMATTER_TABULATION_SIZE, 0, null);
+        escapedXml = escapedXml.replaceAll(ConstantsUtil.TAB, org.apache.commons.lang3.StringUtils.repeat(Constants.HTML_NBSP, tabWidth));
 
         return escapedXml;
     }

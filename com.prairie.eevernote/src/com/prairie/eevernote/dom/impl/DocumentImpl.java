@@ -30,7 +30,7 @@ public class DocumentImpl extends NodeImpl implements Document {
 
     protected DocumentImpl() {
         standalone = true;
-        xmlVersion = ConstantsUtil.XML_VERSION_1_0;
+        xmlVersion = Constants.XML_VERSION_1_0;
         encoding = CharEncoding.UTF_8;
     }
 

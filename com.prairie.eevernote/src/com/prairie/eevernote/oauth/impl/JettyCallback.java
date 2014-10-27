@@ -15,7 +15,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.oauth.CallbackHandler;
-import com.prairie.eevernote.util.ConstantsUtil;
+import com.prairie.eevernote.util.HttpUtil;
 
 public class JettyCallback extends AbstractHandler implements CallbackHandler {
 
@@ -32,7 +32,7 @@ public class JettyCallback extends AbstractHandler implements CallbackHandler {
         server = new Server();
 
         http = new ServerConnector(server);
-        http.setHost(ConstantsUtil.LOCALHOST);
+        http.setHost(HttpUtil.LOCALHOST);
         http.setPort(0);
         server.addConnector(http);
 
@@ -51,7 +51,7 @@ public class JettyCallback extends AbstractHandler implements CallbackHandler {
         if (http == null) {
             return StringUtils.EMPTY;
         }
-        return ConstantsUtil.url(http.getHost(), String.valueOf(http.getLocalPort()), Constants.CALLBACK_URL, false);
+        return HttpUtil.url(http.getHost(), String.valueOf(http.getLocalPort()), Constants.CALLBACK_URL, false);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class JettyCallback extends AbstractHandler implements CallbackHandler {
             doc.println("</html>");
             // notify OAuth thread
             synchronized (this) {
-                this.notifyAll();
+                notifyAll();
             }
         } else {
             doc.println("<html>");

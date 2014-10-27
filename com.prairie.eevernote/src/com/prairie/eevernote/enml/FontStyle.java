@@ -2,14 +2,13 @@ package com.prairie.eevernote.enml;
 
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.Messages;
-import com.prairie.eevernote.util.HTMLUtil;
 
 public enum FontStyle {
 
     NORMAL {
         @Override
         public String toString() {
-            return HTMLUtil.FONT_STYLE_NORMAL;
+            return Constants.FONT_STYLE_NORMAL;
         }
 
         @Override
@@ -21,7 +20,7 @@ public enum FontStyle {
     BOLD {
         @Override
         public String toString() {
-            return HTMLUtil.FONT_STYLE_BOLD;
+            return Constants.FONT_STYLE_BOLD;
         }
 
         @Override
@@ -33,7 +32,7 @@ public enum FontStyle {
     ITALIC {
         @Override
         public String toString() {
-            return HTMLUtil.FONT_STYLE_ITALIC;
+            return Constants.FONT_STYLE_ITALIC;
         }
 
         @Override
@@ -45,7 +44,7 @@ public enum FontStyle {
     BOLD_ITALIC {
         @Override
         public String toString() {
-            return HTMLUtil.FONT_STYLE_BOLD_ITALIC;
+            return Constants.FONT_STYLE_BOLD_ITALIC;
         }
 
         @Override

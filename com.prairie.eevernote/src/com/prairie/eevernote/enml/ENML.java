@@ -41,7 +41,7 @@ public class ENML implements Constants {
         document = DomUtil.getBuilder().newDocument();
         document.setXmlStandalone(true);
         document.setXMLEncoding(CharEncoding.UTF_8);
-        document.setXmlVersion(ConstantsUtil.XML_VERSION_1_0);
+        document.setXmlVersion(XML_VERSION_1_0);
 
         document.appendChild(document.createDocumentType(ENML_TAG_EN_NOTE, null, ENML_DOCTYPE_DECLARATION_SYSTEM_ID));
 
@@ -223,11 +223,11 @@ public class ENML implements Constants {
             public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException, IOException {
                 if (systemId.endsWith(ENML_DTD)) {
                     return new InputSource(getClass().getResourceAsStream(ENML_DTD_LOCATION));
-                } else if (systemId.endsWith(ConstantsUtil.XHTML_1_0_LATIN_1_ENT)) {
+                } else if (systemId.endsWith(XHTML_1_0_LATIN_1_ENT)) {
                     return new InputSource(getClass().getResourceAsStream(XHTML_1_0_LATIN_1_ENT_LOCATION));
-                } else if (systemId.endsWith(ConstantsUtil.XHTML_1_0_SYMBOL_ENT)) {
+                } else if (systemId.endsWith(XHTML_1_0_SYMBOL_ENT)) {
                     return new InputSource(getClass().getResourceAsStream(XHTML_1_0_SYMBOL_ENT_LOCATION));
-                } else if (systemId.endsWith(ConstantsUtil.XHTML_1_0_SPECIAL_ENT)) {
+                } else if (systemId.endsWith(XHTML_1_0_SPECIAL_ENT)) {
                     return new InputSource(getClass().getResourceAsStream(XHTML_1_0_SPECIAL_ENT_LOCATION));
                 } else {
                     return null;

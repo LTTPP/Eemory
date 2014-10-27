@@ -73,6 +73,12 @@ public interface Constants {
     public static final String ENML_TAG_EN_NOTE_SELF_CLOSING_REPLACEMENT = "$1></" + ENML_TAG_EN_NOTE + ">";
     public static final String ENML_TAG_EN_NOTE_START_REGEX = "(<" + ENML_TAG_EN_NOTE + "[^>]*>)";
     public static final String ENML_TAG_EN_NOTE_START_REPLACEMENT_P1 = "$1";
+
+    public static final String FONT_STYLE_NORMAL = "normal";
+    public static final String FONT_STYLE_BOLD = "bold";
+    public static final String FONT_STYLE_ITALIC = "italic";
+    public static final String FONT_STYLE_BOLD_ITALIC = "bold-italic";
+    public static final String HTML_NBSP = "&nbsp;";
     /* end */
 
     public static final String ENML_MODEL_NOTE_NOTEGUID = "Note.guid";
@@ -168,6 +174,19 @@ public interface Constants {
     public static final String TAGS_SEPARATOR = ConstantsUtil.COMMA;
     public static String NO = "no";
     public static String OK_CAPS = "OK";
+
+    // XML
+    public static final String XHTML_1_0_LATIN_1_ENT = "xhtml-lat1.ent";
+    public static final String XHTML_1_0_SYMBOL_ENT = "xhtml-symbol.ent";
+    public static final String XHTML_1_0_SPECIAL_ENT = "xhtml-special.ent";
+    public static final String XML_VERSION_1_0 = "1.0";
+
+    // mime-util
+    public static final String MimeDetector = "eu.medsea.mimeutil.detector.MagicMimeMimeDetector";
+
+    // Eclipse
+    public static final String PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME = "org.eclipse.jdt.core";
+    public static final String PLUGIN_ORG_ECLIPSE_JDT_CORE_PREF_FORMATTER_TABULATION_SIZE = "org.eclipse.jdt.core.formatter.tabulation.size";
 
     public static final String PLUGIN_DEBUG_MODE = "com.prairie.eevernote.debug";
     public static final String PLUGIN_RUN_ON_SANDBOX = "com.evernote.sandbox";
