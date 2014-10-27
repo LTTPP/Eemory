@@ -56,7 +56,7 @@ public class EEHandler extends AbstractHandler implements Constants {
             if (StringUtils.isBlank(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))) {
                 return null;
             } else {
-                boolean confirmed = MessageDialog.openConfirm(HandlerUtil.getActiveShellChecked(event), event.getParameter(PLUGIN_COMMAND_PARAM_ID), Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONFIRM));
+                boolean confirmed = MessageDialog.openConfirm(HandlerUtil.getActiveShellChecked(event), event.getParameter(PLUGIN_COMMAND_PARAM_ID), Messages.getString(PLUGIN_CONFIGS_OAUTH_CONFIRM));
                 if (!confirmed) {
                     return null;
                 }
@@ -79,13 +79,13 @@ public class EEHandler extends AbstractHandler implements Constants {
 
     protected void oauth(final ExecutionEvent event) throws ExecutionException {
         final Shell shell = HandlerUtil.getActiveShellChecked(event);
-        int opt = EclipseUtil.openCustomImageTypeWithCustomButtons(shell, Messages.getString(PLUGIN_CONFIGS_OAUTH), Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_MESSAGE), new Image(Display.getDefault(), getClass().getClassLoader().getResourceAsStream(OAUTH_EVERNOTE_TRADEMARK)), ArrayUtils.toArray(Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONFIGURE), Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_NOTNOW)));
+        int opt = EclipseUtil.openCustomImageTypeWithCustomButtons(shell, Messages.getString(PLUGIN_CONFIGS_OAUTH_TITLE), Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED), new Image(Display.getDefault(), getClass().getClassLoader().getResourceAsStream(OAUTH_EVERNOTE_TRADEMARK)), ArrayUtils.toArray(Messages.getString(PLUGIN_CONFIGS_OAUTH_CONFIGURE), Messages.getString(PLUGIN_CONFIGS_OAUTH_NOTNOW)));
         if (opt == 0) {
             try {
                 new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                     @Override
                     public void run(final IProgressMonitor monitor) {
-                        monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED_WAITING), IProgressMonitor.UNKNOWN);
+                        monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_OAUTH_WAITING), IProgressMonitor.UNKNOWN);
                         try {
                             String token = new OAuth().auth();
                             IDialogSettingsUtil.set(PLUGIN_SETTINGS_KEY_TOKEN, EncryptionUtil.encrypt(token));

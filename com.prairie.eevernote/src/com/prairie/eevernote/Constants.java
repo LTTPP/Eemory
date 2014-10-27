@@ -103,12 +103,12 @@ public interface Constants {
     public static final int PLUGIN_CONFIGS_REFRESH_ID = -143259786; // random number
     public static final String PLUGIN_CONFIGS_REFRESH = "Plugin.Configurations.Refresh";
 
-    public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_MESSAGE = "Plugin.Configurations.TokenNotConfigured.Message";
-    public static final String PLUGIN_CONFIGS_OAUTH = "Plugin.Configurations.OAuth";
-    public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONFIGURE = "Plugin.Configurations.TokenNotConfigured.Configure";
-    public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_NOTNOW = "Plugin.Configurations.TokenNotConfigured.NotNow";
-    public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_CONFIRM = "Plugin.Configurations.TokenNotConfigured.Confirm";
-    public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED_WAITING = "Plugin.Configurations.TokenNotConfigured.Waiting";
+    public static final String PLUGIN_CONFIGS_TOKENNOTCONFIGURED = "Plugin.Configurations.TokenNotConfigured";
+    public static final String PLUGIN_CONFIGS_OAUTH_TITLE = "Plugin.Configurations.OAuth.Title";
+    public static final String PLUGIN_CONFIGS_OAUTH_CONFIGURE = "Plugin.Configurations.OAuth.Configure";
+    public static final String PLUGIN_CONFIGS_OAUTH_NOTNOW = "Plugin.Configurations.OAuth.NotNow";
+    public static final String PLUGIN_CONFIGS_OAUTH_CONFIRM = "Plugin.Configurations.OAuth.Confirm";
+    public static final String PLUGIN_CONFIGS_OAUTH_WAITING = "Plugin.Configurations.OAuth.Waiting";
     public static final String PLUGIN_CONFIGS_AUTHENTICATING = "Plugin.Configurations.Authenticating";
     public static final String PLUGIN_CONFIGS_FETCHINGNOTEBOOKS = "Plugin.Configurations.FetchingNotebooks";
     public static final String PLUGIN_CONFIGS_FETCHINGNOTES = "Plugin.Configurations.FetchingNotes";
@@ -136,7 +136,6 @@ public interface Constants {
     public static final String PLUGIN_ERROR_OCCURRED = "Plugin.Error.Occurred";
     public static final String PLUGIN_ERROR_OOD = "Plugin.Error.OutOfDate";
     public static final String PLUGIN_THROWABLE_NOTFATAL_MESSAGE = "Plugin.Throwable.NotFatal.Message";
-    public static final String PLUGIN_THROWABLE_LINKNOTOPENABLE_MESSAGE = "Plugin.Throwable.LinkNotOpenable.Message";
 
     // DOM
     public static String XML = "xml";

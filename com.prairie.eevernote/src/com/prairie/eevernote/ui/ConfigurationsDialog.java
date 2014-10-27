@@ -1,6 +1,5 @@
 package com.prairie.eevernote.ui;
 
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -29,10 +28,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.Messages;
@@ -47,7 +44,6 @@ import com.prairie.eevernote.util.ColorUtil;
 import com.prairie.eevernote.util.ConstantsUtil;
 import com.prairie.eevernote.util.EclipseUtil;
 import com.prairie.eevernote.util.EncryptionUtil;
-import com.prairie.eevernote.util.HTMLUtil;
 import com.prairie.eevernote.util.IDialogSettingsUtil;
 import com.prairie.eevernote.util.ListUtil;
 import com.prairie.eevernote.util.MapUtil;
@@ -583,28 +579,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
     protected TextField createLabelTextField(final Composite container, final String labelText) {
         Label label = new Label(container, SWT.NONE);
         label.setText(getString(labelText) + ConstantsUtil.COLON);
-
-        Text text = new Text(container, SWT.BORDER);
-        text.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
-
-        return new LabelTextField(text);
-    }
-
-    protected TextField createLabelHyperlinkTextField(final Composite container, final String labelText, final String hyperlink, final String tip) {
-        Link link = new Link(container, SWT.NONE);
-        link.setText(HTMLUtil.hyperlink(getString(labelText) + ConstantsUtil.COLON, hyperlink));
-        link.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(final SelectionEvent event) {
-                try {
-                    //  Open default external browser
-                    PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(event.text));
-                } catch (Throwable e) {
-                    ThrowableHandler.openError(shell, Messages.getString(PLUGIN_THROWABLE_LINKNOTOPENABLE_MESSAGE));
-                }
-            }
-        });
-        link.setToolTipText(tip);
 
         Text text = new Text(container, SWT.BORDER);
         text.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
