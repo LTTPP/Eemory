@@ -13,11 +13,14 @@ import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 
 import com.evernote.auth.EvernoteService;
-import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.oauth.impl.JettyCallback;
+import com.prairie.eevernote.util.EncryptionUtil;
 import com.prairie.eevernote.util.EvernoteUtil;
 
 public class OAuth {
+
+    private static final String CONSUMER_KEY = "eevernote";
+    private static final String CONSUMER_SECRET = "kmLkG5Z1dFnBAam5oqie9NgHqN2zfojd+lg/00GRroU=";
 
     private final CallbackHandler callback;
 
@@ -29,7 +32,7 @@ public class OAuth {
     public String auth() throws PartInitException, MalformedURLException, InterruptedException {
         try {
             Class<? extends EvernoteApi> apiClass = EvernoteUtil.evernoteService() == EvernoteService.PRODUCTION ? EvernoteApi.class : EvernoteApi.Sandbox.class;
-            OAuthService service = new ServiceBuilder().provider(apiClass).apiKey(Constants.CONSUMER_KEY).apiSecret(Constants.CONSUMER_SECRET).callback(callback.getCallbackURL()).build();
+            OAuthService service = new ServiceBuilder().provider(apiClass).apiKey(CONSUMER_KEY).apiSecret(EncryptionUtil.decrypt(CONSUMER_SECRET)).callback(callback.getCallbackURL()).build();
             Token requestToken = service.getRequestToken();
             String authUrl = service.getAuthorizationUrl(requestToken);
             PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(authUrl));

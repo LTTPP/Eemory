@@ -7,9 +7,6 @@ public interface Constants {
     public static final String PLUGIN_ID = "com.prairie.eevernote";
     public static final String PLUGIN_COMMAND_PARAM_ID = "com.prairie.eevernote.command.parameter";
 
-    public static final String CONSUMER_KEY = "eevernote";
-    public static final String CONSUMER_SECRET = "4a4879fd4c671f5b";
-
     // Settings Keys
     public static final String PLUGIN_SETTINGS_KEY_TOKEN = "token";
     public static final String PLUGIN_SETTINGS_SECTION_NOTEBOOK = "notebook";

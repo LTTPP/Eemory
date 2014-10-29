@@ -1,5 +1,10 @@
 package com.prairie.eevernote.util;
 
+import java.nio.charset.Charset;
+
+import org.apache.commons.codec.CharEncoding;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.jasypt.util.text.BasicTextEncryptor;
 
 public class EncryptionUtil {
@@ -8,7 +13,7 @@ public class EncryptionUtil {
 
     static {
         textEncryptor = new BasicTextEncryptor();
-        textEncryptor.setPassword("c21f9dd4d2c38ecc08480fa561b5e97c");
+        textEncryptor.setPassword(StringUtils.toEncodedString(Base64.decodeBase64("ZWVtb3J5"), Charset.forName(CharEncoding.UTF_8)));
     }
 
     public static String encrypt(final String plainText) {
