@@ -50,7 +50,7 @@ public class OAuth {
             Token accessToken = service.getAccessToken(requestToken, verifier);
             return accessToken.getToken();
         } finally {
-            callback.dispose();
+            callback.done();
         }
     }
 

@@ -8,6 +8,6 @@ public interface CallbackHandler {
 
     public abstract String getVerifier();
 
-    public abstract void dispose();
+    public abstract void done();
 
 }

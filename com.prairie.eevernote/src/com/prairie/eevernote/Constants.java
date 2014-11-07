@@ -163,6 +163,11 @@ public interface Constants {
     public static final String OAUTH_VERIFIER = "oauth_verifier";
     public static final String CALLBACK_HTML_META = "text/html;charset=utf-8";
     public static final String OAUTH_EVERNOTE_TRADEMARK = "icons/evernote_32x32.png";
+    public static final String OAUTH_CALLBACK_HTML = "html/callback.html";
+    public static final String OAUTH_CALLBACK_ERR_HTML = "html/callback_err.html";
+    public static final String OAUTH_NOTTARGET_HTML = "html/images/default.html";
+    public static final String OAUTH_RESOURCE_BASE = "html/images";
+    public static final String OAUTH_DEFAULT_HTML = "default.html";
 
     // others
     public static final String BUNDLE_NAME = "messages";
