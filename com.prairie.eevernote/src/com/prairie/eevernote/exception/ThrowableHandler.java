@@ -8,14 +8,13 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.evernote.edam.error.EDAMUserException;
 import com.evernote.thrift.transport.TTransportException;
-import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.EEPlugin;
 import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.util.EclipseUtil;
 import com.prairie.eevernote.util.LogUtil;
 
-public class ThrowableHandler implements Constants {
+public class ThrowableHandler {
 
     public static void openError(final Shell shell, final String message) {
         EclipseUtil.openErrorSync(shell, Messages.Plugin_Error_Occurred, message);

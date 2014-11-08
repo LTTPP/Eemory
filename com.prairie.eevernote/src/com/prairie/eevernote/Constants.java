@@ -4,8 +4,19 @@ import com.prairie.eevernote.util.ConstantsUtil;
 
 public interface Constants {
 
-    public static final String PLUGIN_ID = "com.prairie.eevernote";
+    // Command IDs
     public static final String PLUGIN_COMMAND_PARAM_ID = "com.prairie.eevernote.command.parameter";
+    public static final String PLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipToEvernote";
+    public static final String PLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipSelectionToEvernote";
+    public static final String PLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipFileToEvernote";
+    public static final String PLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipScreenshotToEvernote";
+    public static final String PLUGIN_COMMAND_ID_CONFIGURATIONS = "com.prairie.eevernote.commands.Configurations";
+
+    // field properties
+    public static final String PLUGIN_CONFIGS_NOTEBOOK = "Plugin.Configurations.Notebook";
+    public static final String PLUGIN_CONFIGS_NOTE = "Plugin.Configurations.Note";
+    public static final String PLUGIN_CONFIGS_TAGS = "Plugin.Configurations.Tags";
+    public static final String PLUGIN_CONFIGS_COMMENTS = "Plugin.Configurations.Comments";
 
     // Settings Keys
     public static final String PLUGIN_SETTINGS_KEY_TOKEN = "token";
@@ -18,32 +29,27 @@ public interface Constants {
     public static final String PLUGIN_SETTINGS_KEY_CHECKED = "isChecked";
     public static final String PLUGIN_SETTINGS_KEY_UUID = "uuid";
 
-    // Command IDs
-    public static final String PLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipToEvernote";
-    public static final String PLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipSelectionToEvernote";
-    public static final String PLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipFileToEvernote";
-    public static final String PLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE = "com.prairie.eevernote.commands.ClipScreenshotToEvernote";
-    public static final String PLUGIN_COMMAND_ID_CONFIGURATIONS = "com.prairie.eevernote.commands.Configurations";
+    // Data Model
+    public static final String ENML_MODEL_NOTE_NOTEGUID = "Note.guid";
+    public static final String ENML_MODEL_NOTE_NOTEGUID_READABLE = "Note";
+    public static final String ENML_MODEL_NOTE_NOTEBOOKGUID = "Note.notebookGuid";
+    public static final String ENML_MODEL_NOTE_NOTEBOOKGUID_READABLE = "Notebook";
+    public static final int PLUGIN_CONFIGS_REFRESH_ID = -143259786; // random number
 
-    // field properties
-    public static final String PLUGIN_CONFIGS_ORGANIZE = "Plugin.Configurations.Organize";
-    public static final String PLUGIN_CONFIGS_NOTEBOOK = "Plugin.Configurations.Notebook";
-    public static final String PLUGIN_CONFIGS_NOTE = "Plugin.Configurations.Note";
-    public static final String PLUGIN_CONFIGS_TAGS = "Plugin.Configurations.Tags";
-    public static final String PLUGIN_CONFIGS_TAGS_HINT = "Plugin.Configurations.Tags.HintMessage";
-    public static final String PLUGIN_CONFIGS_NOTE_HINT = "Plugin.Configurations.Note.HintMessage";
-    public static final String PLUGIN_CONFIGS_NOTEBOOK_HINT = "Plugin.Configurations.Notebook.HintMessage";
-    public static final String PLUGIN_CONFIGS_COMMENTS = "Plugin.Configurations.Comments";
-
-    // Screen shot
-    public static final int PLUGIN_SCREENSHOT_HINT_HEIGHT = 18;
-    public static final int PLUGIN_SCREENSHOT_HINT_WIDTH = 260;
-    public static final float PLUGIN_SCREENSHOT_HINT_SCALEFACTOR = 0.3F;
-    public static final int PLUGIN_SCREENSHOT_HINT_TEXT_START_X = 5;
-    public static final int PLUGIN_SCREENSHOT_HINT_TEXT_START_Y = -6;
-    public static final float PLUGIN_SCREENSHOT_MASK_FULLSCREEN_SCALEFACTOR = 0.7F;
+    // DOM
+    public static String XML = "xml";
+    public static String VERSION = "version";
+    public static String ENCODING = "encoding";
+    public static String STANDALONE = "standalone";
+    public static final String DOM_FRAGMENT_NAME = "#document-fragment";
+    public static String NO = "no";
 
     // ENML
+    public static final String XHTML_1_0_LATIN_1_ENT = "xhtml-lat1.ent";
+    public static final String XHTML_1_0_SYMBOL_ENT = "xhtml-symbol.ent";
+    public static final String XHTML_1_0_SPECIAL_ENT = "xhtml-special.ent";
+    public static final String XML_VERSION_1_0 = "1.0";
+
     public static final String XHTML_1_0_LATIN_1_ENT_LOCATION = "dtd/xhtml-lat1.ent";
     public static final String XHTML_1_0_SYMBOL_ENT_LOCATION = "dtd/xhtml-symbol.ent";
     public static final String XHTML_1_0_SPECIAL_ENT_LOCATION = "dtd/xhtml-special.ent";
@@ -86,24 +92,9 @@ public interface Constants {
     public static final String FONT_STYLE_ITALIC = "italic";
     public static final String FONT_STYLE_BOLD_ITALIC = "bold-italic";
     public static final String HTML_NBSP = "&nbsp;";
-    /* end */
-
-    public static final String ENML_MODEL_NOTE_NOTEGUID = "Note.guid";
-    public static final String ENML_MODEL_NOTE_NOTEGUID_READABLE = "Note";
-    public static final String ENML_MODEL_NOTE_NOTEBOOKGUID = "Note.notebookGuid";
-    public static final String ENML_MODEL_NOTE_NOTEBOOKGUID_READABLE = "Notebook";
-    public static final int PLUGIN_CONFIGS_REFRESH_ID = -143259786; // random number
 
     public static final String EDAM_SYNTAX_INTITLE = "intitle:";
-
-    public static final String EDAM_OAUTH_ADDRESS = "https://evernote.com";
-
-    // DOM
-    public static String XML = "xml";
-    public static String VERSION = "version";
-    public static String ENCODING = "encoding";
-    public static String STANDALONE = "standalone";
-    public static final String DOM_FRAGMENT_NAME = "#document-fragment";
+    /* end */
 
     // OAuth
     public static final String JETTY_LOG_IMPL_CLASS = "org.eclipse.jetty.util.log.class";
@@ -117,19 +108,6 @@ public interface Constants {
     public static final String OAUTH_RESOURCE_BASE = "html/images";
     public static final String OAUTH_DEFAULT_HTML = "default.html";
 
-    // others
-    public static final String ILLEGAL_ARGUMENT_EXCEPTION_MSG = "Throwable.IllegalArgumentException.Message";
-    public static final String FileNamePartSimpleDateFormat = "yyyy-MM-dd'T'HH-mm-ss-";
-    public static final String TAGS_SEPARATOR = ConstantsUtil.COMMA;
-    public static String NO = "no";
-    public static String OK_CAPS = "OK";
-
-    // XML
-    public static final String XHTML_1_0_LATIN_1_ENT = "xhtml-lat1.ent";
-    public static final String XHTML_1_0_SYMBOL_ENT = "xhtml-symbol.ent";
-    public static final String XHTML_1_0_SPECIAL_ENT = "xhtml-special.ent";
-    public static final String XML_VERSION_1_0 = "1.0";
-
     // mime-util
     public static final String MimeDetector = "eu.medsea.mimeutil.detector.MagicMimeMimeDetector";
 
@@ -137,7 +115,12 @@ public interface Constants {
     public static final String PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME = "org.eclipse.jdt.core";
     public static final String PLUGIN_ORG_ECLIPSE_JDT_CORE_PREF_FORMATTER_TABULATION_SIZE = "org.eclipse.jdt.core.formatter.tabulation.size";
 
+    // Plug-in
     public static final String PLUGIN_DEBUG_MODE = "com.prairie.eevernote.debug";
     public static final String PLUGIN_RUN_ON_SANDBOX = "com.evernote.sandbox";
+
+    // Others
+    public static final String FileNamePartSimpleDateFormat = "yyyy-MM-dd'T'HH-mm-ss-";
+    public static final String TAGS_SEPARATOR = ConstantsUtil.COMMA;
 
 }

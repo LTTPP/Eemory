@@ -129,7 +129,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         notebookField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent event) {
-                clearHintText(PLUGIN_CONFIGS_NOTEBOOK, PLUGIN_CONFIGS_NOTEBOOK_HINT);
+                clearHintText(PLUGIN_CONFIGS_NOTEBOOK);
                 String[] nbs = notebooks.keySet().toArray(new String[notebooks.size()]);
                 Arrays.sort(nbs);
                 notebookProposalProvider.setProposals(nbs);
@@ -160,7 +160,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         noteField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent e) {
-                clearHintText(PLUGIN_CONFIGS_NOTE, PLUGIN_CONFIGS_NOTE_HINT);
+                clearHintText(PLUGIN_CONFIGS_NOTE);
                 if (shouldRefresh(PLUGIN_CONFIGS_NOTE, PLUGIN_CONFIGS_NOTEBOOK)) {
                     final String hotebook = getFieldInput(PLUGIN_CONFIGS_NOTEBOOK);
                     BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
@@ -204,7 +204,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         tagsField.getTextControl().addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent event) {
-                clearHintText(PLUGIN_CONFIGS_TAGS, PLUGIN_CONFIGS_TAGS_HINT);
+                clearHintText(PLUGIN_CONFIGS_TAGS);
                 String[] tagArray = tags.toArray(new String[tags.size()]);
                 Arrays.sort(tagArray);
                 tagsProposalProvider.setProposals(tagArray);
@@ -356,7 +356,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         }
     }
 
-    private void clearHintText(final String property, final String hintMsg) {
+    private void clearHintText(final String property) {
         if (!isHasInput(property)) {
             setFieldValue(property, StringUtils.EMPTY);
             // Sets foreground color to the default system color for this control.

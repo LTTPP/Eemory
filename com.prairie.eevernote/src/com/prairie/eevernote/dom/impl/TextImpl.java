@@ -8,7 +8,7 @@ import com.prairie.eevernote.dom.DOMException;
 import com.prairie.eevernote.dom.Node;
 import com.prairie.eevernote.dom.Text;
 
-public class TextImpl extends NodeImpl implements Text, Constants {
+public class TextImpl extends NodeImpl implements Text {
 
     private String text;
 
@@ -52,7 +52,7 @@ public class TextImpl extends NodeImpl implements Text, Constants {
 
     @Override
     public String getNodeName() {
-        return DOM_NODE_NAME_TEXT;
+        return Constants.DOM_NODE_NAME_TEXT;
     }
 
     @Override

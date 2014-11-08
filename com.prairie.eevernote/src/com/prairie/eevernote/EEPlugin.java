@@ -10,7 +10,7 @@ import org.osgi.framework.BundleContext;
 public class EEPlugin extends AbstractUIPlugin {
 
     // The plug-in ID
-    public static final String PLUGIN_ID = Constants.PLUGIN_ID;
+    public static final String PLUGIN_ID = "com.prairie.eevernote";
 
     // The shared instance
     private static EEPlugin plugin;

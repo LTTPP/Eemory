@@ -21,7 +21,6 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.ui.GeomRectangle.Position;
 import com.prairie.eevernote.util.ColorUtil;
@@ -29,7 +28,7 @@ import com.prairie.eevernote.util.ImageUtil;
 import com.prairie.eevernote.util.Times;
 
 @SuppressWarnings("serial")
-public class CaptureView extends JFrame implements Constants {
+public class CaptureView extends JFrame {
 
     private final BufferedImage fullScreen;
     private final GeomRectangle rectangle = new GeomRectangle();
@@ -40,6 +39,13 @@ public class CaptureView extends JFrame implements Constants {
     private GeomPoint datumPoint;
 
     private final static Cursor DRAW_CURSOR = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+
+    private static final int PLUGIN_SCREENSHOT_HINT_HEIGHT = 18;
+    private static final int PLUGIN_SCREENSHOT_HINT_WIDTH = 260;
+    private static final float PLUGIN_SCREENSHOT_HINT_SCALEFACTOR = 0.3F;
+    private static final int PLUGIN_SCREENSHOT_HINT_TEXT_START_X = 5;
+    private static final int PLUGIN_SCREENSHOT_HINT_TEXT_START_Y = -6;
+    private static final float PLUGIN_SCREENSHOT_MASK_FULLSCREEN_SCALEFACTOR = 0.7F;
 
     public CaptureView() throws HeadlessException, AWTException {
 
