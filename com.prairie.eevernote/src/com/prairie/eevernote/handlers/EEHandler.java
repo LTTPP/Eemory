@@ -56,7 +56,7 @@ public class EEHandler extends AbstractHandler implements Constants {
             if (StringUtils.isBlank(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))) {
                 return null;
             } else {
-                boolean confirmed = MessageDialog.openConfirm(HandlerUtil.getActiveShellChecked(event), event.getParameter(PLUGIN_COMMAND_PARAM_ID), Messages.getString(PLUGIN_CONFIGS_OAUTH_CONFIRM));
+                boolean confirmed = MessageDialog.openConfirm(HandlerUtil.getActiveShellChecked(event), event.getParameter(PLUGIN_COMMAND_PARAM_ID), Messages.Plugin_Configs_OAuth_Confirm);
                 if (!confirmed) {
                     return null;
                 }
@@ -79,13 +79,13 @@ public class EEHandler extends AbstractHandler implements Constants {
 
     protected void oauth(final ExecutionEvent event) throws ExecutionException {
         final Shell shell = HandlerUtil.getActiveShellChecked(event);
-        int opt = EclipseUtil.openCustomImageTypeWithCustomButtons(shell, Messages.getString(PLUGIN_CONFIGS_OAUTH_TITLE), Messages.getString(PLUGIN_CONFIGS_TOKENNOTCONFIGURED), new Image(Display.getDefault(), getClass().getClassLoader().getResourceAsStream(OAUTH_EVERNOTE_TRADEMARK)), ArrayUtils.toArray(Messages.getString(PLUGIN_CONFIGS_OAUTH_CONFIGURE), Messages.getString(PLUGIN_CONFIGS_OAUTH_NOTNOW)));
+        int opt = EclipseUtil.openCustomImageTypeWithCustomButtons(shell, Messages.Plugin_Configs_OAuth_Title, Messages.Plugin_Configs_TokenNotConfigured, new Image(Display.getDefault(), getClass().getClassLoader().getResourceAsStream(OAUTH_EVERNOTE_TRADEMARK)), ArrayUtils.toArray(Messages.Plugin_Configs_OAuth_Configure, Messages.Plugin_Configs_OAuth_NotNow));
         if (opt == 0) {
             try {
                 new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                     @Override
                     public void run(final IProgressMonitor monitor) {
-                        monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_OAUTH_WAITING), IProgressMonitor.UNKNOWN);
+                        monitor.beginTask(Messages.Plugin_Configs_OAuth_Waiting, IProgressMonitor.UNKNOWN);
                         try {
                             String token = new OAuth().auth();
                             IDialogSettingsUtil.set(PLUGIN_SETTINGS_KEY_TOKEN, EncryptionUtil.encrypt(token));
@@ -117,10 +117,10 @@ public class EEHandler extends AbstractHandler implements Constants {
                 args.setName(FileUtil.concatNameOfFiles(args.getAttachments()));
             }
 
-            Job job = new Job(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE)) {
+            Job job = new Job(Messages.Plugin_Runtime_AddFileToEvernote) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE), 2);
+                    monitor.beginTask(Messages.Plugin_Runtime_AddFileToEvernote, 2);
                     EEClipper clipper = null;
                     try {
                         clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
@@ -177,10 +177,10 @@ public class EEHandler extends AbstractHandler implements Constants {
             }
             args.setContent(EclipseUtil.getSelectedStyleText(styledText));
 
-            Job job = new Job(Messages.getString(PLUGIN_RUNTIME_ADDSELECTIONTOEVERNOTE_MESSAGE)) {
+            Job job = new Job(Messages.Plugin_Runtime_AddSelectionToEvernote) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_RUNTIME_ADDSELECTIONTOEVERNOTE_MESSAGE), 2);
+                    monitor.beginTask(Messages.Plugin_Runtime_AddSelectionToEvernote, 2);
                     EEClipper clipper = null;
                     try {
                         clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
@@ -242,10 +242,10 @@ public class EEHandler extends AbstractHandler implements Constants {
             }
             args.setAttachments(ListUtil.list(file));
 
-            Job job = new Job(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE)) {
+            Job job = new Job(Messages.Plugin_Runtime_AddFileToEvernote) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_RUNTIME_ADDFILETOEVERNOTE_MESSAGE), 3);
+                    monitor.beginTask(Messages.Plugin_Runtime_AddFileToEvernote, 3);
                     EEClipper clipper = null;
                     try {
                         ImageIO.write(screenshot, ConstantsUtil.IMG_PNG, file);

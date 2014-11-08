@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.dom.Attribute;
 import com.prairie.eevernote.dom.DOMException;
@@ -59,10 +58,10 @@ public class ElementImpl extends NodeImpl implements Element {
     @Override
     public Attribute setAttributeNode(final Attribute newAttr) throws DOMException {
         if (!newAttr.getOwnerDocument().isSameNode(this)) {
-            throw new DOMException(DOMException.WRONG_DOCUMENT_ERR, Messages.getString(Constants.DOM_ERROR2));
+            throw new DOMException(DOMException.WRONG_DOCUMENT_ERR, Messages.DOM_Error2);
         }
         if (getOwnerDocument() != null) {
-            throw new DOMException(DOMException.INUSE_ATTRIBUTE_ERR, Messages.getString(Constants.DOM_ERROR3));
+            throw new DOMException(DOMException.INUSE_ATTRIBUTE_ERR, Messages.DOM_Error3);
         }
         Attribute oldAttr = (Attribute) attrs.get(newAttr);
         if (oldAttr != null) {
@@ -77,7 +76,7 @@ public class ElementImpl extends NodeImpl implements Element {
     public Attribute removeAttributeNode(final Attribute oldAttr) throws DOMException {
         AttributeImpl attr = (AttributeImpl) attrs.get(oldAttr);
         if (attr == null) {
-            throw new DOMException(DOMException.NOT_FOUND_ERR, Messages.getString(Constants.DOM_ERROR4));
+            throw new DOMException(DOMException.NOT_FOUND_ERR, Messages.DOM_Error4);
         } else {
             ((AttributeImpl) oldAttr).setOwnerElement(null);
         }

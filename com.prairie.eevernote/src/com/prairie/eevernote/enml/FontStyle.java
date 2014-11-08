@@ -63,6 +63,6 @@ public enum FontStyle {
                 return value;
             }
         }
-        throw new IllegalArgumentException(Messages.getString(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MSG) + code);
+        throw new IllegalArgumentException(Messages.Throwable_IllegalArgumentException_Message + code);
     }
 }

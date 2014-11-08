@@ -147,7 +147,7 @@ public class DocumentImpl extends NodeImpl implements Document {
     @Override
     public Node importNode(final Node sourceNode, final boolean deep) throws DOMException {
         if (!canImport(sourceNode)) {
-            throw new DOMException(DOMException.NOT_SUPPORTED_ERR, Messages.getString(Constants.DOM_ERROR0));
+            throw new DOMException(DOMException.NOT_SUPPORTED_ERR, Messages.DOM_Error0);
         }
 
         Node clonedNode = sourceNode.cloneNode(deep);
@@ -172,7 +172,7 @@ public class DocumentImpl extends NodeImpl implements Document {
     @Override
     public Node adoptNode(final Node sourceNode) throws DOMException {
         if (canAdopt(sourceNode)) {
-            throw new DOMException(DOMException.NOT_SUPPORTED_ERR, Messages.getString(Constants.DOM_ERROR1));
+            throw new DOMException(DOMException.NOT_SUPPORTED_ERR, Messages.DOM_Error1);
         }
         Node parent = sourceNode.getParentNode();
         if (parent != null) {

@@ -29,7 +29,7 @@ public class TextImpl extends NodeImpl implements Text, Constants {
     @Override
     public void insertText(final int offset, final String text) throws DOMException {
         if (offset < 0 || offset >= this.text.length()) {
-            throw new DOMException(DOMException.INDEX_SIZE_ERR, Messages.getString(DOM_ERROR9));
+            throw new DOMException(DOMException.INDEX_SIZE_ERR, Messages.DOM_Error9);
         }
         this.text = StringUtils.join(this.text.substring(0, offset), text, this.text.substring(offset));
     }
@@ -37,7 +37,7 @@ public class TextImpl extends NodeImpl implements Text, Constants {
     @Override
     public void deleteText(final int offset, final int count) throws DOMException {
         if (offset < 0 || offset >= text.length() || count < 0) {
-            throw new DOMException(DOMException.INDEX_SIZE_ERR, Messages.getString(DOM_ERROR8));
+            throw new DOMException(DOMException.INDEX_SIZE_ERR, Messages.DOM_Error8);
         }
         text = StringUtils.join(text.substring(0, offset), text.substring(offset + count));
     }
@@ -45,7 +45,7 @@ public class TextImpl extends NodeImpl implements Text, Constants {
     @Override
     public void replaceText(final int offset, final int count, final String text) throws DOMException {
         if (offset < 0 || offset >= this.text.length() || count < 0) {
-            throw new DOMException(DOMException.INDEX_SIZE_ERR, Messages.getString(DOM_ERROR8));
+            throw new DOMException(DOMException.INDEX_SIZE_ERR, Messages.DOM_Error8);
         }
         this.text = StringUtils.join(this.text.substring(0, offset), text, this.text.substring(offset + count));
     }

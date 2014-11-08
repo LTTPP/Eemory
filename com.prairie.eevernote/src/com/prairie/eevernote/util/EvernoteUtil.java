@@ -42,7 +42,7 @@ public class EvernoteUtil {
         UserStoreClient userStore = factory.createUserStoreClient();
         boolean versionOk = userStore.checkVersion(EEPlugin.getName(), com.evernote.edam.userstore.Constants.EDAM_VERSION_MAJOR, com.evernote.edam.userstore.Constants.EDAM_VERSION_MINOR);
         if (!versionOk) {
-            throw new OutOfDateException(Messages.getString(Constants.PLUGIN_ERROR_OOD));
+            throw new OutOfDateException(Messages.Plugin_Error_OutOfDate);
         }
     }
 
@@ -82,7 +82,7 @@ public class EvernoteUtil {
         if (BooleanUtils.toBoolean(runOnSandbox)) {
             return EvernoteService.SANDBOX;
         } else {
-            return EvernoteService.PRODUCTION;
+            return EvernoteService.SANDBOX;
         }
     }
 

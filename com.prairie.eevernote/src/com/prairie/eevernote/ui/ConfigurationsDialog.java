@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -69,7 +68,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
     // <Field Property, User Input>
     private Map<String, Boolean> inputMatrix;
 
-    // <Field Property, Hint Message Property>
+    // <Field Property, Hint Message>
     private Map<String, String> hintPropMap;
 
     private boolean canceled = false;
@@ -87,14 +86,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
     @Override
     public void create() {
         super.create();
-        setTitle(getString(PLUGIN_CONFIGS_TITLE));
-        setMessage(getString(PLUGIN_CONFIGS_MESSAGE), IMessageProvider.NONE);
+        setTitle(Messages.Plugin_Configs_Title);
+        setMessage(Messages.Plugin_Configs_Message, IMessageProvider.NONE);
     }
 
     @Override
     protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(getString(PLUGIN_CONFIGS_SHELL_TITLE));
+        newShell.setText(Messages.Plugin_Configs_Shell_Title);
     }
 
     @Override
@@ -113,7 +112,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         // ----------------------
 
         Group groupPref = new Group(container, SWT.NONE);
-        groupPref.setText(getString(PLUGIN_CONFIGS_ORGANIZE));
+        groupPref.setText(Messages.Plugin_Configs_Organize);
         groupPref.setLayout(new GridLayout(2, false));
         groupPref.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 
@@ -122,7 +121,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         // Auth
         authInProgress();
 
-        final LabelCheckTextField notebookField = createLabelCheckTextField(groupPref, PLUGIN_CONFIGS_NOTEBOOK);
+        final LabelCheckTextField notebookField = createLabelCheckTextField(groupPref, Messages.Plugin_Configs_Notebook);
         notebookField.setTextLimit(EDAMLimits.EDAM_NOTEBOOK_NAME_LEN_MAX);
         addField(PLUGIN_CONFIGS_NOTEBOOK, notebookField);
         fetchNotebooksInProgres();
@@ -138,14 +137,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
             @Override
             public void focusLost(final FocusEvent e) {
-                showHintText(PLUGIN_CONFIGS_NOTEBOOK, PLUGIN_CONFIGS_NOTEBOOK_HINT);
+                showHintText(PLUGIN_CONFIGS_NOTEBOOK, Messages.Plugin_Configs_Notebook_Hint);
             }
         });
         notebookField.getCheckControl().addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent event) {
                 if (notebookField.isEditable()) {
-                    showHintText(PLUGIN_CONFIGS_NOTEBOOK, PLUGIN_CONFIGS_NOTEBOOK_HINT);
+                    showHintText(PLUGIN_CONFIGS_NOTEBOOK, Messages.Plugin_Configs_Notebook_Hint);
                 }
             }
         });
@@ -153,7 +152,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
         // ----------------------
 
-        final LabelCheckTextField noteField = createLabelCheckTextField(groupPref, PLUGIN_CONFIGS_NOTE);
+        final LabelCheckTextField noteField = createLabelCheckTextField(groupPref, Messages.Plugin_Configs_Note);
         noteField.setTextLimit(EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX);
         addField(PLUGIN_CONFIGS_NOTE, noteField);
         fetchNotesInProgres();
@@ -182,14 +181,14 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
             @Override
             public void focusLost(final FocusEvent e) {
-                showHintText(PLUGIN_CONFIGS_NOTE, PLUGIN_CONFIGS_NOTE_HINT);
+                showHintText(PLUGIN_CONFIGS_NOTE, Messages.Plugin_Configs_Note_Hint);
             }
         });
         noteField.getCheckControl().addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent event) {
                 if (noteField.isEditable()) {
-                    showHintText(PLUGIN_CONFIGS_NOTE, PLUGIN_CONFIGS_NOTE_HINT);
+                    showHintText(PLUGIN_CONFIGS_NOTE, Messages.Plugin_Configs_Note_Hint);
                 }
             }
         });
@@ -197,7 +196,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
         // ----------------------
 
-        final LabelCheckTextField tagsField = createLabelCheckTextField(groupPref, PLUGIN_CONFIGS_TAGS);
+        final LabelCheckTextField tagsField = createLabelCheckTextField(groupPref, Messages.Plugin_Configs_Tags);
         tagsField.setTextLimit(EDAMLimits.EDAM_TAG_NAME_LEN_MAX);
         addField(PLUGIN_CONFIGS_TAGS, tagsField);
         fetchTagsInProgress();
@@ -213,20 +212,20 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
             @Override
             public void focusLost(final FocusEvent e) {
-                showHintText(PLUGIN_CONFIGS_TAGS, PLUGIN_CONFIGS_TAGS_HINT);
+                showHintText(PLUGIN_CONFIGS_TAGS, Messages.Plugin_Configs_Tags_Hint);
             }
         });
         tagsField.getCheckControl().addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent event) {
                 if (tagsField.isEditable()) {
-                    showHintText(PLUGIN_CONFIGS_TAGS, PLUGIN_CONFIGS_TAGS_HINT);
+                    showHintText(PLUGIN_CONFIGS_TAGS, Messages.Plugin_Configs_Tags_Hint);
                 }
             }
         });
         restoreSettings(PLUGIN_CONFIGS_TAGS);
 
-        TextField commentsField = createLabelCheckTextField(groupPref, PLUGIN_CONFIGS_COMMENTS);
+        TextField commentsField = createLabelCheckTextField(groupPref, Messages.Plugin_Configs_Comments);
         addField(PLUGIN_CONFIGS_COMMENTS, commentsField);
         restoreSettings(PLUGIN_CONFIGS_COMMENTS);
 
@@ -243,9 +242,9 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         if (hintPropMap == null) {
             hintPropMap = MapUtil.map();
         }
-        hintPropMap.put(PLUGIN_CONFIGS_NOTEBOOK, PLUGIN_CONFIGS_NOTEBOOK_HINT);
-        hintPropMap.put(PLUGIN_CONFIGS_NOTE, PLUGIN_CONFIGS_NOTE_HINT);
-        hintPropMap.put(PLUGIN_CONFIGS_TAGS, PLUGIN_CONFIGS_TAGS_HINT);
+        hintPropMap.put(PLUGIN_CONFIGS_NOTEBOOK, Messages.Plugin_Configs_Notebook_Hint);
+        hintPropMap.put(PLUGIN_CONFIGS_NOTE, Messages.Plugin_Configs_Note_Hint);
+        hintPropMap.put(PLUGIN_CONFIGS_TAGS, Messages.Plugin_Configs_Tags_Hint);
     }
 
     private void authInProgress() {
@@ -256,7 +255,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_AUTHENTICATING), 1);
+                    monitor.beginTask(Messages.Plugin_Configs_Authenticating, 1);
                     try {
                         globalClipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                     } catch (Throwable e) {
@@ -279,7 +278,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGNOTEBOOKS), 1);
+                    monitor.beginTask(Messages.Plugin_Configs_FetchingNotebooks, 1);
                     try {
                         notebooks = globalClipper.listNotebooks();
                     } catch (Throwable e) {
@@ -303,7 +302,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGNOTES), 1);
+                    monitor.beginTask(Messages.Plugin_Configs_FetchingNotes, 1);
                     try {
                         notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(notebook)));
                     } catch (Throwable e) {
@@ -326,7 +325,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGTAGS), 1);
+                    monitor.beginTask(Messages.Plugin_Configs_FetchingTags, 1);
                     try {
                         tags = globalClipper.listTags();
                     } catch (Throwable e) {
@@ -350,7 +349,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
     private void showHintText(final String property, final String hintMsg) {
         if (getField(property).isEditable() && StringUtils.isBlank(getFieldValue(property))) {
             getField(property).setForeground(shell.getDisplay().getSystemColor(ColorUtil.SWT_COLOR_GRAY));
-            setFieldValue(property, getString(hintMsg));
+            setFieldValue(property, hintMsg);
             setHasInput(property, false);
         } else {
             setHasInput(property, true);
@@ -367,7 +366,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
     @Override
     protected void createButtonsForButtonBar(final Composite parent) {
-        createButton(parent, PLUGIN_CONFIGS_REFRESH_ID, getString(PLUGIN_CONFIGS_REFRESH), false);
+        createButton(parent, PLUGIN_CONFIGS_REFRESH_ID, Messages.Plugin_Configs_Refresh, false);
         createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
         createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
     }
@@ -551,7 +550,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
     protected LabelCheckTextField createLabelCheckTextField(final Composite container, final String labelText) {
         final Button button = new Button(container, SWT.CHECK);
-        button.setText(getString(labelText) + ConstantsUtil.COLON);
+        button.setText(labelText + ConstantsUtil.COLON);
         button.setSelection(true);
 
         final Text text = new Text(container, SWT.BORDER);
@@ -574,16 +573,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         });
 
         return new LabelCheckTextField(button, text);
-    }
-
-    protected TextField createLabelTextField(final Composite container, final String labelText) {
-        Label label = new Label(container, SWT.NONE);
-        label.setText(getString(labelText) + ConstantsUtil.COLON);
-
-        Text text = new Text(container, SWT.BORDER);
-        text.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
-
-        return new LabelTextField(text);
     }
 
     protected boolean isFieldEditable(final String property) {
@@ -644,10 +633,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
             inputMatrix = MapUtil.map();
         }
         inputMatrix.put(property, hasInput);
-    }
-
-    protected String getString(final String key) {
-        return Messages.getString(key);
     }
 
     public boolean isCanceled() {

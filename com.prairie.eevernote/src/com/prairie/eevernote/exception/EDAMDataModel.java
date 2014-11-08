@@ -38,6 +38,6 @@ public enum EDAMDataModel {
                 return value;
             }
         }
-        throw new IllegalArgumentException(Messages.getString(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MSG) + name);
+        throw new IllegalArgumentException(Messages.Throwable_IllegalArgumentException_Message + name);
     }
 }

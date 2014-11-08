@@ -221,7 +221,7 @@ public class CaptureView extends JFrame implements Constants {
             g2.drawImage(ImageUtil.mask(fullScreen.getSubimage(p.getX(), p.getY() - (PLUGIN_SCREENSHOT_HINT_HEIGHT + 2), PLUGIN_SCREENSHOT_HINT_WIDTH, PLUGIN_SCREENSHOT_HINT_HEIGHT), PLUGIN_SCREENSHOT_HINT_SCALEFACTOR), p.getX(), p.getY() - (PLUGIN_SCREENSHOT_HINT_HEIGHT + 2), null);
             g2.setColor(Color.WHITE);
             g2.setFont(getFont().deriveFont(Font.BOLD));
-            g2.drawString(Messages.getString(PLUGIN_RUNTIME_CLIPSCREENSHOTTOEVERNOTE_HINT), p.getX() + PLUGIN_SCREENSHOT_HINT_TEXT_START_X, p.getY() + PLUGIN_SCREENSHOT_HINT_TEXT_START_Y);
+            g2.drawString(Messages.Plugin_Runtime_ClipScreenshotToEvernote_Hint, p.getX() + PLUGIN_SCREENSHOT_HINT_TEXT_START_X, p.getY() + PLUGIN_SCREENSHOT_HINT_TEXT_START_Y);
         }
     }
 

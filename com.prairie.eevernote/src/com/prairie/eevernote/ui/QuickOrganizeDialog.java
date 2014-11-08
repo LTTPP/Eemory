@@ -44,7 +44,7 @@ import com.prairie.eevernote.util.StringUtil;
 
 public class QuickOrganizeDialog extends Dialog implements Constants {
 
-    public static final int SHOULD_NOT_SHOW = PLUGIN_CONFIGS_HOTSET_SHOULD_NOT_SHOW_ID;
+    public static final int SHOULD_NOT_SHOW = -1;
 
     private final Shell shell;
     private static QuickOrganizeDialog thisDialog;
@@ -76,7 +76,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
     @Override
     protected void configureShell(final Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(Messages.getString(PLUGIN_CONFIGS_HOTSET_SHELL_TITLE));
+        newShell.setText(Messages.Plugin_Configs_QuickOrgnize_Shell_Title);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
         // ------------
 
         if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)) {
-            Text notebookField = createLabelTextField(container, PLUGIN_CONFIGS_NOTEBOOK);
+            Text notebookField = createLabelTextField(container, Messages.Plugin_Configs_Notebook);
             notebookField.setTextLimit(EDAMLimits.EDAM_NOTEBOOK_NAME_LEN_MAX);
             addField(PLUGIN_CONFIGS_NOTEBOOK, notebookField);
             fetchNotebooksInProgres();
@@ -109,7 +109,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
         // ------------
 
         if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID)) {
-            Text noteField = createLabelTextField(container, PLUGIN_CONFIGS_NOTE);
+            Text noteField = createLabelTextField(container, Messages.Plugin_Configs_Note);
             noteField.setTextLimit(EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX);
             addField(PLUGIN_CONFIGS_NOTE, noteField);
             fetchNotesInProgres();
@@ -142,7 +142,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
         // ------------
 
         if (shouldShow(PLUGIN_SETTINGS_SECTION_TAGS, PLUGIN_SETTINGS_KEY_NAME)) {
-            Text tagsField = createLabelTextField(container, PLUGIN_CONFIGS_TAGS);
+            Text tagsField = createLabelTextField(container, Messages.Plugin_Configs_Tags);
             tagsField.setTextLimit(EDAMLimits.EDAM_TAG_NAME_LEN_MAX);
             addField(PLUGIN_CONFIGS_TAGS, tagsField);
             fetchTagsInProgress();
@@ -152,7 +152,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
         // ------------
 
         if (shouldShow(PLUGIN_SETTINGS_SECTION_COMMENTS, PLUGIN_SETTINGS_KEY_NAME)) {
-            addField(PLUGIN_CONFIGS_COMMENTS, createLabelTextField(container, PLUGIN_CONFIGS_COMMENTS));
+            addField(PLUGIN_CONFIGS_COMMENTS, createLabelTextField(container, Messages.Plugin_Configs_Comments));
         }
 
         return container;
@@ -166,7 +166,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_AUTHENTICATING), 1);
+                    monitor.beginTask(Messages.Plugin_Configs_Authenticating, 1);
                     try {
                         clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                     } catch (Throwable e) {
@@ -189,7 +189,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGNOTEBOOKS), 1);
+                    monitor.beginTask(Messages.Plugin_Configs_FetchingNotebooks, 1);
                     try {
                         notebooks = clipper.listNotebooks();
                     } catch (Throwable e) {
@@ -212,7 +212,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGNOTES), 1);
+                    monitor.beginTask(Messages.Plugin_Configs_FetchingNotes, 1);
                     try {
                         notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)));
                     } catch (Throwable e) {
@@ -235,7 +235,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
             new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.getString(PLUGIN_CONFIGS_FETCHINGTAGS), 1);
+                    monitor.beginTask(Messages.Plugin_Configs_FetchingTags, 1);
                     try {
                         tags = clipper.listTags();
                     } catch (Throwable e) {
@@ -274,13 +274,13 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
         boolean confirm = false;
         String msg = StringUtils.EMPTY;
         if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getGuid())) {
-            msg = StringUtils.isBlank(quickSettings.getName()) ? Messages.getString(PLUGIN_RUNTIME_CREATENEWNOTE) : Messages.getString(PLUGIN_RUNTIME_CREATENEWNOTEWITHGIVENNAME, quickSettings.getName());
+            msg = StringUtils.isBlank(quickSettings.getName()) ? Messages.Plugin_Runtime_CreateNewNote : Messages.bind(Messages.Plugin_Runtime_CreateNewNoteWithGivenName, quickSettings.getName());
             confirm = true;
         } else if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID) && StringUtils.isBlank(quickSettings.getNotebook().getGuid())) {
-            msg = Messages.getString(PLUGIN_RUNTIME_CLIPTODEFAULT);
+            msg = Messages.Plugin_Runtime_ClipToDefault;
             confirm = true;
         }
-        return confirm ? MessageDialog.openQuestion(shell, Messages.getString(PLUGIN_CONFIGS_HOTSET_SHELL_TITLE), msg) : true;
+        return confirm ? MessageDialog.openQuestion(shell, Messages.Plugin_Configs_QuickOrgnize_Shell_Title, msg) : true;
     }
 
     private void saveQuickSettings() {
@@ -350,7 +350,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
 
     protected Text createLabelTextField(final Composite container, final String labelText) {
         Label label = new Label(container, SWT.NONE);
-        label.setText(Messages.getString(labelText) + ConstantsUtil.COLON);
+        label.setText(labelText + ConstantsUtil.COLON);
 
         Text text = new Text(container, SWT.BORDER);
         text.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));

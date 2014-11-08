@@ -1,38 +1,70 @@
 package com.prairie.eevernote;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import org.eclipse.osgi.util.NLS;
 
-import org.apache.commons.lang3.StringUtils;
+public class Messages extends NLS {
 
-import com.prairie.eevernote.util.ConstantsUtil;
-import com.prairie.eevernote.util.StringUtil;
+    private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
 
-public class Messages {
+    public static String Plugin_Configs_Shell_Title;
+    public static String Plugin_Configs_QuickOrgnize_Shell_Title;
+    public static String Plugin_Configs_Title;
+    public static String Plugin_Configs_Message;
+    public static String Plugin_Configs_Organize;
+    public static String Plugin_Configs_Notebook;
+    public static String Plugin_Configs_Note;
+    public static String Plugin_Configs_Tags;
+    public static String Plugin_Configs_Notebook_Hint;
+    public static String Plugin_Configs_Note_Hint;
+    public static String Plugin_Configs_Tags_Hint;
+    public static String Plugin_Configs_Comments;
+    public static String Plugin_Configs_Refresh;
+    public static String Plugin_Configs_TokenNotConfigured;
+    public static String Plugin_Configs_OAuth_Title;
+    public static String Plugin_Configs_OAuth_Configure;
+    public static String Plugin_Configs_OAuth_NotNow;
+    public static String Plugin_Configs_OAuth_Waiting;
+    public static String Plugin_Configs_OAuth_Confirm;
+    public static String Plugin_Configs_Authenticating;
+    public static String Plugin_Configs_FetchingNotebooks;
+    public static String Plugin_Configs_FetchingNotes;
+    public static String Plugin_Configs_FetchingTags;
+    public static String Plugin_Runtime_AddFileToEvernote;
+    public static String Plugin_Runtime_AddFileToEvernote_Subtask;
+    public static String Plugin_Runtime_AddFileToEvernote_OutOfDate;
+    public static String Plugin_Runtime_AddSelectionToEvernote;
+    public static String Plugin_Runtime_AddSelectionToEvernote_Subtask;
+    public static String Plugin_Runtime_AddSelectionToEvernote_OutOfDate;
+    public static String Plugin_Runtime_ClipScreenshotToEvernote_Message;
+    public static String Plugin_Runtime_ClipScreenshotToEvernote_Subtask;
+    public static String Plugin_Runtime_ClipScreenshotToEvernote_OutOfDate;
+    public static String Plugin_Runtime_ClipScreenshotToEvernote_Hint;
+    public static String Plugin_Runtime_AuthExpired_Message;
+    public static String Plugin_Runtime_AuthExpired_Title;
+    public static String Plugin_Runtime_CreateNewNote;
+    public static String Plugin_Runtime_ClipToDefault;
+    public static String Plugin_Runtime_CreateNewNoteWithGivenName;
+    public static String Plugin_Error_Occurred;
+    public static String Plugin_Error_OutOfDate;
+    public static String Plugin_Throwable_NotFatal;
+    public static String DOM_Error0;
+    public static String DOM_Error1;
+    public static String DOM_Error2;
+    public static String DOM_Error3;
+    public static String DOM_Error4;
+    public static String DOM_Error5;
+    public static String DOM_Error6;
+    public static String DOM_Error7;
+    public static String DOM_Error8;
+    public static String DOM_Error9;
+    public static String Throwable_IllegalArgumentException_Message;
 
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(Constants.BUNDLE_NAME);
+    static {
+        // initialize resource bundle
+        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+    }
 
     private Messages() {
-
-    }
-
-    public static String getString(final String key) {
-        if (StringUtil.isNull(key)) {
-            return StringUtils.EMPTY;
-        }
-        try {
-            return RESOURCE_BUNDLE.getString(key);
-        } catch (MissingResourceException e) {
-            return key;
-        }
-    }
-
-    public static String getString(final String key, final String... replacements) {
-        String value = getString(key);
-        for (int i = 0; i < replacements.length; i++) {
-            value = value.replace(ConstantsUtil.LEFT_BRACE + (i + 1) + ConstantsUtil.RIGHT_BRACE, replacements[i]);
-        }
-        return value;
     }
 
 }
