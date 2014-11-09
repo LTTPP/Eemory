@@ -130,7 +130,7 @@ public class EEHandler extends AbstractHandler implements Constants {
                         clipper.clipFile(args);
                         monitor.worked(2);
                     } catch (Throwable e) {
-                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, HandlerUtil.getActiveShell(event));
+                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args);
                         if (status == LogUtil.ok()) {
                             try {
                                 clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
@@ -187,7 +187,7 @@ public class EEHandler extends AbstractHandler implements Constants {
                         clipper.clipSelection(args);
                         monitor.worked(2);
                     } catch (Throwable e) {
-                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, HandlerUtil.getActiveShell(event));
+                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args);
                         if (status == LogUtil.ok()) {
                             try {
                                 clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
@@ -253,7 +253,7 @@ public class EEHandler extends AbstractHandler implements Constants {
                         clipper.clipFile(args);
                         monitor.worked(3);
                     } catch (Throwable e) {
-                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, HandlerUtil.getActiveShell(event));
+                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args);
                         if (status == LogUtil.ok()) {
                             try {
                                 clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
