@@ -169,7 +169,13 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
                             try {
                                 notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
                             } catch (Throwable e) {
-                                ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
+                                boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
+                                if (fixed) {
+                                    try {
+                                        notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
+                                    } catch (Exception ignored) {
+                                    }
+                                }
                             }
                         }
                     });
@@ -259,7 +265,13 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
                     try {
                         globalClipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
+                        boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
+                        if (fixed) {
+                            try {
+                                globalClipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                            } catch (Exception ignored) {
+                            }
+                        }
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();
@@ -282,7 +294,13 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
                     try {
                         notebooks = globalClipper.listNotebooks();
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
+                        boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
+                        if (fixed) {
+                            try {
+                                notebooks = globalClipper.listNotebooks();
+                            } catch (Exception ignored) {
+                            }
+                        }
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();
@@ -306,7 +324,13 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
                     try {
                         notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(notebook)));
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
+                        boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
+                        if (fixed) {
+                            try {
+                                notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(notebook)));
+                            } catch (Exception ignored) {
+                            }
+                        }
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();
@@ -329,7 +353,13 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
                     try {
                         tags = globalClipper.listTags();
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
+                        boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
+                        if (fixed) {
+                            try {
+                                tags = globalClipper.listTags();
+                            } catch (Exception ignored) {
+                            }
+                        }
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();

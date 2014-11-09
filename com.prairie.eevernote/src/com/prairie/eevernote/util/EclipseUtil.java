@@ -184,7 +184,7 @@ public class EclipseUtil {
         return contentProposalProvider;
     }
 
-    public static void openErrorSync(final Shell shell, final String title, final String message) {
+    public static void openErrorSyncly(final Shell shell, final String title, final String message) {
         Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {
@@ -195,7 +195,7 @@ public class EclipseUtil {
 
     private static int opt = 0;
 
-    public static int openErrorSyncWithCustomButtons(final Shell shell, final String title, final String message, final String[] buttons) {
+    public static int openErrorWithCustomButtonsSyncly(final Shell shell, final String title, final String message, final String[] buttons) {
         Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {

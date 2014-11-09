@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
 
 import com.evernote.edam.error.EDAMNotFoundException;
 import com.prairie.eevernote.client.EEClipper;
@@ -22,13 +23,13 @@ public class EDAMNotFoundHandler {
         this.token = token;
     }
 
-    public boolean fixNotFoundException(final EDAMNotFoundException e, final ENNote args) {
+    public IStatus fixNotFoundException(final EDAMNotFoundException e, final ENNote args) {
         if (e.getIdentifier().equals(EDAMDataModel.Note_notebookGuid.toString())) {
-            return fixNotFoundNotebookGuid(args);
+            return fixNotFoundNotebookGuid(args) ? LogUtil.ok() : LogUtil.error(e);
         } else if (e.getIdentifier().equals(EDAMDataModel.Note_noteGuid.toString())) {
-            return fixNotFoundNoteGuid(args);
+            return fixNotFoundNoteGuid(args) ? LogUtil.ok() : LogUtil.error(e);
         }
-        return false;
+        return LogUtil.error(e);
     }
 
     public String findNotebookByName(final String name) {

@@ -82,7 +82,7 @@ public class EvernoteUtil {
         if (BooleanUtils.toBoolean(runOnSandbox)) {
             return EvernoteService.SANDBOX;
         } else {
-            return EvernoteService.SANDBOX;
+            return EvernoteService.PRODUCTION;
         }
     }
 

@@ -24,14 +24,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import com.evernote.edam.error.EDAMNotFoundException;
 import com.prairie.eevernote.Constants;
 import com.prairie.eevernote.Messages;
 import com.prairie.eevernote.client.EEClipper;
 import com.prairie.eevernote.client.EEClipperFactory;
 import com.prairie.eevernote.client.ENNote;
 import com.prairie.eevernote.client.impl.ENNoteImpl;
-import com.prairie.eevernote.exception.EDAMNotFoundHandler;
 import com.prairie.eevernote.exception.ThrowableHandler;
 import com.prairie.eevernote.oauth.OAuth;
 import com.prairie.eevernote.ui.CaptureView;
@@ -56,7 +54,7 @@ public class EEHandler extends AbstractHandler implements Constants {
             if (StringUtils.isBlank(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))) {
                 return null;
             } else {
-                boolean confirmed = MessageDialog.openConfirm(HandlerUtil.getActiveShellChecked(event), event.getParameter(PLUGIN_COMMAND_PARAM_ID), Messages.Plugin_Configs_OAuth_Confirm);
+                boolean confirmed = MessageDialog.openConfirm(HandlerUtil.getActiveShellChecked(event), event.getParameter(PLUGIN_COMMAND_PARAM_ID), Messages.Plugin_OAuth_Confirm);
                 if (!confirmed) {
                     return null;
                 }
@@ -79,13 +77,13 @@ public class EEHandler extends AbstractHandler implements Constants {
 
     protected void oauth(final ExecutionEvent event) throws ExecutionException {
         final Shell shell = HandlerUtil.getActiveShellChecked(event);
-        int opt = EclipseUtil.openCustomImageTypeWithCustomButtons(shell, Messages.Plugin_Configs_OAuth_Title, Messages.Plugin_Configs_TokenNotConfigured, new Image(Display.getDefault(), getClass().getClassLoader().getResourceAsStream(OAUTH_EVERNOTE_TRADEMARK)), ArrayUtils.toArray(Messages.Plugin_Configs_OAuth_Configure, Messages.Plugin_Configs_OAuth_NotNow));
+        int opt = EclipseUtil.openCustomImageTypeWithCustomButtons(shell, Messages.Plugin_OAuth_Title, Messages.Plugin_OAuth_TokenNotConfigured, new Image(Display.getDefault(), getClass().getClassLoader().getResourceAsStream(OAUTH_EVERNOTE_TRADEMARK)), ArrayUtils.toArray(Messages.Plugin_OAuth_Configure, Messages.Plugin_OAuth_NotNow));
         if (opt == 0) {
             try {
                 new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                     @Override
                     public void run(final IProgressMonitor monitor) {
-                        monitor.beginTask(Messages.Plugin_Configs_OAuth_Waiting, IProgressMonitor.UNKNOWN);
+                        monitor.beginTask(Messages.Plugin_OAuth_Waiting, IProgressMonitor.UNKNOWN);
                         try {
                             String token = new OAuth().auth();
                             IDialogSettingsUtil.set(PLUGIN_SETTINGS_KEY_TOKEN, EncryptionUtil.encrypt(token));
@@ -131,21 +129,18 @@ public class EEHandler extends AbstractHandler implements Constants {
                         }
                         clipper.clipFile(args);
                         monitor.worked(2);
-                    } catch (EDAMNotFoundException e) {
-                        // try to auto fix EDAMNotFoundException
-                        boolean fixed = new EDAMNotFoundHandler(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))).fixNotFoundException(e, args);
-                        if (fixed) {
+                    } catch (Throwable e) {
+                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, HandlerUtil.getActiveShell(event));
+                        if (status == LogUtil.ok()) {
                             try {
+                                clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                                 clipper.clipFile(args);
-                            } catch (Throwable e1) {
-                                return ThrowableHandler.handleJobErr(e1, clipper);
+                            } catch (Throwable t) {
+                                return ThrowableHandler.handleJobErr(t, clipper);
                             }
                             saveIfNeeded(args);
-                            return LogUtil.ok();
                         }
-                        return ThrowableHandler.handleJobErr(e);
-                    } catch (Throwable e) {
-                        return ThrowableHandler.handleJobErr(e, clipper);
+                        return status;
                     }
                     monitor.done();
                     return LogUtil.ok();
@@ -191,20 +186,18 @@ public class EEHandler extends AbstractHandler implements Constants {
                         }
                         clipper.clipSelection(args);
                         monitor.worked(2);
-                    } catch (EDAMNotFoundException e) {
-                        boolean fixed = new EDAMNotFoundHandler(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))).fixNotFoundException(e, args);
-                        if (fixed) {
+                    } catch (Throwable e) {
+                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, HandlerUtil.getActiveShell(event));
+                        if (status == LogUtil.ok()) {
                             try {
-                                clipper.clipFile(args);
-                            } catch (Throwable e1) {
-                                return ThrowableHandler.handleJobErr(e1, clipper);
+                                clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                                clipper.clipSelection(args);
+                            } catch (Throwable t) {
+                                return ThrowableHandler.handleJobErr(t, clipper);
                             }
                             saveIfNeeded(args);
-                            return LogUtil.ok();
                         }
-                        return ThrowableHandler.handleJobErr(e);
-                    } catch (final Throwable e) {
-                        return ThrowableHandler.handleJobErr(e, clipper);
+                        return status;
                     }
                     monitor.done();
                     return LogUtil.ok();
@@ -259,21 +252,18 @@ public class EEHandler extends AbstractHandler implements Constants {
                         }
                         clipper.clipFile(args);
                         monitor.worked(3);
-                    } catch (EDAMNotFoundException e) {
-                        boolean fixed = new EDAMNotFoundHandler(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN))).fixNotFoundException(e, args);
-                        if (fixed) {
+                    } catch (Throwable e) {
+                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, HandlerUtil.getActiveShell(event));
+                        if (status == LogUtil.ok()) {
                             try {
+                                clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                                 clipper.clipFile(args);
-                            } catch (Throwable e1) {
-                                return ThrowableHandler.handleJobErr(e1, clipper);
+                            } catch (Throwable t) {
+                                return ThrowableHandler.handleJobErr(t, clipper);
                             }
                             saveIfNeeded(args);
-                            monitor.done();
-                            return LogUtil.ok();
                         }
-                        return ThrowableHandler.handleJobErr(e);
-                    } catch (Throwable e) {
-                        return ThrowableHandler.handleJobErr(e, clipper);
+                        return status;
                     } finally {
                         if (file != null && file.exists()) {
                             file.delete();

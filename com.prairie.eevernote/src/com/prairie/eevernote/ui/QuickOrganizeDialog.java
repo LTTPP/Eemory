@@ -126,7 +126,13 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                                     try {
                                         notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
                                     } catch (Throwable e) {
-                                        ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
+                                        boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
+                                        if (fixed) {
+                                            try {
+                                                notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
+                                            } catch (Exception ignored) {
+                                            }
+                                        }
                                     }
                                 }
                             });
@@ -170,7 +176,13 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                     try {
                         clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e, true, clipper);
+                        boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, true, clipper);
+                        if (fixed) {
+                            try {
+                                clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                            } catch (Exception ignored) {
+                            }
+                        }
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();
@@ -193,7 +205,13 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                     try {
                         notebooks = clipper.listNotebooks();
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
+                        boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
+                        if (fixed) {
+                            try {
+                                notebooks = clipper.listNotebooks();
+                            } catch (Exception ignored) {
+                            }
+                        }
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();
@@ -216,7 +234,13 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                     try {
                         notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)));
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
+                        boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
+                        if (fixed) {
+                            try {
+                                notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)));
+                            } catch (Exception ignored) {
+                            }
+                        }
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();
@@ -239,7 +263,13 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                     try {
                         tags = clipper.listTags();
                     } catch (Throwable e) {
-                        ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
+                        boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
+                        if (fixed) {
+                            try {
+                                tags = clipper.listTags();
+                            } catch (Exception ignored) {
+                            }
+                        }
                     }
                     setCanceled(monitor.isCanceled());
                     monitor.done();
