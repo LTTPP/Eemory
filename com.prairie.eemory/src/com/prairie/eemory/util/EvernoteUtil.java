@@ -21,7 +21,7 @@ import com.evernote.edam.type.Resource;
 import com.evernote.edam.type.ResourceAttributes;
 import com.evernote.thrift.TException;
 import com.prairie.eemory.Constants;
-import com.prairie.eemory.EEPlugin;
+import com.prairie.eemory.EemoryPlugin;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.exception.OutOfDateException;
 
@@ -40,7 +40,7 @@ public class EvernoteUtil {
 
     private static void checkVersion(final ClientFactory factory) throws TException, OutOfDateException {
         UserStoreClient userStore = factory.createUserStoreClient();
-        boolean versionOk = userStore.checkVersion(EEPlugin.getName(), com.evernote.edam.userstore.Constants.EDAM_VERSION_MAJOR, com.evernote.edam.userstore.Constants.EDAM_VERSION_MINOR);
+        boolean versionOk = userStore.checkVersion(EemoryPlugin.getName(), com.evernote.edam.userstore.Constants.EDAM_VERSION_MAJOR, com.evernote.edam.userstore.Constants.EDAM_VERSION_MINOR);
         if (!versionOk) {
             throw new OutOfDateException(Messages.Plugin_Error_OutOfDate);
         }

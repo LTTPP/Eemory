@@ -7,11 +7,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 import com.prairie.eemory.Constants;
-import com.prairie.eemory.EEPlugin;
+import com.prairie.eemory.EemoryPlugin;
 
 public class LogUtil {
 
-    private static final ILog log = EEPlugin.getDefault().getLog();
+    private static final ILog log = EemoryPlugin.getDefault().getLog();
 
     public static void debug(final String message) {
         String debug = System.getProperty(Constants.PLUGIN_DEBUG_MODE);
@@ -57,38 +57,38 @@ public class LogUtil {
     }
 
     public static IStatus info(final Throwable exception) {
-        return new Status(Status.INFO, EEPlugin.PLUGIN_ID, ExceptionUtils.getRootCauseMessage(exception), exception);
+        return new Status(Status.INFO, EemoryPlugin.PLUGIN_ID, ExceptionUtils.getRootCauseMessage(exception), exception);
     }
 
     public static IStatus warning(final Throwable exception) {
-        return new Status(Status.WARNING, EEPlugin.PLUGIN_ID, ExceptionUtils.getRootCauseMessage(exception), exception);
+        return new Status(Status.WARNING, EemoryPlugin.PLUGIN_ID, ExceptionUtils.getRootCauseMessage(exception), exception);
     }
 
     public static IStatus warning(final String message, final Throwable exception) {
-        return new Status(Status.WARNING, EEPlugin.PLUGIN_ID, message, exception);
+        return new Status(Status.WARNING, EemoryPlugin.PLUGIN_ID, message, exception);
     }
 
     public static IStatus cancel(final Throwable exception) {
-        return new Status(Status.CANCEL, EEPlugin.PLUGIN_ID, ExceptionUtils.getRootCauseMessage(exception), exception);
+        return new Status(Status.CANCEL, EemoryPlugin.PLUGIN_ID, ExceptionUtils.getRootCauseMessage(exception), exception);
     }
 
     public static IStatus error(final Throwable exception) {
-        return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, ExceptionUtils.getRootCauseMessage(exception), exception);
+        return new Status(Status.ERROR, EemoryPlugin.PLUGIN_ID, ExceptionUtils.getRootCauseMessage(exception), exception);
     }
 
     public static IStatus info(final String message) {
-        return new Status(Status.INFO, EEPlugin.PLUGIN_ID, message);
+        return new Status(Status.INFO, EemoryPlugin.PLUGIN_ID, message);
     }
 
     public static IStatus warning(final String message) {
-        return new Status(Status.WARNING, EEPlugin.PLUGIN_ID, message);
+        return new Status(Status.WARNING, EemoryPlugin.PLUGIN_ID, message);
     }
 
     public static IStatus cancel(final String message) {
-        return new Status(Status.CANCEL, EEPlugin.PLUGIN_ID, message);
+        return new Status(Status.CANCEL, EemoryPlugin.PLUGIN_ID, message);
     }
     public static IStatus error(final String message) {
-        return new Status(Status.ERROR, EEPlugin.PLUGIN_ID, message);
+        return new Status(Status.ERROR, EemoryPlugin.PLUGIN_ID, message);
     }
 
     public static IStatus ok() {

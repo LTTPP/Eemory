@@ -11,7 +11,7 @@ import com.evernote.edam.error.EDAMNotFoundException;
 import com.evernote.edam.error.EDAMUserException;
 import com.evernote.thrift.transport.TTransportException;
 import com.prairie.eemory.Constants;
-import com.prairie.eemory.EEPlugin;
+import com.prairie.eemory.EemoryPlugin;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.client.EEClipper;
 import com.prairie.eemory.client.ENNote;
@@ -50,7 +50,7 @@ public class ThrowableHandler {
             });
             return result;
         } else if (e instanceof OutOfDateException) {
-            openError(shell, EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + Messages.Plugin_Runtime_AddFileToEvernote_OutOfDate);
+            openError(shell, EemoryPlugin.getName() + StringUtils.EMPTY + EemoryPlugin.getVersion() + Messages.Plugin_Runtime_AddFileToEvernote_OutOfDate);
         } else if (e instanceof TTransportException) {
             if (clipper != null) {
                 clipper.setInvalid();
@@ -82,7 +82,7 @@ public class ThrowableHandler {
         } else if (e instanceof EDAMUserException) {
             return new EDAMUserExceptionHandler().handleRuntime((EDAMUserException) e, Display.getDefault().getActiveShell());
         } else if (e instanceof OutOfDateException) {
-            return LogUtil.error(EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + Messages.Plugin_Runtime_AddFileToEvernote_OutOfDate);
+            return LogUtil.error(EemoryPlugin.getName() + StringUtils.EMPTY + EemoryPlugin.getVersion() + Messages.Plugin_Runtime_AddFileToEvernote_OutOfDate);
         } else if (e instanceof TTransportException) {
             if (clipper != null) {
                 clipper.setInvalid();
@@ -97,7 +97,7 @@ public class ThrowableHandler {
 
     public static ExecutionException handleExecErr(final Throwable e, final EEClipper clipper) {
         if (e instanceof OutOfDateException) {
-            return new ExecutionException(EEPlugin.getName() + StringUtils.EMPTY + EEPlugin.getVersion() + Messages.Plugin_Runtime_AddFileToEvernote_OutOfDate);
+            return new ExecutionException(EemoryPlugin.getName() + StringUtils.EMPTY + EemoryPlugin.getVersion() + Messages.Plugin_Runtime_AddFileToEvernote_OutOfDate);
         } else if (e instanceof TTransportException) {
             if (clipper != null) {
                 clipper.setInvalid();

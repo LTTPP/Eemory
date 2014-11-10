@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <description name="EAlways Update Site" url="https://github.com/prairie/EAlways">
-      Eclipse Update Site for EAlways Plug-in
+   <description name="Eemory Update Site" url="https://github.com/prairie/Eemory">
+      Eclipse Update Site for Eemory Plug-in
    </description>
    <feature url="features/com.prairie.eemory.feature_1.0.0.201402181129.jar" id="com.prairie.eemory.feature" version="1.0.0.201402181129">
-      <category name="EAlways"/>
+      <category name="Eemory"/>
    </feature>
-   <category-def name="EAlways" label="EAlways"/>
+   <category-def name="Eemory" label="Eemory"/>
 </site>

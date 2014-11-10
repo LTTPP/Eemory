@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: EAlways
+Bundle-Name: Eemory
 Bundle-SymbolicName: com.prairie.eemory; singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: com.prairie.eemory.EEPlugin
+Bundle-Activator: com.prairie.eemory.EemoryPlugin
 Bundle-Vendor: Prairie at Github
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

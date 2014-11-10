@@ -2,11 +2,11 @@ package com.prairie.eemory.util;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 
-import com.prairie.eemory.EEPlugin;
+import com.prairie.eemory.EemoryPlugin;
 
 public class IDialogSettingsUtil {
 
-    private static IDialogSettings settings = EEPlugin.getDefault().getDialogSettings();
+    private static IDialogSettings settings = EemoryPlugin.getDefault().getDialogSettings();
 
     public static String get(final String key) {
         return settings.get(key);

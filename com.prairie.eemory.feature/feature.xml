@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.prairie.eemory.feature"
-      label="EAlways"
+      label="Eemory"
       version="1.0.0.qualifier"
       provider-name="Liu, Jianwei"
       plugin="com.prairie.eemory">
 
-   <description url="https://github.com/prairie/EAlways">
-      The EAlways is the easiest way to save resources
+   <description url="https://github.com/prairie/Eemory">
+      The Eemory is the easiest way to save resources
 in your Eclipse like Java code into your Evernote account.
    </description>
 
@@ -40,7 +40,7 @@ SOFTWARE.
    </license>
 
    <url>
-      <discovery label="EAlways" url="https://github.com/prairie/EAlways"/>
+      <discovery label="Eemory" url="https://github.com/prairie/Eemory"/>
    </url>
 
    <requires>

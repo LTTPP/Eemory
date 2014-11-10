@@ -7,15 +7,15 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class EEPlugin extends AbstractUIPlugin {
+public class EemoryPlugin extends AbstractUIPlugin {
 
     // The plug-in ID
     public static final String PLUGIN_ID = "com.prairie.eemory";
 
     // The shared instance
-    private static EEPlugin plugin;
+    private static EemoryPlugin plugin;
 
-    public EEPlugin() {
+    public EemoryPlugin() {
 
     }
 
@@ -36,7 +36,7 @@ public class EEPlugin extends AbstractUIPlugin {
      *
      * @return the shared instance
      */
-    public static EEPlugin getDefault() {
+    public static EemoryPlugin getDefault() {
         return plugin;
     }
 
@@ -53,7 +53,7 @@ public class EEPlugin extends AbstractUIPlugin {
     }
 
     public static String getVersion() {
-        return EEPlugin.getDefault().getBundle().getVersion().toString();
+        return EemoryPlugin.getDefault().getBundle().getVersion().toString();
         // return
         // ((BundleReference)EEClipperPlugin.class.getClassLoader()).getBundle().getVersion().toString();
         // return
@@ -61,7 +61,7 @@ public class EEPlugin extends AbstractUIPlugin {
     }
 
     public static String getName() {
-        return EEPlugin.getDefault().getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_NAME);
+        return EemoryPlugin.getDefault().getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_NAME);
     }
 
 }
