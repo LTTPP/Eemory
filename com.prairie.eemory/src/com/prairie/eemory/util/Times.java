@@ -1,6 +1,5 @@
 package com.prairie.eemory.util;
 
-
 public class Times {
 
     private int times = 0;
