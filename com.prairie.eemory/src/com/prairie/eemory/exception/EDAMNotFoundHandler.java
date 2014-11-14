@@ -8,8 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 
 import com.evernote.edam.error.EDAMNotFoundException;
-import com.prairie.eemory.client.EEClipper;
-import com.prairie.eemory.client.EEClipperFactory;
+import com.prairie.eemory.client.EeClipper;
+import com.prairie.eemory.client.EeClipperFactory;
 import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.client.impl.ENNoteImpl;
 import com.prairie.eemory.util.ListUtil;
@@ -35,7 +35,7 @@ public class EDAMNotFoundHandler {
     public String findNotebookByName(final String name) {
         String guid = null;
         try {
-            EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(token, false);
+            EeClipper clipper = EeClipperFactory.getInstance().getEEClipper(token, false);
             Map<String, String> map = clipper.listNotebooks();
             guid = map.get(name);
         } catch (Throwable e) {
@@ -48,7 +48,7 @@ public class EDAMNotFoundHandler {
     public ENNote findNoteByName(final String notebookGuid, final String name) {
         ENNote guid = null;
         try {
-            EEClipper clipper = EEClipperFactory.getInstance().getEEClipper(token, false);
+            EeClipper clipper = EeClipperFactory.getInstance().getEEClipper(token, false);
             ENNote args = new ENNoteImpl();
             args.getNotebook().setGuid(notebookGuid);
             args.setName(name);

@@ -30,7 +30,7 @@
     icon="icons/icon_file_16x16.png"/> <image commandId="com.prairie.eemory.commands.ClipSelectionToEvernote"
     icon="icons/icon_selection_16x16.png"/> </extension -->
     <extension point="org.eclipse.ui.handlers">
-        <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.ClipToEvernote" class="com.prairie.eemory.handlers.EEHandler">
+        <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.ClipToEvernote" class="com.prairie.eemory.handlers.EeHandler">
             <enabledWhen>
                 <or>
                     <with variable="selection">
@@ -47,18 +47,18 @@
                 </or>
             </enabledWhen>
         </handler>
-        <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.ClipFileToEvernote" class="com.prairie.eemory.handlers.EEHandler">
+        <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.ClipFileToEvernote" class="com.prairie.eemory.handlers.EeHandler">
         </handler>
-        <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.ClipSelectionToEvernote" class="com.prairie.eemory.handlers.EEHandler">
+        <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.ClipSelectionToEvernote" class="com.prairie.eemory.handlers.EeHandler">
             <enabledWhen>
                 <with variable="selection">
                     <instanceof value="org.eclipse.jface.text.ITextSelection" />
                 </with>
             </enabledWhen>
         </handler>
-        <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.ClipScreenshotToEvernote" class="com.prairie.eemory.handlers.EEHandler">
+        <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.ClipScreenshotToEvernote" class="com.prairie.eemory.handlers.EeHandler">
         </handler>
-        <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.Configurations" class="com.prairie.eemory.handlers.EEHandler">
+        <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.Configurations" class="com.prairie.eemory.handlers.EeHandler">
         </handler>
     </extension>
     <!--extension point="org.eclipse.ui.bindings"> <key commandId="com.prairie.eemory.commands.ClipFileToEvernote"

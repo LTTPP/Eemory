@@ -33,8 +33,8 @@ import org.eclipse.swt.widgets.Text;
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.client.EDAMLimits;
-import com.prairie.eemory.client.EEClipper;
-import com.prairie.eemory.client.EEClipperFactory;
+import com.prairie.eemory.client.EeClipper;
+import com.prairie.eemory.client.EeClipperFactory;
 import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.client.impl.ENNoteImpl;
 import com.prairie.eemory.exception.EDAMNotFoundHandler;
@@ -52,7 +52,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
     private final Shell shell;
 
-    private EEClipper globalClipper;
+    private EeClipper globalClipper;
 
     private Map<String, String> notebooks; // <Name, Guid>
     private Map<String, ENNote> notes; // <Name, Guid>
@@ -79,7 +79,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         notebooks = MapUtil.map();
         notes = MapUtil.map();
         tags = ListUtil.list();
-        globalClipper = EEClipperFactory.getInstance().getEEClipper();
+        globalClipper = EeClipperFactory.getInstance().getEEClipper();
         buildHintPropMap();
     }
 
@@ -263,12 +263,12 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask(Messages.Plugin_Configs_Authenticating, 1);
                     try {
-                        globalClipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                        globalClipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                     } catch (Throwable e) {
                         boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
                         if (fixed) {
                             try {
-                                globalClipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                                globalClipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                             } catch (Exception ignored) {
                             }
                         }

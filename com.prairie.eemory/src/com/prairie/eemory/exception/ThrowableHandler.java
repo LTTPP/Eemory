@@ -13,7 +13,7 @@ import com.evernote.thrift.transport.TTransportException;
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.EemoryPlugin;
 import com.prairie.eemory.Messages;
-import com.prairie.eemory.client.EEClipper;
+import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.util.EclipseUtil;
 import com.prairie.eemory.util.EncryptionUtil;
@@ -34,13 +34,13 @@ public class ThrowableHandler {
         return handleDesignTimeErr(shell, e, fatal, null);
     }
 
-    public static boolean handleDesignTimeErr(final Shell shell, final Throwable e, final EEClipper clipper) {
+    public static boolean handleDesignTimeErr(final Shell shell, final Throwable e, final EeClipper clipper) {
         return handleDesignTimeErr(shell, e, false, clipper);
     }
 
     private static boolean result;
 
-    public static boolean handleDesignTimeErr(final Shell shell, final Throwable e, final boolean fatal, final EEClipper clipper) {
+    public static boolean handleDesignTimeErr(final Shell shell, final Throwable e, final boolean fatal, final EeClipper clipper) {
         if (e instanceof EDAMUserException) {
             Display.getDefault().syncExec(new Runnable() {
                 @Override
@@ -70,11 +70,11 @@ public class ThrowableHandler {
         return handleJobErr(e, null, args);
     }
 
-    public static IStatus handleJobErr(final Throwable e, final EEClipper clipper) {
+    public static IStatus handleJobErr(final Throwable e, final EeClipper clipper) {
         return handleJobErr(e, clipper, null);
     }
 
-    public static IStatus handleJobErr(final Throwable e, final EEClipper clipper, final ENNote args) {
+    public static IStatus handleJobErr(final Throwable e, final EeClipper clipper, final ENNote args) {
         if (e instanceof EDAMNotFoundException) {
             if (args != null) {
                 return new EDAMNotFoundHandler(EncryptionUtil.decrypt(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN))).fixNotFoundException((EDAMNotFoundException) e, args);
@@ -95,7 +95,7 @@ public class ThrowableHandler {
         return handleExecErr(e, null);
     }
 
-    public static ExecutionException handleExecErr(final Throwable e, final EEClipper clipper) {
+    public static ExecutionException handleExecErr(final Throwable e, final EeClipper clipper) {
         if (e instanceof OutOfDateException) {
             return new ExecutionException(EemoryPlugin.getName() + StringUtils.EMPTY + EemoryPlugin.getVersion() + Messages.Plugin_Runtime_AddFileToEvernote_OutOfDate);
         } else if (e instanceof TTransportException) {

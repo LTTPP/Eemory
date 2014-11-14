@@ -3,7 +3,7 @@ package com.prairie.eemory.client;
 import java.util.List;
 import java.util.Map;
 
-public abstract class EEClipper {
+public abstract class EeClipper {
 
     private boolean valid = true;
 

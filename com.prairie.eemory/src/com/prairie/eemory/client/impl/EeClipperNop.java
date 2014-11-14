@@ -3,12 +3,12 @@ package com.prairie.eemory.client.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.prairie.eemory.client.EEClipper;
+import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.util.ListUtil;
 import com.prairie.eemory.util.MapUtil;
 
-public class EEClipperNop extends EEClipper {
+public class EeClipperNop extends EeClipper {
 
     @Override
     public void clipFile(final ENNote args) {

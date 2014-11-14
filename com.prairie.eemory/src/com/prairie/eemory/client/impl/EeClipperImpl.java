@@ -24,7 +24,7 @@ import com.evernote.edam.type.Tag;
 import com.evernote.thrift.TException;
 import com.evernote.thrift.transport.TTransportException;
 import com.prairie.eemory.Constants;
-import com.prairie.eemory.client.EEClipper;
+import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.exception.OutOfDateException;
 import com.prairie.eemory.util.ConstantsUtil;
@@ -35,7 +35,7 @@ import com.prairie.eemory.util.MapStringizer;
 import com.prairie.eemory.util.MapUtil;
 import com.prairie.eemory.util.StringUtil;
 
-public class EEClipperImpl extends EEClipper {
+public class EeClipperImpl extends EeClipper {
 
     private final NoteStoreClient noteStoreClient;
 
@@ -53,7 +53,7 @@ public class EEClipperImpl extends EEClipper {
      * @throws EDAMSystemException
      *             Please refer to Evernote SDK
      */
-    public EEClipperImpl(final String token) throws TException, OutOfDateException, EDAMUserException, EDAMSystemException {
+    public EeClipperImpl(final String token) throws TException, OutOfDateException, EDAMUserException, EDAMSystemException {
         noteStoreClient = EvernoteUtil.getNoteStoreClient(token);
     }
 

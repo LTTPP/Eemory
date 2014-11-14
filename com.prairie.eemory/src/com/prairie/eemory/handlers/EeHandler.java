@@ -26,8 +26,8 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
-import com.prairie.eemory.client.EEClipper;
-import com.prairie.eemory.client.EEClipperFactory;
+import com.prairie.eemory.client.EeClipper;
+import com.prairie.eemory.client.EeClipperFactory;
 import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.client.impl.ENNoteImpl;
 import com.prairie.eemory.exception.ThrowableHandler;
@@ -44,7 +44,7 @@ import com.prairie.eemory.util.IDialogSettingsUtil;
 import com.prairie.eemory.util.ListUtil;
 import com.prairie.eemory.util.LogUtil;
 
-public class EEHandler extends AbstractHandler implements Constants {
+public class EeHandler extends AbstractHandler implements Constants {
 
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
@@ -119,9 +119,9 @@ public class EEHandler extends AbstractHandler implements Constants {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
                     monitor.beginTask(Messages.Plugin_Runtime_AddFileToEvernote, 2);
-                    EEClipper clipper = null;
+                    EeClipper clipper = null;
                     try {
-                        clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                        clipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                         monitor.worked(1);
 
                         if (monitor.isCanceled()) {
@@ -133,7 +133,7 @@ public class EEHandler extends AbstractHandler implements Constants {
                         IStatus status = ThrowableHandler.handleJobErr(e, clipper, args);
                         if (status == LogUtil.ok()) {
                             try {
-                                clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                                clipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                                 clipper.clipFile(args);
                             } catch (Throwable t) {
                                 return ThrowableHandler.handleJobErr(t, clipper);
@@ -176,9 +176,9 @@ public class EEHandler extends AbstractHandler implements Constants {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
                     monitor.beginTask(Messages.Plugin_Runtime_AddSelectionToEvernote, 2);
-                    EEClipper clipper = null;
+                    EeClipper clipper = null;
                     try {
-                        clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                        clipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                         monitor.worked(1);
 
                         if (monitor.isCanceled()) {
@@ -190,7 +190,7 @@ public class EEHandler extends AbstractHandler implements Constants {
                         IStatus status = ThrowableHandler.handleJobErr(e, clipper, args);
                         if (status == LogUtil.ok()) {
                             try {
-                                clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                                clipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                                 clipper.clipSelection(args);
                             } catch (Throwable t) {
                                 return ThrowableHandler.handleJobErr(t, clipper);
@@ -239,12 +239,12 @@ public class EEHandler extends AbstractHandler implements Constants {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
                     monitor.beginTask(Messages.Plugin_Runtime_AddFileToEvernote, 3);
-                    EEClipper clipper = null;
+                    EeClipper clipper = null;
                     try {
                         ImageIO.write(screenshot, ConstantsUtil.IMG_PNG, file);
                         monitor.worked(1);
 
-                        clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                        clipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                         monitor.worked(2);
 
                         if (monitor.isCanceled()) {
@@ -256,7 +256,7 @@ public class EEHandler extends AbstractHandler implements Constants {
                         IStatus status = ThrowableHandler.handleJobErr(e, clipper, args);
                         if (status == LogUtil.ok()) {
                             try {
-                                clipper = EEClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                                clipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                                 clipper.clipFile(args);
                             } catch (Throwable t) {
                                 return ThrowableHandler.handleJobErr(t, clipper);
