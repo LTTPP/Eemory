@@ -3,12 +3,13 @@
       id="com.prairie.eemory.feature"
       label="Eemory"
       version="1.0.0.qualifier"
-      provider-name="Liu, Jianwei"
+      provider-name="Jianwei Liu"
       plugin="com.prairie.eemory">
 
-   <description url="https://github.com/prairie/Eemory">
-      The Eemory is the easiest way to save resources
-in your Eclipse like Java code into your Evernote account.
+   <description>
+      Eemory is an Eclipse Plug-in aimed at integrating Evernote within
+      the Eclipse IDE, which bring the benefits offered by cloud storage
+      into Eclipse IDE.
    </description>
 
    <copyright>
@@ -16,7 +17,7 @@ in your Eclipse like Java code into your Evernote account.
    </copyright>
 
    <license url="http://opensource.org/licenses/MIT">
-The MIT License (MIT)
+      The MIT License (MIT)
 
 Copyright (c) 2014
 
@@ -40,6 +41,7 @@ SOFTWARE.
    </license>
 
    <url>
+      <update label="Eemory Update Site" url="http://dl.bintray.com/prairie/eemory-update-site"/>
       <discovery label="Eemory" url="https://github.com/prairie/Eemory"/>
    </url>
 
@@ -47,6 +49,10 @@ SOFTWARE.
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.core.expressions"/>
+      <import plugin="org.eclipse.jdt.core"/>
    </requires>
 
    <plugin
