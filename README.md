@@ -1,6 +1,6 @@
-# Eemory
+# ![Eemory](com.prairie.eemory/icons/plugin_logo_174x54.png)
 
-Eemory is an Eclipse Plug-in aimed at integrating Evernote within the Eclipse IDE.
+Eemory is an Eclipse plug-in aimed at integrating Evernote within the Eclipse IDE.
 
 I love Evernote, but every time I want to save something to Evernote, I have to switch between Eclipse IDE and Evernote client, copy sometihng and paste, then go back to Eclipse and continue on my work. This is heavy and boring, so Eemory was born, which bring the benefits offered by Evernote into Eclipse. No need to open Evernote client anymore to add a note, just select something and one-click to save to Evernote elegantly. And you will find you are still in Eclipse.
 
