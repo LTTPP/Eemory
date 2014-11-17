@@ -2,9 +2,9 @@
 
 Eemory is an Eclipse Plug-in aimed at integrating Evernote within the Eclipse IDE.
 
-I love Evernote, but every time I must switch between Eclipse IDE and Evernote client, copy sometihng and paste, then go back to Eclipse and continue on my work. This is heavy and boring, so Eemory was born, which bring the benefits offered by Evernote into Eclipse. No need to open Evernote client anymore to add a note, just select something and one-click to save to Evernote elegantly. And you will find you are still in Eclipse.
+I love Evernote, but every time I want to save something to Evernote, I have to switch between Eclipse IDE and Evernote client, copy sometihng and paste, then go back to Eclipse and continue on my work. This is heavy and boring, so Eemory was born, which bring the benefits offered by Evernote into Eclipse. No need to open Evernote client anymore to add a note, just select something and one-click to save to Evernote elegantly. And you will find you are still in Eclipse.
 
-Visit [Eemory]() Home.  
+Visit [Eemory Home](http://prairie.github.io/Eemory).  
 Visit [Eemory](http://marketplace.eclipse.org/content/eemory) at Eclipse Marketplace.
 
 ## Features
@@ -12,10 +12,10 @@ Visit [Eemory](http://marketplace.eclipse.org/content/eemory) at Eclipse Marketp
 + Adding code snippet, source file, screenshot and more to a new note on Evernote.
 + Appending code snippet, source file, screenshot and more to an existing note on Evernote.
 + Adding/Appending multiple files once.
-+ Notebook, Note and Tag can be specified(no need to remember their names, we have auto-suggestion).
-+ Also can specify comment for each clip.
++ Notebook, Note and Tag can be specified(no need to remember their names, we have auto-suggestion) beforehand or in runtime.
++ Also can add a comment for each clip.
 + Syntax highlighting for any language on Evernote just like what you see in Eclipse.
-+ One-click OAuth as easy to use as what an web application can do.
++ Authentication is delegated to Eemory using the OAuth protocol. One-click OAuth authentication as easy to use as a web application did.
 
 ## Limits
 
@@ -27,13 +27,13 @@ Visit [Eemory](http://marketplace.eclipse.org/content/eemory) at Eclipse Marketp
 
 ## Installation
 
-Pre-built package is ready to install. Require Eclipse Ganymede(3.4) and higher, Java 1.6 and higher.
+Pre-built package is ready to install and requires a minimum of JDK 1.6.
 
-+ Install from Eclipse Marketplace(recommended).
++ Install from Eclipse Marketplace in Eclipse(recommended).
 + Install from update site URL: `http://dl.bintray.com/prairie/eemory-update-site`.
-+ Install from [archive update site](https://github.com/prairie/Eemory/releases) locally.
++ Install from [archived update site](https://github.com/prairie/Eemory/releases) locally.
 
-New to Eclipse plug-in? Please check out this [wiki](https://github.com/prairie/Eemory/wiki).
+New to Eclipse plug-in? Please check out this [Wiki](https://github.com/prairie/Eemory/wiki) for more information, or go to [Eclipse Marketplace](http://dl.bintray.com/prairie/eemory-update-site) website.
 
 ## Contributing
 
@@ -56,7 +56,7 @@ Need more information? Please check out this [wiki](https://github.com/prairie/E
 + YXBJ support.
 + Revoke authorization from plug-in side.
 
-## Authors
+## Authors and Contributors
 
 + Jianwei Liu
 

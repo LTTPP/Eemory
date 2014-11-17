@@ -42,7 +42,7 @@ SOFTWARE.
 
    <url>
       <update label="Eemory Update Site" url="http://dl.bintray.com/prairie/eemory-update-site"/>
-      <discovery label="Eemory" url="https://github.com/prairie/Eemory"/>
+      <discovery label="Eemory Home" url="http://prairie.github.io/Eemory"/>
    </url>
 
    <requires>
