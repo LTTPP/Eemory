@@ -1,4 +1,4 @@
-# ![Eemory](com.prairie.eemory/icons/plugin_logo_174x54.png)
+# ![Eemory](com.prairie.eemory/icons/plugin_172x56.png)
 
 Eemory is an Eclipse plug-in aimed at integrating Evernote within the Eclipse IDE.
 
@@ -33,7 +33,7 @@ Pre-built package is ready to install and requires a minimum of JDK 1.6.
 + Install from update site URL: `http://dl.bintray.com/prairie/eemory-update-site`.
 + Install from [archived update site](https://github.com/prairie/Eemory/releases) locally.
 
-New to Eclipse plug-in? Please check out this [Wiki](https://github.com/prairie/Eemory/wiki) for more information, or go to [Eclipse Marketplace](http://dl.bintray.com/prairie/eemory-update-site) website.
+New to Eclipse plug-in? Please check out this [Wiki](https://github.com/prairie/Eemory/wiki) for complete instructions, or go to [Eclipse Marketplace](http://dl.bintray.com/prairie/eemory-update-site) website for more information.
 
 ## Contributing
 
