@@ -23,7 +23,7 @@ Visit [Eemory](http://marketplace.eclipse.org/content/eemory) at Eclipse Marketp
 
 ## Screenshots
 
-![screenshot](com.prairie.eemory/doc/eclipse-screenshot.png)
+![screenshot](com.prairie.eemory/res/plugin-screenshot.png)
 
 ## Installation
 
