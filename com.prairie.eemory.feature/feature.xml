@@ -3,7 +3,7 @@
       id="com.prairie.eemory.feature"
       label="Eemory"
       version="1.0.0.qualifier"
-      provider-name="Jianwei Liu"
+      provider-name="prairie"
       plugin="com.prairie.eemory">
 
    <description>
