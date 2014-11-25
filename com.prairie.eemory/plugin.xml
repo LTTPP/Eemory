@@ -74,7 +74,7 @@
                     id="com.prairie.eemory.toolbars.ClipToEvernoteToolbar">
                 <command style="pulldown"
                         commandId="com.prairie.eemory.commands.ClipToEvernote"
-                        icon="icons/icon_evernote_16x16.png" tooltip="Clip to Evernote"
+                        icon="icons/icon_evernote_16x16.png" tooltip="%ClipToEvernote"
                         id="com.prairie.eemory.toolbars.ClipToEvernoteCommand">
                     <parameter name="com.prairie.eemory.command.parameter"
                             value="Clip to Evernote">
@@ -85,19 +85,19 @@
         <menuContribution
                 locationURI="menu:com.prairie.eemory.toolbars.ClipToEvernoteCommand">
             <!--menu label="Sample Menu" mnemonic="M" id="com.prairie.eemory.menus.sampleMenu" -->
-            <command label="Clip Selection to Evernote" icon="icons/icon_selection_16x16.png"
+            <command label="%ClipSelectionToEvernote" icon="icons/icon_selection_16x16.png"
                     commandId="com.prairie.eemory.commands.ClipSelectionToEvernote">
                 <parameter name="com.prairie.eemory.command.parameter"
                         value="Clip Selection to Evernote">
                 </parameter>
             </command>
-            <command label="Clip File to Evernote" icon="icons/icon_file_16x16.png"
+            <command label="%ClipFileToEvernote" icon="icons/icon_file_16x16.png"
                     commandId="com.prairie.eemory.commands.ClipFileToEvernote">
                 <parameter name="com.prairie.eemory.command.parameter"
                         value="Clip File to Evernote">
                 </parameter>
             </command>
-            <command label="Clip Screenshot to Evernote" icon="icons/icon_screenshot_16x16.png"
+            <command label="%ClipScreenshotToEvernote" icon="icons/icon_screenshot_16x16.png"
                     commandId="com.prairie.eemory.commands.ClipScreenshotToEvernote">
                 <parameter name="com.prairie.eemory.command.parameter"
                         value="Clip Screenshot to Evernote">
@@ -105,7 +105,7 @@
             </command>
             <separator name="separatorLine" visible="true">
             </separator>
-            <command label="Clip Configurations..."
+            <command label="%ClipConfigs"
                     commandId="com.prairie.eemory.commands.Configurations">
                 <parameter name="com.prairie.eemory.command.parameter"
                         value="Clip Configurations...">
@@ -115,21 +115,21 @@
         </menuContribution>
 
         <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-            <menu label="Clip to Evernote" icon="icons/icon_evernote_16x16.png"
+            <menu label="%ClipToEvernote" icon="icons/icon_evernote_16x16.png"
                     id="com.prairie.eemory.popupMenu">
-                <command label="Clip Selection to Evernote" icon="icons/icon_selection_16x16.png"
+                <command label="%ClipSelectionToEvernote" icon="icons/icon_selection_16x16.png"
                         commandId="com.prairie.eemory.commands.ClipSelectionToEvernote">
                     <parameter name="com.prairie.eemory.command.parameter"
                             value="Clip Selection to Evernote">
                     </parameter>
                 </command>
-                <command label="Clip File to Evernote" icon="icons/icon_file_16x16.png"
+                <command label="%ClipFileToEvernote" icon="icons/icon_file_16x16.png"
                         commandId="com.prairie.eemory.commands.ClipFileToEvernote">
                     <parameter name="com.prairie.eemory.command.parameter"
                             value="Clip File to Evernote">
                     </parameter>
                 </command>
-                <command label="Clip Screenshot to Evernote" icon="icons/icon_screenshot_16x16.png"
+                <command label="%ClipScreenshotToEvernote" icon="icons/icon_screenshot_16x16.png"
                         commandId="com.prairie.eemory.commands.ClipScreenshotToEvernote">
                     <parameter name="com.prairie.eemory.command.parameter"
                             value="Clip Screenshot to Evernote">
@@ -137,7 +137,7 @@
                 </command>
                 <separator name="separatorLine" visible="true">
                 </separator>
-                <command label="Clip Configurations..."
+                <command label="%ClipConfigs"
                         commandId="com.prairie.eemory.commands.Configurations">
                     <parameter name="com.prairie.eemory.command.parameter"
                             value="Clip Configurations...">
