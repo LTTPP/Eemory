@@ -4,7 +4,7 @@ Bundle-Name: Eemory
 Bundle-SymbolicName: com.prairie.eemory; singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.prairie.eemory.EemoryPlugin
-Bundle-Vendor: Prairie at Github
+Bundle-Vendor: prairie
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
