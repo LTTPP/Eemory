@@ -43,7 +43,7 @@ We are always thrilled to receive pull requests, and do our best to process them
 
 The only principle when you working on this we need to remember is simple and intuitive.
 
-Need more information? Please check out this [wiki](https://github.com/prairie/Eemory/wiki/Contributing).
+Need more information? Please check out this [Wiki](https://github.com/prairie/Eemory/wiki/Contributing).
 
 ## Todo
 
