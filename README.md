@@ -33,7 +33,7 @@ Pre-built package is ready to install and requires a minimum of JDK 1.6.
 + Install from update site URL: `http://dl.bintray.com/prairie/eemory-update-site`.
 + Install from [archived update site](https://github.com/prairie/Eemory/releases) locally.
 
-New to Eclipse plug-in? Please check out this [Wiki](https://github.com/prairie/Eemory/wiki) for complete instructions, or go to [Eclipse Marketplace](http://dl.bintray.com/prairie/eemory-update-site) website for more information.
+New to Eclipse plug-in? Please check out this [Wiki](https://github.com/prairie/Eemory/wiki/Installation-instructions) for complete instructions, or go to [Eclipse Marketplace](http://marketplace.eclipse.org/content/eemory) website for more information.
 
 ## Contributing
 
@@ -43,7 +43,7 @@ We are always thrilled to receive pull requests, and do our best to process them
 
 The only principle when you working on this we need to remember is simple and intuitive.
 
-Need more information? Please check out this [wiki](https://github.com/prairie/Eemory/wiki).
+Need more information? Please check out this [wiki](https://github.com/prairie/Eemory/wiki/Contributing).
 
 ## Todo
 
