@@ -2,10 +2,10 @@
 
 Eemory is an Eclipse plug-in aimed at integrating Evernote within the Eclipse IDE.
 
-I love Evernote, but every time I want to save something to Evernote, I have to switch between Eclipse IDE and Evernote client, copy sometihng and paste, then go back to Eclipse and continue on my work. This is heavy and boring, so Eemory was born, which bring the benefits offered by Evernote into Eclipse. No need to open Evernote client anymore to add a note, just select something and one-click to save to Evernote elegantly. And you will find you are still in Eclipse.
+I love Evernote, but every time I want to save something to Evernote, I have to switch between Eclipse IDE and Evernote client, copy sometihng and paste, then go back to Eclipse and continue on my work. This is heavy and boring, so Eemory was born, which bring the benefits offered by Evernote into Eclipse. No need to open Evernote client anymore to add a note, just select something and one-click to save to Evernote right in Eclipse elegantly.
 
 Visit [Eemory Home](http://prairie.github.io/Eemory).  
-Visit [Eemory](http://marketplace.eclipse.org/content/eemory) at Eclipse Marketplace.
+Visit [Eemory](http://marketplace.eclipse.org/content/eemory) on Eclipse Marketplace.
 
 ## Features
 
@@ -29,7 +29,7 @@ Visit [Eemory](http://marketplace.eclipse.org/content/eemory) at Eclipse Marketp
 
 Pre-built package is ready to install and requires a minimum of JDK 1.6.
 
-+ Install from Eclipse Marketplace in Eclipse(recommended).
++ Install from Eclipse Marketplace within Eclipse(recommended).
 + Install from update site URL: `http://dl.bintray.com/prairie/eemory-update-site`.
 + Install from [archived update site](https://github.com/prairie/Eemory/releases) locally.
 
@@ -55,6 +55,7 @@ Need more information? Please check out this [wiki](https://github.com/prairie/E
 + Caching user data that was sent to Evernote when the error occurred so it can be sent again after troubleshooted.
 + YXBJ support.
 + Revoke authorization from plug-in side.
++ Chinese language support.
 
 ## Authors and Contributors
 
