@@ -10,8 +10,8 @@ Visit [Eemory](http://marketplace.eclipse.org/content/eemory) on Eclipse Marketp
 ## Features
 
 + Adding code snippet, source file, screenshot and more to a new note on Evernote.
-+ Appending code snippet, source file, screenshot and more to an existing note on Evernote.
-+ Adding/Appending multiple files once.
++ Prepending code snippet, source file, screenshot and more to an existing note on Evernote.
++ Adding/Prepending multiple files once.
 + Notebook, Note and Tag can be specified(no need to remember their names, we have auto-suggestion) beforehand or in runtime.
 + Also can add a comment for each clip.
 + Syntax highlighting for any language on Evernote just like what you see in Eclipse.
@@ -49,7 +49,7 @@ Need more information? Please check out this [Wiki](https://github.com/prairie/E
 
 + Add preference page with preference configurations:
  - Customize title of clipped note. User can specify the format of clipped note title using Regex or something else.
- - Append or insert to head when updating note.
+ - Appending or prepending for updating note case.
  - To one note or separate notes when clipping multiple files once.
 + Clip video support. Allow user to record a video and add to Evernote.
 + Caching user data that was sent to Evernote when the error occurred so it can be sent again after troubleshooted.
