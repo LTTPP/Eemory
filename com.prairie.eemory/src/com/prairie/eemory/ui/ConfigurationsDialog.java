@@ -33,9 +33,9 @@ import org.eclipse.swt.widgets.Text;
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.client.EDAMLimits;
+import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.EeClipperFactory;
-import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.client.impl.ENNoteImpl;
 import com.prairie.eemory.exception.EDAMNotFoundHandler;
 import com.prairie.eemory.exception.ThrowableHandler;
@@ -265,7 +265,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
                     try {
                         globalClipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                     } catch (Throwable e) {
-                        boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
+                        boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, true, globalClipper);
                         if (fixed) {
                             try {
                                 globalClipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
