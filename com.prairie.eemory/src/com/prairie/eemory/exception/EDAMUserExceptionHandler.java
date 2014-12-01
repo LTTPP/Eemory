@@ -30,7 +30,9 @@ public class EDAMUserExceptionHandler {
             } catch (ExecutionException e1) {
                 return LogUtil.error(e1);
             }
-            return LogUtil.ok();
+            if (StringUtils.isNotBlank(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN))) {
+                return LogUtil.ok();
+            }
         }
         return LogUtil.error(e);
     }
@@ -42,11 +44,13 @@ public class EDAMUserExceptionHandler {
             } catch (ExecutionException e1) {
                 EclipseUtil.openErrorSyncly(shell, Messages.Plugin_Error_Occurred, e.toString());
             }
-            return true;
+            if (StringUtils.isNotBlank(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN))) {
+                return true;
+            }
         } else {
             EclipseUtil.openErrorSyncly(shell, Messages.Plugin_Error_Occurred, e.toString());
-            return false;
         }
+        return false;
     }
 
     private void oauth(final Shell shell) throws ExecutionException {
