@@ -1,6 +1,7 @@
 package com.prairie.eemory.exception;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -58,7 +59,9 @@ public class EDAMUserExceptionHandler {
                         monitor.beginTask(Messages.Plugin_OAuth_Waiting, IProgressMonitor.UNKNOWN);
                         try {
                             String token = new OAuth().auth();
-                            IDialogSettingsUtil.set(Constants.PLUGIN_SETTINGS_KEY_TOKEN, EncryptionUtil.encrypt(token));
+                            if (StringUtils.isNotBlank(token)) {
+                                IDialogSettingsUtil.set(Constants.PLUGIN_SETTINGS_KEY_TOKEN, EncryptionUtil.encrypt(token));
+                            }
                         } catch (Throwable e) {
                             ThrowableHandler.handleDesignTimeErr(shell, e);
                         }

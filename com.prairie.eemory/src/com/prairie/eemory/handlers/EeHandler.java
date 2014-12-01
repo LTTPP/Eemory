@@ -26,9 +26,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
+import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.EeClipperFactory;
-import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.client.impl.ENNoteImpl;
 import com.prairie.eemory.exception.ThrowableHandler;
 import com.prairie.eemory.oauth.OAuth;
@@ -86,7 +86,9 @@ public class EeHandler extends AbstractHandler implements Constants {
                         monitor.beginTask(Messages.Plugin_OAuth_Waiting, IProgressMonitor.UNKNOWN);
                         try {
                             String token = new OAuth().auth();
-                            IDialogSettingsUtil.set(PLUGIN_SETTINGS_KEY_TOKEN, EncryptionUtil.encrypt(token));
+                            if (StringUtils.isNotBlank(token)) {
+                                IDialogSettingsUtil.set(PLUGIN_SETTINGS_KEY_TOKEN, EncryptionUtil.encrypt(token));
+                            }
                         } catch (Throwable e) {
                             ThrowableHandler.handleDesignTimeErr(shell, e);
                         }
