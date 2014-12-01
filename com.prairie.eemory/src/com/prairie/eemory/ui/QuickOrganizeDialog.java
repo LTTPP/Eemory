@@ -29,9 +29,9 @@ import org.eclipse.swt.widgets.Text;
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.client.EDAMLimits;
+import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.EeClipperFactory;
-import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.client.impl.ENNoteImpl;
 import com.prairie.eemory.exception.ThrowableHandler;
 import com.prairie.eemory.util.ConstantsUtil;
@@ -70,7 +70,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
         notebooks = MapUtil.map();
         notes = MapUtil.map();
         tags = ListUtil.list();
-        clipper = EeClipperFactory.getInstance().getEEClipper();
+        clipper = EeClipperFactory.getInstance().getEeClipper();
     }
 
     @Override
@@ -174,12 +174,12 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask(Messages.Plugin_Configs_Authenticating, 1);
                     try {
-                        clipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                        clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                     } catch (Throwable e) {
                         boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, true, clipper);
                         if (fixed) {
                             try {
-                                clipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                                clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                             } catch (Exception ignored) {
                             }
                         }

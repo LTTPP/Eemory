@@ -123,7 +123,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                     monitor.beginTask(Messages.Plugin_Runtime_AddFileToEvernote, 2);
                     EeClipper clipper = null;
                     try {
-                        clipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                        clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                         monitor.worked(1);
 
                         if (monitor.isCanceled()) {
@@ -135,7 +135,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                         IStatus status = ThrowableHandler.handleJobErr(e, clipper, args);
                         if (status == LogUtil.ok()) {
                             try {
-                                clipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                                clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                                 clipper.clipFile(args);
                             } catch (Throwable t) {
                                 return ThrowableHandler.handleJobErr(t, clipper);
@@ -180,7 +180,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                     monitor.beginTask(Messages.Plugin_Runtime_AddSelectionToEvernote, 2);
                     EeClipper clipper = null;
                     try {
-                        clipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                        clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                         monitor.worked(1);
 
                         if (monitor.isCanceled()) {
@@ -192,7 +192,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                         IStatus status = ThrowableHandler.handleJobErr(e, clipper, args);
                         if (status == LogUtil.ok()) {
                             try {
-                                clipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                                clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                                 clipper.clipSelection(args);
                             } catch (Throwable t) {
                                 return ThrowableHandler.handleJobErr(t, clipper);
@@ -246,7 +246,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                         ImageIO.write(screenshot, ConstantsUtil.IMG_PNG, file);
                         monitor.worked(1);
 
-                        clipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                        clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                         monitor.worked(2);
 
                         if (monitor.isCanceled()) {
@@ -258,7 +258,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                         IStatus status = ThrowableHandler.handleJobErr(e, clipper, args);
                         if (status == LogUtil.ok()) {
                             try {
-                                clipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                                clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                                 clipper.clipFile(args);
                             } catch (Throwable t) {
                                 return ThrowableHandler.handleJobErr(t, clipper);

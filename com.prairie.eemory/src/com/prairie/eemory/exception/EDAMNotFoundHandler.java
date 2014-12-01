@@ -35,7 +35,7 @@ public class EDAMNotFoundHandler {
     public String findNotebookByName(final String name) {
         String guid = null;
         try {
-            EeClipper clipper = EeClipperFactory.getInstance().getEEClipper(token, false);
+            EeClipper clipper = EeClipperFactory.getInstance().getEeClipper(token, false);
             Map<String, String> map = clipper.listNotebooks();
             guid = map.get(name);
         } catch (Throwable e) {
@@ -48,7 +48,7 @@ public class EDAMNotFoundHandler {
     public ENNote findNoteByName(final String notebookGuid, final String name) {
         ENNote guid = null;
         try {
-            EeClipper clipper = EeClipperFactory.getInstance().getEEClipper(token, false);
+            EeClipper clipper = EeClipperFactory.getInstance().getEeClipper(token, false);
             ENNote args = new ENNoteImpl();
             args.getNotebook().setGuid(notebookGuid);
             args.setName(name);

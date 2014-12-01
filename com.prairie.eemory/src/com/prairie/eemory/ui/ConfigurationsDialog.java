@@ -79,7 +79,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         notebooks = MapUtil.map();
         notes = MapUtil.map();
         tags = ListUtil.list();
-        globalClipper = EeClipperFactory.getInstance().getEEClipper();
+        globalClipper = EeClipperFactory.getInstance().getEeClipper();
         buildHintPropMap();
     }
 
@@ -263,12 +263,12 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask(Messages.Plugin_Configs_Authenticating, 1);
                     try {
-                        globalClipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                        globalClipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                     } catch (Throwable e) {
                         boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, true, globalClipper);
                         if (fixed) {
                             try {
-                                globalClipper = EeClipperFactory.getInstance().getEEClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
+                                globalClipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                             } catch (Exception ignored) {
                             }
                         }

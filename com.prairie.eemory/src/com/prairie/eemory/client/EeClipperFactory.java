@@ -20,9 +20,9 @@ public class EeClipperFactory {
 
     private static EeClipperFactory instance;
 
-    private EeClipper nopEEClipper;
+    private EeClipper nopEeClipper;
 
-    private final Map<String, EeClipper> realEEClipperMap = MapUtil.map();
+    private final Map<String, EeClipper> realEeClipperMap = MapUtil.map();
 
     private EeClipperFactory() {
 
@@ -59,32 +59,32 @@ public class EeClipperFactory {
      * @throws OutOfDateException
      *             This plug-in is out of date
      */
-    public EeClipper getEEClipper(final String token) throws TException, EDAMUserException, EDAMSystemException, OutOfDateException {
+    public EeClipper getEeClipper(final String token) throws TException, EDAMUserException, EDAMSystemException, OutOfDateException {
         if (StringUtils.isBlank(token)) {
-            return this.getEEClipper();
+            return this.getEeClipper();
         } else {
             EeClipper clipper = new EeClipperImpl(token);
-            realEEClipperMap.put(token, clipper);
+            realEeClipperMap.put(token, clipper);
             return clipper;
         }
     }
 
-    public EeClipper getEEClipper(final String token, final boolean newInstance) throws TException, EDAMUserException, EDAMSystemException, OutOfDateException {
+    public EeClipper getEeClipper(final String token, final boolean newInstance) throws TException, EDAMUserException, EDAMSystemException, OutOfDateException {
         if (newInstance) {
-            return this.getEEClipper(token);
+            return this.getEeClipper(token);
         } else {
-            if (realEEClipperMap.get(token) == null) {
-                synchronized (realEEClipperMap) {
-                    if (realEEClipperMap.get(token) == null) {
-                        return this.getEEClipper(token);
+            if (realEeClipperMap.get(token) == null) {
+                synchronized (realEeClipperMap) {
+                    if (realEeClipperMap.get(token) == null) {
+                        return this.getEeClipper(token);
                     }
                 }
             }
-            EeClipper clipper = realEEClipperMap.get(token);
+            EeClipper clipper = realEeClipperMap.get(token);
             if (!clipper.isValid()) {
-                synchronized (realEEClipperMap) {
+                synchronized (realEeClipperMap) {
                     if (!clipper.isValid()) {
-                        clipper = getEEClipper(token);
+                        clipper = getEeClipper(token);
                     }
                 }
             }
@@ -101,8 +101,8 @@ public class EeClipperFactory {
      * @return existing or new created no-operation <code>EECliper</code>
      *         instance
      */
-    public EeClipper getEEClipper() {
-        return getEEClipperNop();
+    public EeClipper getEeClipper() {
+        return getEeClipperNop();
     }
 
     /**
@@ -111,15 +111,15 @@ public class EeClipperFactory {
      * @return existing or new created no-operation <code>EECliper</code>
      *         instance
      */
-    public EeClipper getEEClipperNop() {
-        if (nopEEClipper == null) {
+    public EeClipper getEeClipperNop() {
+        if (nopEeClipper == null) {
             synchronized (this) {
-                if (nopEEClipper == null) {
-                    nopEEClipper = new EeClipperNop();
+                if (nopEeClipper == null) {
+                    nopEeClipper = new EeClipperNop();
                 }
             }
         }
-        return nopEEClipper;
+        return nopEeClipper;
     }
 
 }
