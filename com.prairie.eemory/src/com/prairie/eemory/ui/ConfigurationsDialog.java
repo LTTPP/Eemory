@@ -297,6 +297,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
                         boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
                         if (fixed) {
                             try {
+                                globalClipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                                 notebooks = globalClipper.listNotebooks();
                             } catch (Exception ignored) {
                             }
@@ -327,6 +328,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
                         boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
                         if (fixed) {
                             try {
+                                globalClipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                                 notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(notebook)));
                             } catch (Exception ignored) {
                             }
@@ -356,6 +358,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
                         boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
                         if (fixed) {
                             try {
+                                globalClipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                                 tags = globalClipper.listTags();
                             } catch (Exception ignored) {
                             }

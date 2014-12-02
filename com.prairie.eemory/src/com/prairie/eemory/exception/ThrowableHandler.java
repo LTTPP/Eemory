@@ -2,10 +2,12 @@ package com.prairie.eemory.exception;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.evernote.edam.error.EDAMNotFoundException;
 import com.evernote.edam.error.EDAMUserException;
@@ -13,8 +15,8 @@ import com.evernote.thrift.transport.TTransportException;
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.EemoryPlugin;
 import com.prairie.eemory.Messages;
-import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.ENNote;
+import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.util.EclipseUtil;
 import com.prairie.eemory.util.EncryptionUtil;
 import com.prairie.eemory.util.IDialogSettingsUtil;
@@ -27,7 +29,7 @@ public class ThrowableHandler {
     }
 
     public static boolean handleDesignTimeErr(final Shell shell, final Throwable e) {
-        return handleDesignTimeErr(shell, e, false, null);
+        return handleDesignTimeErr(shell, e, false);
     }
 
     public static boolean handleDesignTimeErr(final Shell shell, final Throwable e, final boolean fatal) {
@@ -45,7 +47,7 @@ public class ThrowableHandler {
             Display.getDefault().syncExec(new Runnable() {
                 @Override
                 public void run() {
-                    result = new EDAMUserExceptionHandler().handleDesingTime(shell, (EDAMUserException) e);
+                    result = new EDAMUserExceptionHandler().handleDesingTime(shell, (EDAMUserException) e, clipper);
                 }
             });
             return result;
@@ -63,24 +65,29 @@ public class ThrowableHandler {
     }
 
     public static IStatus handleJobErr(final Throwable e) {
-        return handleJobErr(e, null, null);
+        return handleJobErr(e, null, null, null);
     }
 
     public static IStatus handleJobErr(final Throwable e, final ENNote args) {
-        return handleJobErr(e, null, args);
+        return handleJobErr(e, null, args, null);
     }
 
     public static IStatus handleJobErr(final Throwable e, final EeClipper clipper) {
-        return handleJobErr(e, clipper, null);
+        return handleJobErr(e, clipper, null, null);
     }
 
-    public static IStatus handleJobErr(final Throwable e, final EeClipper clipper, final ENNote args) {
+    public static IStatus handleJobErr(final Throwable e, final EeClipper clipper, final ENNote args, final ExecutionEvent event) {
         if (e instanceof EDAMNotFoundException) {
             if (args != null) {
                 return new EDAMNotFoundHandler(EncryptionUtil.decrypt(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN))).fixNotFoundException((EDAMNotFoundException) e, args);
             }
         } else if (e instanceof EDAMUserException) {
-            return new EDAMUserExceptionHandler().handleRuntime((EDAMUserException) e, Display.getDefault().getActiveShell());
+            Shell shell = null;
+            try {
+                shell = HandlerUtil.getActiveShellChecked(event);
+            } catch (ExecutionException ignored) {
+            }
+            return new EDAMUserExceptionHandler().handleRuntime(shell, (EDAMUserException) e, clipper);
         } else if (e instanceof OutOfDateException) {
             return LogUtil.error(EemoryPlugin.getName() + StringUtils.EMPTY + EemoryPlugin.getVersion() + Messages.Plugin_Runtime_AddFileToEvernote_OutOfDate);
         } else if (e instanceof TTransportException) {

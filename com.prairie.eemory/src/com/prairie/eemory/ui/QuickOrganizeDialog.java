@@ -208,6 +208,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                         boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
                         if (fixed) {
                             try {
+                                clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                                 notebooks = clipper.listNotebooks();
                             } catch (Exception ignored) {
                             }
@@ -237,6 +238,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                         boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
                         if (fixed) {
                             try {
+                                clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                                 notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)));
                             } catch (Exception ignored) {
                             }
@@ -266,6 +268,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                         boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
                         if (fixed) {
                             try {
+                                clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                                 tags = clipper.listTags();
                             } catch (Exception ignored) {
                             }

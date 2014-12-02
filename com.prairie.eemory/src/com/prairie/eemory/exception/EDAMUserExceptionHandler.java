@@ -15,6 +15,7 @@ import com.evernote.edam.error.EDAMErrorCode;
 import com.evernote.edam.error.EDAMUserException;
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
+import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.oauth.OAuth;
 import com.prairie.eemory.util.EclipseUtil;
 import com.prairie.eemory.util.EncryptionUtil;
@@ -23,28 +24,40 @@ import com.prairie.eemory.util.LogUtil;
 
 public class EDAMUserExceptionHandler {
 
-    public IStatus handleRuntime(final EDAMUserException e, final Shell shell) {
+    private boolean reauthorized = false;
+
+    public IStatus handleRuntime(final Shell shell, final EDAMUserException e, final EeClipper clipper) {
         if (e.getErrorCode() == EDAMErrorCode.AUTH_EXPIRED) {
-            try {
-                oauth(shell);
-            } catch (ExecutionException e1) {
-                return LogUtil.error(e1);
-            }
-            if (StringUtils.isNotBlank(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN))) {
+            Display.getDefault().syncExec(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        oauth(shell);
+                    } catch (ExecutionException ignored) {
+                    }
+                }
+            });
+            if (reauthorized) {
+                if (clipper != null) {
+                    clipper.setInvalid();
+                }
                 return LogUtil.ok();
             }
         }
         return LogUtil.error(e);
     }
 
-    public boolean handleDesingTime(final Shell shell, final EDAMUserException e) {
+    public boolean handleDesingTime(final Shell shell, final EDAMUserException e, final EeClipper clipper) {
         if (e.getErrorCode() == EDAMErrorCode.AUTH_EXPIRED) {
             try {
                 oauth(shell);
             } catch (ExecutionException e1) {
                 EclipseUtil.openErrorSyncly(shell, Messages.Plugin_Error_Occurred, e.toString());
             }
-            if (StringUtils.isNotBlank(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN))) {
+            if (reauthorized) {
+                if (clipper != null) {
+                    clipper.setInvalid();
+                }
                 return true;
             }
         } else {
@@ -65,6 +78,7 @@ public class EDAMUserExceptionHandler {
                             String token = new OAuth().auth();
                             if (StringUtils.isNotBlank(token)) {
                                 IDialogSettingsUtil.set(Constants.PLUGIN_SETTINGS_KEY_TOKEN, EncryptionUtil.encrypt(token));
+                                reauthorized = true;
                             }
                         } catch (Throwable e) {
                             ThrowableHandler.handleDesignTimeErr(shell, e);

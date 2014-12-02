@@ -132,7 +132,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                         clipper.clipFile(args);
                         monitor.worked(2);
                     } catch (Throwable e) {
-                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args);
+                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, event);
                         if (status == LogUtil.ok()) {
                             try {
                                 clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
@@ -189,7 +189,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                         clipper.clipSelection(args);
                         monitor.worked(2);
                     } catch (Throwable e) {
-                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args);
+                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, event);
                         if (status == LogUtil.ok()) {
                             try {
                                 clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
@@ -255,7 +255,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                         clipper.clipFile(args);
                         monitor.worked(3);
                     } catch (Throwable e) {
-                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args);
+                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, event);
                         if (status == LogUtil.ok()) {
                             try {
                                 clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
