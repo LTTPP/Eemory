@@ -24,11 +24,11 @@ import com.evernote.edam.type.Tag;
 import com.evernote.thrift.TException;
 import com.evernote.thrift.transport.TTransportException;
 import com.prairie.eemory.Constants;
-import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.ENNote;
+import com.prairie.eemory.client.EeClipper;
+import com.prairie.eemory.client.StoreClientFactory;
 import com.prairie.eemory.exception.OutOfDateException;
 import com.prairie.eemory.util.ConstantsUtil;
-import com.prairie.eemory.util.EvernoteUtil;
 import com.prairie.eemory.util.ListStringizer;
 import com.prairie.eemory.util.ListUtil;
 import com.prairie.eemory.util.MapStringizer;
@@ -37,6 +37,7 @@ import com.prairie.eemory.util.StringUtil;
 
 public class EeClipperImpl extends EeClipper {
 
+    private final String token;
     private final NoteStoreClient noteStoreClient;
 
     /**
@@ -54,7 +55,8 @@ public class EeClipperImpl extends EeClipper {
      *             Please refer to Evernote SDK
      */
     public EeClipperImpl(final String token) throws TException, OutOfDateException, EDAMUserException, EDAMSystemException {
-        noteStoreClient = EvernoteUtil.getNoteStoreClient(token);
+        this.token = token;
+        noteStoreClient = StoreClientFactory.getInstance(token).getNoteStoreClient();
     }
 
     /**
@@ -80,7 +82,7 @@ public class EeClipperImpl extends EeClipper {
      */
     @Override
     public void clipFile(final ENNote args) throws NoSuchAlgorithmException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, IOException, ParserConfigurationException, SAXException, OutOfDateException {
-        new NoteOpsFileImpl(noteStoreClient).updateOrCreate(args);
+        new NoteOpsFileImpl(token).updateOrCreate(args);
     }
 
     /**
@@ -107,7 +109,7 @@ public class EeClipperImpl extends EeClipper {
      */
     @Override
     public void clipSelection(final ENNote args) throws DOMException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, OutOfDateException {
-        new NoteOpsTextImpl(noteStoreClient).updateOrCreate(args);
+        new NoteOpsTextImpl(token).updateOrCreate(args);
     }
 
     /**

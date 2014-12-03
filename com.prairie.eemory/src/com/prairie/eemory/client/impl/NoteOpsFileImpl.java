@@ -20,6 +20,7 @@ import com.evernote.thrift.TException;
 import com.prairie.eemory.client.EDAMLimits;
 import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.client.NoteOps;
+import com.prairie.eemory.client.StoreClientFactory;
 import com.prairie.eemory.enml.ENML;
 import com.prairie.eemory.exception.EDAMDataModel;
 import com.prairie.eemory.exception.OutOfDateException;
@@ -31,8 +32,8 @@ public class NoteOpsFileImpl extends NoteOps {
 
     private final NoteStoreClient noteStoreClient;
 
-    public NoteOpsFileImpl(final NoteStoreClient noteStoreClient) {
-        this.noteStoreClient = noteStoreClient;
+    public NoteOpsFileImpl(final String token) throws EDAMUserException, EDAMSystemException, TException, OutOfDateException {
+        noteStoreClient = StoreClientFactory.getInstance(token).getNoteStoreClient();
     }
 
     @Override
@@ -72,6 +73,7 @@ public class NoteOpsFileImpl extends NoteOps {
 
         // create tags
         for (String tagName : args.getTags()) {
+            tagName = tagName.trim();
             if (StringUtils.isNotBlank(tagName)) {
                 note.addToTagNames(tagName);
             }
@@ -109,6 +111,7 @@ public class NoteOpsFileImpl extends NoteOps {
 
         // update tags
         for (String tagName : args.getTags()) {
+            tagName = tagName.trim();
             if (StringUtils.isNotBlank(tagName)) {
                 note.addToTagNames(tagName);
             }
