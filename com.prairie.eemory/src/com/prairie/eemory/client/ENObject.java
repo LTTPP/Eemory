@@ -1,6 +1,5 @@
 package com.prairie.eemory.client;
 
-
 public interface ENObject {
 
     public String getName();
@@ -20,5 +19,9 @@ public interface ENObject {
     public boolean isGuidAdopt();
 
     public void setGuidAdopt(boolean adopt);
+
+    public ENObjectType getType();
+
+    public void setType(ENObjectType type);
 
 }

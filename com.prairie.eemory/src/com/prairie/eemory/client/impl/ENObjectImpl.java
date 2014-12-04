@@ -3,6 +3,7 @@ package com.prairie.eemory.client.impl;
 import org.apache.commons.lang3.StringUtils;
 
 import com.prairie.eemory.client.ENObject;
+import com.prairie.eemory.client.ENObjectType;
 
 public class ENObjectImpl implements ENObject {
 
@@ -11,6 +12,8 @@ public class ENObjectImpl implements ENObject {
 
     private boolean reset = false;
     private boolean adopt = false;
+
+    private ENObjectType type = ENObjectType.NORMAL;
 
     public ENObjectImpl() {
 
@@ -85,6 +88,16 @@ public class ENObjectImpl implements ENObject {
         }
         ENObject o = (ENObject) other;
         return StringUtils.equals(guid, o.getGuid());
+    }
+
+    @Override
+    public ENObjectType getType() {
+        return type;
+    }
+
+    @Override
+    public void setType(final ENObjectType type) {
+        this.type = type;
     }
 
 }
