@@ -439,7 +439,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         if (StringUtils.isNotBlank(nbName)) {
             if (!notebooks.containsKey(nbName) && notebooks.containsValue(ENObjectImpl.forGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)))) {
                 // rename case on Evernote
-                String key = MapUtil.getKey(notebooks, ENObjectImpl.forGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)));
+                String key = MapUtil.getKeyByValue(notebooks, ENObjectImpl.forGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)));
                 if (StringUtils.isNotBlank(nbName) && isHasInput(PLUGIN_CONFIGS_NOTEBOOK) && !nbName.equals(key)) {
                     setFieldValue(PLUGIN_CONFIGS_NOTEBOOK, key);
                 }
@@ -492,7 +492,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
     private void refreshNameByGuid() {
         // rename case on Evernote
         if (notes.containsValue(ENNoteImpl.forGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID)))) { // override equals() of ENNote, assume ENNote equals if guid equals
-            String key = MapUtil.getKey(notes, ENNoteImpl.forGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID))); // override equals() of ENNote, assume ENNote equals if guid equals
+            String key = MapUtil.getKeyByValue(notes, ENNoteImpl.forGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID))); // override equals() of ENNote, assume ENNote equals if guid equals
             if (isHasInput(PLUGIN_CONFIGS_NOTE)) {
                 setFieldValue(PLUGIN_CONFIGS_NOTE, key);
                 saveNoteSettings(key);
