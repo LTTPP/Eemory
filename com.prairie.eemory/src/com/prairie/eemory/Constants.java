@@ -26,6 +26,8 @@ public interface Constants {
     public static final String PLUGIN_SETTINGS_SECTION_COMMENTS = "comments";
     public static final String PLUGIN_SETTINGS_KEY_NAME = "name";
     public static final String PLUGIN_SETTINGS_KEY_GUID = "guid";
+    public static final String PLUGIN_SETTINGS_KEY_TYPE = "type";
+    public static final String PLUGIN_SETTINGS_KEY_OBJECT = "object";
     public static final String PLUGIN_SETTINGS_KEY_CHECKED = "isChecked";
     public static final String PLUGIN_SETTINGS_KEY_UUID = "uuid";
 
@@ -108,6 +110,11 @@ public interface Constants {
     public static final String OAUTH_NOTTARGET_HTML = "html/images/default.html";
     public static final String OAUTH_RESOURCE_BASE = "html/images";
     public static final String OAUTH_DEFAULT_HTML = "default.html";
+
+    // Store type
+    public static final String ENOBJECT_TYPE_NORMAL = "normal";
+    public static final String ENOBJECT_TYPE_LINKED = "linked";
+    public static final String ENOBJECT_TYPE_BUSINESS = "business";
 
     // mime-util
     public static final String MimeDetector = "eu.medsea.mimeutil.detector.MagicMimeMimeDetector";

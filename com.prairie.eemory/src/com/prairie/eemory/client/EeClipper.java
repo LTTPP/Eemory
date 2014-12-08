@@ -11,7 +11,7 @@ public abstract class EeClipper {
 
     public abstract void clipSelection(ENNote args) throws Exception;
 
-    public abstract Map<String, String> listNotebooks() throws Exception;
+    public abstract Map<String, ENObject> listNotebooks() throws Exception;
 
     public abstract Map<String, ENNote> listNotesWithinNotebook(ENNote args) throws Exception;
 

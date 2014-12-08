@@ -1,5 +1,6 @@
 package com.prairie.eemory.ui;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +35,12 @@ import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.client.EDAMLimits;
 import com.prairie.eemory.client.ENNote;
+import com.prairie.eemory.client.ENObject;
+import com.prairie.eemory.client.ENObjectType;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.EeClipperFactory;
 import com.prairie.eemory.client.impl.ENNoteImpl;
+import com.prairie.eemory.client.impl.ENObjectImpl;
 import com.prairie.eemory.exception.EDAMNotFoundHandler;
 import com.prairie.eemory.exception.ThrowableHandler;
 import com.prairie.eemory.util.ColorUtil;
@@ -46,6 +50,7 @@ import com.prairie.eemory.util.EncryptionUtil;
 import com.prairie.eemory.util.IDialogSettingsUtil;
 import com.prairie.eemory.util.ListUtil;
 import com.prairie.eemory.util.MapUtil;
+import com.prairie.eemory.util.ObjectUtil;
 import com.prairie.eemory.util.StringUtil;
 
 public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
@@ -54,7 +59,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
     private EeClipper globalClipper;
 
-    private Map<String, String> notebooks; // <Name, Guid>
+    private Map<String, ENObject> notebooks; // <Name, Guid|Type|LinkedObject>
     private Map<String, ENNote> notes; // <Name, Guid>
     private List<String> tags;
 
@@ -167,12 +172,12 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
                         @Override
                         public void run() {
                             try {
-                                notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
+                                notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebook(notebooks.get(hotebook)));
                             } catch (Throwable e) {
                                 boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
                                 if (fixed) {
                                     try {
-                                        notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
+                                        notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebook(notebooks.get(hotebook)));
                                     } catch (Exception ignored) {
                                     }
                                 }
@@ -323,13 +328,13 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask(Messages.Plugin_Configs_FetchingNotes, 1);
                     try {
-                        notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(notebook)));
+                        notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebook(notebooks.get(notebook)));
                     } catch (Throwable e) {
                         boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, globalClipper);
                         if (fixed) {
                             try {
                                 globalClipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
-                                notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(notebook)));
+                                notes = globalClipper.listNotesWithinNotebook(ENNoteImpl.forNotebook(notebooks.get(notebook)));
                             } catch (Exception ignored) {
                             }
                         }
@@ -422,7 +427,6 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         diagnoseNotebook(nbName);
 
         // refresh note
-        nbName = getFieldInput(PLUGIN_CONFIGS_NOTEBOOK);
         fetchNotesInProgres();
         String nName = getFieldInput(PLUGIN_CONFIGS_NOTE);
         diagnoseNote(nName);
@@ -433,9 +437,9 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
     private void diagnoseNotebook(final String nbName) {
         if (StringUtils.isNotBlank(nbName)) {
-            if (!notebooks.containsKey(nbName) && notebooks.containsValue(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID))) {
-                // rename case
-                String key = MapUtil.getKey(notebooks, IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID));
+            if (!notebooks.containsKey(nbName) && notebooks.containsValue(ENObjectImpl.forGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)))) {
+                // rename case on Evernote
+                String key = MapUtil.getKey(notebooks, ENObjectImpl.forGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)));
                 if (StringUtils.isNotBlank(nbName) && isHasInput(PLUGIN_CONFIGS_NOTEBOOK) && !nbName.equals(key)) {
                     setFieldValue(PLUGIN_CONFIGS_NOTEBOOK, key);
                 }
@@ -451,22 +455,31 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
             } else {
                 // user make nothing change, but maybe something changed in Evernote, needs to be synced
                 if (notes.containsValue(ENNoteImpl.forGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID)))) { // override equals() of ENNote, assume ENNote equals if guid equals
+                    // rename case on Evernote
                     refreshNameByGuid();
                 } else {
+                    // re-creation(delete and create a new one with same name) case on Evernote
                     refreshGuidByName(nName);
                 }
             }
         }
     }
 
-    // diagnose if everything is fine, nothing needs to change
+    // diagnose if everything is fine, nothing need to be changed
     private boolean isOk(final String nName) {
         return StringUtils.isBlank(nName) || notes.containsKey(nName) && (StringUtils.equals(notes.get(nName).getName(), IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_NAME)) || StringUtils.isBlank(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_NAME))) && (StringUtils.equals(notes.get(nName).getGuid(), IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID)) || StringUtils.isBlank(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID)));
     }
 
     /*
+     * Refresh note related information including UI display by NOTE NAME not
+     * uuid. Actually this can be done when Apply button is clicked.
+     * 
+     * Keeping for 1.0.0 release as already tested, considering deletion in next
+     * release.
+     * 
      * @param nName uuid of note
      */
+    @Deprecated
     private void refreshGuidByName(final String nName) {
         // recreate, delete cases
         ENNote noteFound = EDAMNotFoundHandler.findNote(notes, nName); // NOTICE: pass in uuid here, so should not work for name repetition case
@@ -477,7 +490,7 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
     }
 
     private void refreshNameByGuid() {
-        // rename case
+        // rename case on Evernote
         if (notes.containsValue(ENNoteImpl.forGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID)))) { // override equals() of ENNote, assume ENNote equals if guid equals
             String key = MapUtil.getKey(notes, ENNoteImpl.forGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID))); // override equals() of ENNote, assume ENNote equals if guid equals
             if (isHasInput(PLUGIN_CONFIGS_NOTE)) {
@@ -489,7 +502,11 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
 
     @Override
     protected void okPressed() {
-        saveSettings();
+        try {
+            saveSettings();
+        } catch (IOException e) {
+            ThrowableHandler.handleDesignTimeErr(shell, e);
+        }
         super.okPressed();
     }
 
@@ -523,31 +540,35 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         return false;
     }
 
-    private void saveSettings() {
+    private void saveSettings() throws IOException {
         String notebookValue = getFieldInput(PLUGIN_CONFIGS_NOTEBOOK);
-        setSection(PLUGIN_SETTINGS_SECTION_NOTEBOOK, notebookValue, isFieldEditable(PLUGIN_CONFIGS_NOTEBOOK), notebooks.get(notebookValue));
+        diagnoseNotebook(notebookValue);
+        notebookValue = getFieldInput(PLUGIN_CONFIGS_NOTEBOOK);
+        ENObject notebook = notebooks.get(notebookValue);
+        setSection(PLUGIN_SETTINGS_SECTION_NOTEBOOK, notebook != null ? notebook.getName() : null, isFieldEditable(PLUGIN_CONFIGS_NOTEBOOK), notebook != null ? notebook.getGuid() : null, notebookValue, notebook != null ? notebook.getType().toString() : null);
+        if (notebook != null && notebook.getType() == ENObjectType.LINKED) {
+            // notebook.getLinkedObject() should NOT be null
+            IDialogSettingsUtil.set(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_OBJECT, ObjectUtil.serialize(notebook.getLinkedObject()));
+        } else {
+            IDialogSettingsUtil.set(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_OBJECT, null);
+        }
 
         String noteValue = getFieldInput(PLUGIN_CONFIGS_NOTE);
         diagnoseNote(noteValue);
         noteValue = getFieldInput(PLUGIN_CONFIGS_NOTE);
-        saveNoteSettings(noteValue);
+        ENNote note = notes.get(noteValue);
+        setSection(PLUGIN_SETTINGS_SECTION_NOTE, note != null ? note.getName() : null, isFieldEditable(PLUGIN_CONFIGS_NOTE), note != null ? note.getGuid() : null, noteValue);
 
         String tagsValue = getFieldInput(PLUGIN_CONFIGS_TAGS);
-        setSection(PLUGIN_SETTINGS_SECTION_TAGS, tagsValue, isFieldEditable(PLUGIN_CONFIGS_TAGS), null);
+        setSection(PLUGIN_SETTINGS_SECTION_TAGS, tagsValue, isFieldEditable(PLUGIN_CONFIGS_TAGS));
 
-        setSection(PLUGIN_SETTINGS_SECTION_COMMENTS, getFieldInput(PLUGIN_CONFIGS_COMMENTS), isFieldEditable(PLUGIN_CONFIGS_COMMENTS), null);
-    }
-
-    private void saveNoteSettings(final String noteValue) {
-        ENNote note = notes.get(noteValue);
-        setSection(PLUGIN_SETTINGS_SECTION_NOTE, note != null ? note.getName() : null, isFieldEditable(PLUGIN_CONFIGS_NOTE), note != null ? note.getGuid() : null);
-        IDialogSettingsUtil.set(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_UUID, noteValue);
+        setSection(PLUGIN_SETTINGS_SECTION_COMMENTS, getFieldInput(PLUGIN_CONFIGS_COMMENTS), isFieldEditable(PLUGIN_CONFIGS_COMMENTS));
     }
 
     private void restoreSettings(final String label) {
         if (label.equals(PLUGIN_CONFIGS_NOTEBOOK)) {
             editableField(PLUGIN_CONFIGS_NOTEBOOK, IDialogSettingsUtil.getBoolean(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_CHECKED));
-            String value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_NAME);
+            String value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_UUID);
             if (isFieldEditable(PLUGIN_CONFIGS_NOTEBOOK) && StringUtils.isNotBlank(value)) {
                 setFieldValue(PLUGIN_CONFIGS_NOTEBOOK, value);
                 setHasInput(PLUGIN_CONFIGS_NOTEBOOK, true);
@@ -575,10 +596,29 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
         }
     }
 
+    private void setSection(final String sectionName, final String name, final boolean isChecked, final String guid, final String uuid, final String type) {
+        setSection(sectionName, name, isChecked, guid, uuid);
+        IDialogSettingsUtil.set(sectionName, PLUGIN_SETTINGS_KEY_TYPE, type);
+    }
+
+    private void setSection(final String sectionName, final String name, final boolean isChecked, final String guid, final String uuid) {
+        setSection(sectionName, name, isChecked, guid);
+        IDialogSettingsUtil.set(sectionName, PLUGIN_SETTINGS_KEY_UUID, uuid);
+    }
+
     private void setSection(final String sectionName, final String name, final boolean isChecked, final String guid) {
+        setSection(sectionName, name, isChecked);
+        IDialogSettingsUtil.set(sectionName, PLUGIN_SETTINGS_KEY_GUID, guid);
+    }
+
+    private void setSection(final String sectionName, final String name, final boolean isChecked) {
         IDialogSettingsUtil.set(sectionName, PLUGIN_SETTINGS_KEY_NAME, name);
         IDialogSettingsUtil.set(sectionName, PLUGIN_SETTINGS_KEY_CHECKED, isChecked);
-        IDialogSettingsUtil.set(sectionName, PLUGIN_SETTINGS_KEY_GUID, guid);
+    }
+
+    private void saveNoteSettings(final String noteValue) {
+        ENNote note = notes.get(noteValue);
+        setSection(PLUGIN_SETTINGS_SECTION_NOTE, note != null ? note.getName() : null, isFieldEditable(PLUGIN_CONFIGS_NOTE), note != null ? note.getGuid() : null, noteValue);
     }
 
     protected LabelCheckTextField createLabelCheckTextField(final Composite container, final String labelText) {

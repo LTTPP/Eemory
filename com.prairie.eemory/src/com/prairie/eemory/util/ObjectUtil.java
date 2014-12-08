@@ -1,10 +1,16 @@
 package com.prairie.eemory.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.ObjectUtils;
 
 public class ObjectUtil {
@@ -86,6 +92,22 @@ public class ObjectUtil {
             return (T) new Character((Character) obj);
         }
         return null;
+    }
+
+    public static String serialize(final Object object) throws IOException {
+        ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutput = new ObjectOutputStream(byteOutput);
+        objectOutput.writeObject(object);
+        objectOutput.close();
+        return new String(Base64.encodeBase64(byteOutput.toByteArray()));
+    }
+
+    public static Object deserialize(final String base64SerializedString) throws IOException, ClassNotFoundException {
+        byte[] data = Base64.decodeBase64(base64SerializedString);
+        ObjectInputStream objectInput = new ObjectInputStream(new ByteArrayInputStream(data));
+        Object object = objectInput.readObject();
+        objectInput.close();
+        return object;
     }
 
 }

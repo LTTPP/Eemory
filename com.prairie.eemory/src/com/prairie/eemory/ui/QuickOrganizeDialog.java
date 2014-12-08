@@ -30,9 +30,12 @@ import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.client.EDAMLimits;
 import com.prairie.eemory.client.ENNote;
+import com.prairie.eemory.client.ENObject;
+import com.prairie.eemory.client.ENObjectType;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.EeClipperFactory;
 import com.prairie.eemory.client.impl.ENNoteImpl;
+import com.prairie.eemory.client.impl.ENObjectImpl;
 import com.prairie.eemory.exception.ThrowableHandler;
 import com.prairie.eemory.util.ConstantsUtil;
 import com.prairie.eemory.util.EclipseUtil;
@@ -40,6 +43,7 @@ import com.prairie.eemory.util.EncryptionUtil;
 import com.prairie.eemory.util.IDialogSettingsUtil;
 import com.prairie.eemory.util.ListUtil;
 import com.prairie.eemory.util.MapUtil;
+import com.prairie.eemory.util.ObjectUtil;
 import com.prairie.eemory.util.StringUtil;
 
 public class QuickOrganizeDialog extends Dialog implements Constants {
@@ -51,7 +55,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
 
     private EeClipper clipper;
 
-    private Map<String, String> notebooks; // <Name, Guid>
+    private Map<String, ENObject> notebooks; // <Name, Guid|Type|LinkedObject>
     private Map<String, ENNote> notes; // <Name, Guid>
     private List<String> tags;
 
@@ -124,12 +128,12 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                                 @Override
                                 public void run() {
                                     try {
-                                        notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
+                                        notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebook(notebooks.get(hotebook)));
                                     } catch (Throwable e) {
                                         boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
                                         if (fixed) {
                                             try {
-                                                notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(notebooks.get(hotebook)));
+                                                notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebook(notebooks.get(hotebook)));
                                             } catch (Exception ignored) {
                                             }
                                         }
@@ -233,13 +237,13 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask(Messages.Plugin_Configs_FetchingNotes, 1);
                     try {
-                        notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)));
+                        doFetchNotes();
                     } catch (Throwable e) {
                         boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
                         if (fixed) {
                             try {
                                 clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
-                                notes = clipper.listNotesWithinNotebook(ENNoteImpl.forNotebookGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)));
+                                doFetchNotes();
                             } catch (Exception ignored) {
                             }
                         }
@@ -251,6 +255,20 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
         } catch (Throwable e) {
             ThrowableHandler.handleDesignTimeErr(shell, e);
         }
+    }
+
+    private void doFetchNotes() throws Exception {
+        ENNote note = ENNoteImpl.forNotebook(ENObjectImpl.forNameAndGuid(IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_NAME), IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)));
+        String typeString= IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_TYPE);
+        if (StringUtils.isNotBlank(typeString)) {
+            note.getNotebook().setType(ENObjectType.forName(typeString));
+        }
+        String serializedString = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_OBJECT);
+        if (StringUtils.isNotBlank(serializedString)) {
+            Object linkedObject = ObjectUtil.deserialize(serializedString);
+            note.getNotebook().setLinkedObject(linkedObject);
+        }
+        notes = clipper.listNotesWithinNotebook(note);
     }
 
     private void fetchTagsInProgress() {
@@ -319,8 +337,13 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
     private void saveQuickSettings() {
         quickSettings = new ENNoteImpl();
 
-        quickSettings.getNotebook().setName(getFieldValue(PLUGIN_CONFIGS_NOTEBOOK));
-        quickSettings.getNotebook().setGuid(notebooks.get(getFieldValue(PLUGIN_CONFIGS_NOTEBOOK)));
+        quickSettings.getNotebook().setName(getFieldValue(PLUGIN_CONFIGS_NOTEBOOK)); // Notice: set notebook name field value(not real name of notebook) as notebook name for error handling later
+        ENObject nb = notebooks.get(getFieldValue(PLUGIN_CONFIGS_NOTEBOOK));
+        if (nb != null) {
+            quickSettings.getNotebook().setGuid(nb.getGuid());
+            quickSettings.getNotebook().setType(nb.getType());
+            quickSettings.getNotebook().setLinkedObject(nb.getLinkedObject());
+        }
 
         ENNote note = notes.get(getFieldValue(PLUGIN_CONFIGS_NOTE));
         quickSettings.setName(note != null ? note.getName() : getFieldValue(PLUGIN_CONFIGS_NOTE));

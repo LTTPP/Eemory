@@ -91,6 +91,9 @@ public class ENNoteImpl extends ENObjectImpl implements ENNote {
         this.comments = comments;
     }
 
+    /**
+     * Adopt if not null/empty/blank
+     */
     @Override
     public void adopt(final ENObject obj) {
 
@@ -130,9 +133,14 @@ public class ENNoteImpl extends ENObjectImpl implements ENNote {
         return new ENNoteImpl(name, guid);
     }
 
-    public static ENNote forNotebookGuid(final String guid) {
+    public static ENNote forNotebook(final ENObject notebook) {
         ENNote n = new ENNoteImpl();
-        n.getNotebook().setGuid(guid);
+        if (notebook != null) {
+            n.getNotebook().setName(notebook.getName()); // maybe no use but just in case
+            n.getNotebook().setGuid(notebook.getGuid());
+            n.getNotebook().setType(notebook.getType());
+            n.getNotebook().setLinkedObject(notebook.getLinkedObject());
+        }
         return n;
     }
 

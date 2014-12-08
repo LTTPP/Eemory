@@ -10,18 +10,22 @@ public interface ENObject {
 
     public void setGuid(final String guid);
 
-    public boolean isGuidReset();
+    public boolean isArgsReset();
 
-    public void setGuidReset(boolean reset);
+    public void setArgsReset(boolean reset);
 
     public abstract void adopt(ENObject note);
 
-    public boolean isGuidAdopt();
+    public boolean isArgsAdopt();
 
-    public void setGuidAdopt(boolean adopt);
+    public void setArgsAdopt(boolean adopt);
 
     public ENObjectType getType();
 
     public void setType(ENObjectType type);
+
+    public Object getLinkedObject();
+
+    public void setLinkedObject(Object linkedObject);
 
 }

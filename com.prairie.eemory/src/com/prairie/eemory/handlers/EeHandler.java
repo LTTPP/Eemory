@@ -2,6 +2,7 @@ package com.prairie.eemory.handlers;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
@@ -27,6 +28,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.client.ENNote;
+import com.prairie.eemory.client.ENObjectType;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.EeClipperFactory;
 import com.prairie.eemory.client.impl.ENNoteImpl;
@@ -43,6 +45,7 @@ import com.prairie.eemory.util.FileUtil;
 import com.prairie.eemory.util.IDialogSettingsUtil;
 import com.prairie.eemory.util.ListUtil;
 import com.prairie.eemory.util.LogUtil;
+import com.prairie.eemory.util.ObjectUtil;
 
 public class EeHandler extends AbstractHandler implements Constants {
 
@@ -140,7 +143,10 @@ public class EeHandler extends AbstractHandler implements Constants {
                             } catch (Throwable t) {
                                 return ThrowableHandler.handleJobErr(t, clipper);
                             }
-                            saveIfNeeded(args);
+                            try {
+                                saveIfNeeded(args);
+                            } catch (Throwable ignored) {
+                            }
                         }
                         return status;
                     }
@@ -197,7 +203,10 @@ public class EeHandler extends AbstractHandler implements Constants {
                             } catch (Throwable t) {
                                 return ThrowableHandler.handleJobErr(t, clipper);
                             }
-                            saveIfNeeded(args);
+                            try {
+                                saveIfNeeded(args);
+                            } catch (Throwable ignored) {
+                            }
                         }
                         return status;
                     }
@@ -263,7 +272,10 @@ public class EeHandler extends AbstractHandler implements Constants {
                             } catch (Throwable t) {
                                 return ThrowableHandler.handleJobErr(t, clipper);
                             }
-                            saveIfNeeded(args);
+                            try {
+                                saveIfNeeded(args);
+                            } catch (Throwable ignored) {
+                            }
                         }
                         return status;
                     } finally {
@@ -287,12 +299,21 @@ public class EeHandler extends AbstractHandler implements Constants {
         ConfigurationsDialog.show(HandlerUtil.getActiveShellChecked(event));
     }
 
-    private ENNote createENNote() {
+    private ENNote createENNote() throws ClassNotFoundException, IOException {
         ENNote args = new ENNoteImpl();
 
         String value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID);
         if (StringUtils.isNotBlank(value)) {
             args.getNotebook().setGuid(value);
+        }
+        String type = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_TYPE);
+        if (StringUtils.isNotBlank(type)) {
+            args.getNotebook().setType(ENObjectType.forName(type));
+        }
+        String object = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_OBJECT);
+        if (args.getNotebook().getType() == ENObjectType.LINKED && StringUtils.isNotBlank(object)) {
+            // Should meet the two conditions(linked & non-blank) at the same time
+            args.getNotebook().setLinkedObject(ObjectUtil.deserialize(object));
         }
         value = IDialogSettingsUtil.get(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_NAME);
         if (StringUtils.isNotBlank(value)) {
@@ -320,12 +341,18 @@ public class EeHandler extends AbstractHandler implements Constants {
         return args;
     }
 
-    private void saveIfNeeded(final ENNote args) {
-        if (args.getNotebook().isGuidReset() && !args.getNotebook().isGuidAdopt()) {
+    private void saveIfNeeded(final ENNote args) throws IOException {
+        if (args.getNotebook().isArgsReset() && !args.getNotebook().isArgsAdopt()) {
+            IDialogSettingsUtil.set(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_NAME, args.getNotebook().getName());
             IDialogSettingsUtil.set(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID, args.getNotebook().getGuid());
+            IDialogSettingsUtil.set(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_TYPE, args.getNotebook().getType().toString());
+            IDialogSettingsUtil.set(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_OBJECT, ObjectUtil.serialize(args.getNotebook().getLinkedObject()));
+            // uuid maybe not correct here, if will be updated when Configurations opens and Apply clicked
         }
-        if (args.isGuidReset() && !args.isGuidAdopt()) {
+        if (args.isArgsReset() && !args.isArgsAdopt()) {
+            IDialogSettingsUtil.set(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_NAME, args.getName());
             IDialogSettingsUtil.set(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID, args.getGuid());
+            // uuid maybe not correct here, if will be updated when Configurations opens and Apply clicked
         }
     }
 

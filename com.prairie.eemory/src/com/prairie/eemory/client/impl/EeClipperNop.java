@@ -3,8 +3,9 @@ package com.prairie.eemory.client.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.ENNote;
+import com.prairie.eemory.client.ENObject;
+import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.util.ListUtil;
 import com.prairie.eemory.util.MapUtil;
 
@@ -21,7 +22,7 @@ public class EeClipperNop extends EeClipper {
     }
 
     @Override
-    public Map<String, String> listNotebooks() {
+    public Map<String, ENObject> listNotebooks() {
         return MapUtil.map();
     }
 

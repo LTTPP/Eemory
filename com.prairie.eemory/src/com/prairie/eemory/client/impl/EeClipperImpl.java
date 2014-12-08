@@ -19,19 +19,22 @@ import com.evernote.edam.notestore.NoteFilter;
 import com.evernote.edam.notestore.NoteMetadata;
 import com.evernote.edam.notestore.NotesMetadataList;
 import com.evernote.edam.notestore.NotesMetadataResultSpec;
+import com.evernote.edam.type.LinkedNotebook;
 import com.evernote.edam.type.Notebook;
+import com.evernote.edam.type.SharedNotebook;
 import com.evernote.edam.type.Tag;
 import com.evernote.thrift.TException;
 import com.evernote.thrift.transport.TTransportException;
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.client.ENNote;
+import com.prairie.eemory.client.ENObject;
+import com.prairie.eemory.client.ENObjectType;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.StoreClientFactory;
 import com.prairie.eemory.exception.OutOfDateException;
 import com.prairie.eemory.util.ConstantsUtil;
 import com.prairie.eemory.util.ListStringizer;
 import com.prairie.eemory.util.ListUtil;
-import com.prairie.eemory.util.MapStringizer;
 import com.prairie.eemory.util.MapUtil;
 import com.prairie.eemory.util.StringUtil;
 
@@ -105,6 +108,7 @@ public class EeClipperImpl extends EeClipper {
      * @throws EDAMUserException
      *             Please refer to Evernote SDK
      * @throws DOMException
+     *             Something wrong when parsing ENML
      *
      */
     @Override
@@ -113,7 +117,7 @@ public class EeClipperImpl extends EeClipper {
     }
 
     /**
-     * return a user's all notebooks.
+     * return a user's all notebooks(including linked notebooks).
      *
      * @return The user's notebooks.
      *
@@ -125,22 +129,31 @@ public class EeClipperImpl extends EeClipper {
      *             Please refer to Evernote SDK
      * @throws OutOfDateException
      *             This plug-in is out of date
+     * @throws EDAMNotFoundException
+     *             Please refer to Evernote SDK
      */
     @Override
-    public Map<String, String> listNotebooks() throws EDAMUserException, EDAMSystemException, TException, OutOfDateException {
-        // List the notes in the user's account
+    public Map<String, ENObject> listNotebooks() throws EDAMUserException, EDAMSystemException, TException, OutOfDateException, EDAMNotFoundException {
         List<Notebook> notebooks = noteStoreClient.listNotebooks();
-        return ListUtil.toStringMap(notebooks, new MapStringizer() {
-            @Override
-            public String key(final Object o) {
-                return ((Notebook) o).getName();
-            }
+        List<LinkedNotebook> linkedNotebooks = noteStoreClient.listLinkedNotebooks();
 
-            @Override
-            public String value(final Object o) {
-                return ((Notebook) o).getGuid();
+        Map<String, ENObject> map = MapUtil.map();
+        for (Notebook n : notebooks) {
+            map.put(n.getName(), ENObjectImpl.forNameAndGuid(n.getName(), n.getGuid()));
+        }
+
+        for (LinkedNotebook linkedNotebook : linkedNotebooks) {
+            NoteStoreClient linkedNoteStore = StoreClientFactory.getInstance(token).getLinkedNoteStoreClient(linkedNotebook);
+            SharedNotebook sharedNotebook = linkedNoteStore.getSharedNotebookByAuth();
+
+            if (map.containsKey(linkedNotebook.getShareName())) {
+                map.put(linkedNotebook.getShareName() + ConstantsUtil.LEFT_PARENTHESIS + linkedNotebook.getUsername() + ConstantsUtil.COLON + sharedNotebook.getNotebookGuid() + ConstantsUtil.RIGHT_PARENTHESIS, ENObjectImpl.forValues(linkedNotebook.getShareName(), sharedNotebook.getNotebookGuid(), ENObjectType.LINKED, linkedNotebook));
+            } else {
+                map.put(linkedNotebook.getShareName(), ENObjectImpl.forValues(linkedNotebook.getShareName(), sharedNotebook.getNotebookGuid(), ENObjectType.LINKED, linkedNotebook));
             }
-        });
+        }
+
+        return map;
     }
 
     /**
@@ -175,7 +188,12 @@ public class EeClipperImpl extends EeClipper {
         NotesMetadataResultSpec resultSpec = new NotesMetadataResultSpec();
         resultSpec.setIncludeTitle(true);
 
-        NotesMetadataList notesMetadataList = noteStoreClient.findNotesMetadata(filter, 0, com.evernote.edam.limits.Constants.EDAM_USER_NOTES_MAX, resultSpec);
+        NoteStoreClient client = noteStoreClient;
+        if (args.getNotebook().getType() == ENObjectType.LINKED) {
+        	// args.getNotebook().getLinkedObject() should NOT be null
+            client = StoreClientFactory.getInstance(token).getLinkedNoteStoreClient((LinkedNotebook) args.getNotebook().getLinkedObject());
+        }
+        NotesMetadataList notesMetadataList = client.findNotesMetadata(filter, 0, com.evernote.edam.limits.Constants.EDAM_USER_NOTES_MAX, resultSpec);
         List<NoteMetadata> noteList = notesMetadataList.getNotes();
 
         Map<String, ENNote> map = MapUtil.map();

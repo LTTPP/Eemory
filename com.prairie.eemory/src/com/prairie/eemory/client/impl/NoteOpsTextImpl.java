@@ -17,7 +17,6 @@ import com.evernote.thrift.TException;
 import com.prairie.eemory.client.EDAMLimits;
 import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.client.NoteOps;
-import com.prairie.eemory.client.StoreClientFactory;
 import com.prairie.eemory.enml.ENML;
 import com.prairie.eemory.exception.EDAMDataModel;
 import com.prairie.eemory.exception.OutOfDateException;
@@ -25,10 +24,8 @@ import com.prairie.eemory.util.ListUtil;
 
 public class NoteOpsTextImpl extends NoteOps {
 
-    private final NoteStoreClient noteStoreClient;
-
-    public NoteOpsTextImpl(final String token) throws EDAMUserException, EDAMSystemException, TException, OutOfDateException {
-        noteStoreClient = StoreClientFactory.getInstance(token).getNoteStoreClient();
+    public NoteOpsTextImpl(final String token) {
+        super(token);
     }
 
     @Override
@@ -63,11 +60,13 @@ public class NoteOpsTextImpl extends NoteOps {
             }
         }
 
-        noteStoreClient.createNote(note);
+        getNoteStoreClient(args).createNote(note);
     }
 
     private void update(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, DOMException, ParserConfigurationException, SAXException, IOException, OutOfDateException {
-        Note note = noteStoreClient.getNote(args.getGuid(), true, false, false, false);
+        NoteStoreClient client = getNoteStoreClient(args);
+
+        Note note = client.getNote(args.getGuid(), true, false, false, false);
         if (!note.isActive()) {
             EDAMNotFoundException e = new EDAMNotFoundException();
             e.setIdentifier(EDAMDataModel.Note_noteGuid.toString());
@@ -91,7 +90,7 @@ public class NoteOpsTextImpl extends NoteOps {
             }
         }
 
-        noteStoreClient.updateNote(note);
+        client.updateNote(note);
     }
 
     private boolean shouldUpdate(final ENNote args) {

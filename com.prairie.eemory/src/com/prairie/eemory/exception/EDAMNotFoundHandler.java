@@ -8,9 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 
 import com.evernote.edam.error.EDAMNotFoundException;
+import com.prairie.eemory.client.ENNote;
+import com.prairie.eemory.client.ENObject;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.EeClipperFactory;
-import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.client.impl.ENNoteImpl;
 import com.prairie.eemory.util.ListUtil;
 import com.prairie.eemory.util.LogUtil;
@@ -32,38 +33,37 @@ public class EDAMNotFoundHandler {
         return LogUtil.error(e);
     }
 
-    public String findNotebookByName(final String name) {
-        String guid = null;
+    public ENObject findNotebookByName(final String name) {
         try {
             EeClipper clipper = EeClipperFactory.getInstance().getEeClipper(token, false);
-            Map<String, String> map = clipper.listNotebooks();
-            guid = map.get(name);
+            Map<String, ENObject> map = clipper.listNotebooks();
+            return map.get(name);
         } catch (Throwable e) {
             // ignore and give up failure recovery
             LogUtil.logCancel(e);
         }
-        return guid;
+        return null;
     }
 
-    public ENNote findNoteByName(final String notebookGuid, final String name) {
-        ENNote guid = null;
+    public ENNote findNoteByName(final ENObject notebook, final String name) {
+        ENNote noteFound = null;
         try {
             EeClipper clipper = EeClipperFactory.getInstance().getEeClipper(token, false);
             ENNote args = new ENNoteImpl();
-            args.getNotebook().setGuid(notebookGuid);
+            args.setNotebook(notebook);
             args.setName(name);
             Map<String, ENNote> map = clipper.listNotesWithinNotebook(args);
-            guid = findNote(map, name);
+            noteFound = findNote(map, name);
         } catch (Throwable e) {
             // ignore and give up failure recovery
             LogUtil.logCancel(e);
         }
-        return guid;
+        return noteFound;
     }
 
     /**
      * find note by name
-     * 
+     *
      * @param noteMap
      *            uuid-ENNote map
      * @param name
@@ -87,20 +87,20 @@ public class EDAMNotFoundHandler {
     }
 
     private boolean fixNotFoundNotebookGuid(final ENNote args) {
-        String found = findNotebookByName(args.getNotebook().getName());
-        if (StringUtils.isNotBlank(found)) {
-            args.getNotebook().setGuid(found);
-            args.getNotebook().setGuidReset(true);
+        ENObject found = findNotebookByName(args.getNotebook().getName());
+        if (found != null) {
+            args.setNotebook(found);
+            args.getNotebook().setArgsReset(true);
             return true;
         }
         return false;
     }
 
     private boolean fixNotFoundNoteGuid(final ENNote args) {
-        ENNote found = findNoteByName(args.getNotebook().getGuid(), args.getName());
+        ENNote found = findNoteByName(args.getNotebook(), args.getName());
         if (found != null && StringUtils.isNotBlank(found.getGuid())) {
             args.setGuid(found.getGuid());
-            args.setGuidReset(true);
+            args.setArgsReset(true);
             return true;
         }
         return false;
