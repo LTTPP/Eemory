@@ -37,7 +37,7 @@ public class EDAMNotFoundHandler {
         try {
             EeClipper clipper = EeClipperFactory.getInstance().getEeClipper(token, false);
             Map<String, ENObject> map = clipper.listNotebooks();
-            return map.get(name);
+            return map.get(name); // TODO If consider linked notebook in, and if need to prompt user
         } catch (Throwable e) {
             // ignore and give up failure recovery
             LogUtil.logCancel(e);

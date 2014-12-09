@@ -94,7 +94,7 @@ public class ObjectUtil {
         return null;
     }
 
-    public static String serialize(final Object object) throws IOException {
+    public static String serialize(final Object object) throws IOException {//TODO effective Java
         ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
         ObjectOutputStream objectOutput = new ObjectOutputStream(byteOutput);
         objectOutput.writeObject(object);

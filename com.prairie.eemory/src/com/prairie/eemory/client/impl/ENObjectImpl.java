@@ -104,22 +104,21 @@ public class ENObjectImpl implements ENObject {
      */
     @Override
     public void adopt(final ENObject note) {
+        // this/set-name should always be done
         if (StringUtils.isNotBlank(note.getName())) {
             setName(note.getName());
-            setArgsAdopt(true);
         }
 
-        if (StringUtils.isNotBlank(note.getGuid())) {
+        if (StringUtils.isNotBlank(note.getGuid())) { // user do re-select an existing note in Quick Organize
             setGuid(note.getGuid());
-            setArgsAdopt(true);
-        }
 
-        if (note.getType() != null) {
-            setType(note.getType());
-            setArgsAdopt(true);
-        }
-        if (note.getLinkedObject() != null) {
-            setLinkedObject(note.getLinkedObject());
+            if (note.getType() != null) {
+                setType(note.getType());
+            }
+            if (note.getLinkedObject() != null) {
+                setLinkedObject(note.getLinkedObject());
+            }
+
             setArgsAdopt(true);
         }
     }
