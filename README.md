@@ -56,6 +56,7 @@ Need more information? Please check out this [Wiki](https://github.com/prairie/E
 + YXBJ support.
 + Revoke authorization from plug-in side.
 + Chinese language support.
++ Business support.
 
 ## Authors and Contributors
 
