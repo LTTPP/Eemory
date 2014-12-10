@@ -3,6 +3,7 @@ package com.prairie.eemory.handlers;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -106,6 +107,8 @@ public class EeHandler extends AbstractHandler implements Constants {
 
     protected void clipFileClicked(final ExecutionEvent event) throws ExecutionException {
         try {
+            List<File> attachments = EclipseUtil.getSelectedFiles(event);
+
             final ENNote args = createENNote();
 
             int option = QuickOrganizeDialog.show(HandlerUtil.getActiveShellChecked(event));
@@ -115,7 +118,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                 return;
             }
 
-            args.setAttachments(EclipseUtil.getSelectedFiles(event));
+            args.setAttachments(attachments);
             if (StringUtils.isBlank(args.getName())) {
                 args.setName(FileUtil.concatNameOfFiles(args.getAttachments()));
             }
@@ -164,6 +167,9 @@ public class EeHandler extends AbstractHandler implements Constants {
 
     protected void clipSelectionClicked(final ExecutionEvent event) throws ExecutionException {
         try {
+            IEditorPart editor = HandlerUtil.getActiveEditor(event);
+            StyledText styledText = (StyledText) editor.getAdapter(Control.class);
+
             final ENNote args = createENNote();
 
             int option = QuickOrganizeDialog.show(HandlerUtil.getActiveShellChecked(event));
@@ -173,8 +179,6 @@ public class EeHandler extends AbstractHandler implements Constants {
                 return;
             }
 
-            IEditorPart editor = HandlerUtil.getActiveEditor(event);
-            StyledText styledText = (StyledText) editor.getAdapter(Control.class);
             if (StringUtils.isBlank(args.getName())) {
                 args.setName(editor.getTitle() + ConstantsUtil.MINUS + DateTimeUtil.timestamp());
             }
