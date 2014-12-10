@@ -120,10 +120,10 @@ public class EeHandler extends AbstractHandler implements Constants {
                 args.setName(FileUtil.concatNameOfFiles(args.getAttachments()));
             }
 
-            Job job = new Job(Messages.Plugin_Runtime_AddFileToEvernote) {
+            Job job = new Job(Messages.Plugin_Runtime_ClipFileToEvernote) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.Plugin_Runtime_AddFileToEvernote, 2);
+                    monitor.beginTask(Messages.Plugin_Runtime_ClipFileToEvernote, 2);
                     EeClipper clipper = null;
                     try {
                         clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
@@ -180,10 +180,10 @@ public class EeHandler extends AbstractHandler implements Constants {
             }
             args.setContent(EclipseUtil.getSelectedStyleText(styledText));
 
-            Job job = new Job(Messages.Plugin_Runtime_AddSelectionToEvernote) {
+            Job job = new Job(Messages.Plugin_Runtime_ClipSelectionToEvernote) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.Plugin_Runtime_AddSelectionToEvernote, 2);
+                    monitor.beginTask(Messages.Plugin_Runtime_ClipSelectionToEvernote, 2);
                     EeClipper clipper = null;
                     try {
                         clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
@@ -246,10 +246,10 @@ public class EeHandler extends AbstractHandler implements Constants {
             }
             args.setAttachments(ListUtil.list(file));
 
-            Job job = new Job(Messages.Plugin_Runtime_AddFileToEvernote) {
+            Job job = new Job(Messages.Plugin_Runtime_ClipFileToEvernote) {
                 @Override
                 protected IStatus run(final IProgressMonitor monitor) {
-                    monitor.beginTask(Messages.Plugin_Runtime_AddFileToEvernote, 3);
+                    monitor.beginTask(Messages.Plugin_Runtime_ClipFileToEvernote, 3);
                     EeClipper clipper = null;
                     try {
                         ImageIO.write(screenshot, ConstantsUtil.IMG_PNG, file);

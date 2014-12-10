@@ -1,6 +1,5 @@
 package com.prairie.eemory.exception;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -29,20 +28,12 @@ public class ThrowableHandler {
     }
 
     public static boolean handleDesignTimeErr(final Shell shell, final Throwable e) {
-        return handleDesignTimeErr(shell, e, false);
-    }
-
-    public static boolean handleDesignTimeErr(final Shell shell, final Throwable e, final boolean fatal) {
-        return handleDesignTimeErr(shell, e, fatal, null);
-    }
-
-    public static boolean handleDesignTimeErr(final Shell shell, final Throwable e, final EeClipper clipper) {
-        return handleDesignTimeErr(shell, e, false, clipper);
+        return handleDesignTimeErr(shell, e, null);
     }
 
     private static boolean result;
 
-    public static boolean handleDesignTimeErr(final Shell shell, final Throwable e, final boolean fatal, final EeClipper clipper) {
+    public static boolean handleDesignTimeErr(final Shell shell, final Throwable e, final EeClipper clipper) {
         if (e instanceof EDAMUserException) {
             Display.getDefault().syncExec(new Runnable() {
                 @Override
@@ -52,14 +43,14 @@ public class ThrowableHandler {
             });
             return result;
         } else if (e instanceof OutOfDateException) {
-            openError(shell, EemoryPlugin.getName() + StringUtils.EMPTY + EemoryPlugin.getVersion() + Messages.Plugin_Runtime_AddFileToEvernote_OutOfDate);
+            openError(shell, Messages.bind(Messages.Plugin_OutOfDate, EemoryPlugin.getVersion()));
         } else if (e instanceof TTransportException) {
             if (clipper != null) {
                 clipper.setInvalid();
             }
-            openError(shell, ExceptionUtils.getRootCauseMessage(e) + (fatal ? StringUtils.EMPTY : Messages.Plugin_Throwable_NotFatal));
+            openError(shell, ExceptionUtils.getRootCauseMessage(e));
         } else {
-            openError(shell, ExceptionUtils.getRootCauseMessage(e) + (fatal ? StringUtils.EMPTY : Messages.Plugin_Throwable_NotFatal));
+            openError(shell, ExceptionUtils.getRootCauseMessage(e));
         }
         return false;
     }
@@ -89,7 +80,7 @@ public class ThrowableHandler {
             }
             return new EDAMUserExceptionHandler().handleRuntime(shell, (EDAMUserException) e, clipper);
         } else if (e instanceof OutOfDateException) {
-            return LogUtil.error(EemoryPlugin.getName() + StringUtils.EMPTY + EemoryPlugin.getVersion() + Messages.Plugin_Runtime_AddFileToEvernote_OutOfDate);
+            return LogUtil.error(Messages.bind(Messages.Plugin_OutOfDate, EemoryPlugin.getVersion()));
         } else if (e instanceof TTransportException) {
             if (clipper != null) {
                 clipper.setInvalid();
@@ -104,7 +95,7 @@ public class ThrowableHandler {
 
     public static ExecutionException handleExecErr(final Throwable e, final EeClipper clipper) {
         if (e instanceof OutOfDateException) {
-            return new ExecutionException(EemoryPlugin.getName() + StringUtils.EMPTY + EemoryPlugin.getVersion() + Messages.Plugin_Runtime_AddFileToEvernote_OutOfDate);
+            return new ExecutionException(Messages.bind(Messages.Plugin_OutOfDate, EemoryPlugin.getVersion()));
         } else if (e instanceof TTransportException) {
             if (clipper != null) {
                 clipper.setInvalid();

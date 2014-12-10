@@ -180,7 +180,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                     try {
                         clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
                     } catch (Throwable e) {
-                        boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, true, clipper);
+                        boolean fixed = ThrowableHandler.handleDesignTimeErr(shell, e, clipper);
                         if (fixed) {
                             try {
                                 clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
@@ -193,7 +193,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
                 }
             });
         } catch (Throwable e) {
-            ThrowableHandler.handleDesignTimeErr(shell, e, true);
+            ThrowableHandler.handleDesignTimeErr(shell, e);
         }
     }
 

@@ -53,11 +53,8 @@ public class EemoryPlugin extends AbstractUIPlugin {
     }
 
     public static String getVersion() {
-        return EemoryPlugin.getDefault().getBundle().getVersion().toString();
-        // return
-        // ((BundleReference)EEClipperPlugin.class.getClassLoader()).getBundle().getVersion().toString();
-        // return
-        // EEClipperPlugin.getDefault().getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
+        //return EemoryPlugin.getDefault().getBundle().getVersion().toString(); // Not support by Ganymede
+        return EemoryPlugin.getDefault().getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
     }
 
     public static String getName() {

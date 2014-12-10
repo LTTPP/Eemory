@@ -190,7 +190,7 @@ public class EeClipperImpl extends EeClipper {
 
         NoteStoreClient client = noteStoreClient;
         if (args.getNotebook().getType() == ENObjectType.LINKED) {
-        	// args.getNotebook().getLinkedObject() should NOT be null
+            // args.getNotebook().getLinkedObject() should NOT be null
             client = StoreClientFactory.getInstance(token).getLinkedNoteStoreClient((LinkedNotebook) args.getNotebook().getLinkedObject());
         }
         NotesMetadataList notesMetadataList = client.findNotesMetadata(filter, 0, com.evernote.edam.limits.Constants.EDAM_USER_NOTES_MAX, resultSpec);
