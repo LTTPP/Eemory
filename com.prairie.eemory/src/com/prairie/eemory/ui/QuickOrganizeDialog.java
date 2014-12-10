@@ -309,7 +309,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
 
     @Override
     protected Point getInitialSize() {
-        return new Point(450, 200);
+        return new Point(450, 250);
     }
 
     @Override
