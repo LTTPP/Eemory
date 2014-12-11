@@ -9,10 +9,10 @@ Visit [Eemory](http://marketplace.eclipse.org/content/eemory) on Eclipse Marketp
 
 ## Features
 
-+ Adding code snippet, source file, screenshot and more to a new note on Evernote.
-+ Prepending code snippet, source file, screenshot and more to an existing note on Evernote.
-+ Adding/Prepending multiple files once.
-+ Notebook, Note and Tag can be specified(no need to remember their names, we have auto-suggestion) beforehand or in runtime.
++ Adding code snippet, source file, screenshot and more to a new note.
++ Prepending code snippet, source file, screenshot and more to an existing note.
++ Adding/Prepending multiple files at once.
++ Notebook(including shared notebooks by other people), Note and Tag can be specified beforehand or in runtime.
 + Also can add a comment for each clip.
 + Syntax highlighting for any language on Evernote just like what you see in Eclipse.
 + Authentication is delegated to Eemory using the OAuth protocol. One-click OAuth authentication as easy to use as a web application did.
