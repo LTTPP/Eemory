@@ -7,6 +7,8 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -20,6 +22,8 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import org.apache.commons.lang3.SystemUtils;
 
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.ui.GeomRectangle.Position;
@@ -52,6 +56,10 @@ public class CaptureView extends JFrame {
         fullScreen = ImageUtil.captureScreen(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setUndecorated(true);
+        setResizable(false);
+        setAlwaysOnTop(true);
+        setCursor(DRAW_CURSOR);
+
         resetView();
 
         addKeyListener(new KeyAdapter() {
@@ -258,7 +266,6 @@ public class CaptureView extends JFrame {
                 g2.drawRect(0, 0, new Double(Toolkit.getDefaultToolkit().getScreenSize().getWidth()).intValue(), new Double(Toolkit.getDefaultToolkit().getScreenSize().getHeight()).intValue());
             }
         });
-        setAlwaysOnTop(true);
         validate();
     }
 
@@ -271,8 +278,18 @@ public class CaptureView extends JFrame {
 
     public static BufferedImage showView() throws HeadlessException, AWTException, InterruptedException {
         final CaptureView view = new CaptureView();
-        view.setVisible(true);
-        view.setCursor(DRAW_CURSOR);
+
+        if (SystemUtils.IS_OS_WINDOWS) {
+            view.setVisible(true);
+        } else {
+            GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+            if (device.isFullScreenSupported()) {
+                device.setFullScreenWindow(view);
+            } else {
+                view.setVisible(true);
+            }
+        }
+
         while (view.isVisible()) {
             Thread.sleep(100);
         }
