@@ -243,9 +243,7 @@ public class CaptureView extends JFrame {
                 ((Graphics2D) graphics).drawImage(ImageUtil.mask(fullScreen, scaleFactor), 0, 0, null);
             }
         });
-        requestFocus();
-        setAlwaysOnTop(true);
-        setVisible(true);
+        validate();
     }
 
     private void resetView() {
@@ -261,8 +259,7 @@ public class CaptureView extends JFrame {
             }
         });
         setAlwaysOnTop(true);
-        setVisible(true);
-        requestFocus();
+        validate();
     }
 
     public BufferedImage getScreenshot() {
