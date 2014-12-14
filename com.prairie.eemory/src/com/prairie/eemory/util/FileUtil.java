@@ -1,8 +1,11 @@
 package com.prairie.eemory.util;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.prairie.eemory.Constants;
@@ -43,6 +46,18 @@ public class FileUtil {
             sb.append(Integer.toHexString(intVal));
         }
         return sb.toString();
+    }
+
+    public static File toFile(final URL url) {
+        File file = FileUtils.toFile(url);
+        if (file == null) {
+            try {
+                file = new File(url.toURI());
+            } catch (URISyntaxException e) {
+                file = new File(url.getPath());
+            }
+        }
+        return file;
     }
 
 }

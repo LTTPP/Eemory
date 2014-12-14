@@ -21,6 +21,7 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.oauth.CallbackHandler;
+import com.prairie.eemory.util.FileUtil;
 import com.prairie.eemory.util.HttpUtil;
 
 public class JettyCallback extends AbstractHandler implements CallbackHandler {
@@ -115,7 +116,7 @@ public class JettyCallback extends AbstractHandler implements CallbackHandler {
             response.setStatus(HttpServletResponse.SC_OK);
             baseRequest.setHandled(true);
             PrintWriter doc = response.getWriter();
-            doc.println(FileUtils.readFileToString(FileUtils.toFile(FileLocator.resolve(getClass().getResource(Constants.OAUTH_NOTTARGET_HTML))), CharEncoding.UTF_8));
+            doc.println(FileUtils.readFileToString(FileUtil.toFile(FileLocator.resolve(getClass().getResource(Constants.OAUTH_NOTTARGET_HTML))), CharEncoding.UTF_8));
         }
     }
 
