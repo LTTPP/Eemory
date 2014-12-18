@@ -7,7 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +21,6 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.oauth.CallbackHandler;
-import com.prairie.eemory.util.FileUtil;
 import com.prairie.eemory.util.HttpUtil;
 
 public class JettyCallback extends AbstractHandler implements CallbackHandler {
@@ -78,9 +77,9 @@ public class JettyCallback extends AbstractHandler implements CallbackHandler {
 
                 verifier = request.getParameter(Constants.OAUTH_VERIFIER);
                 if (StringUtils.isNotBlank(verifier)) {
-                    doc.println(FileUtils.readFileToString(FileUtils.toFile(FileLocator.resolve(getClass().getResource(Constants.OAUTH_CALLBACK_HTML))), CharEncoding.UTF_8));
+                    doc.println(IOUtils.toString(getClass().getResourceAsStream(Constants.OAUTH_CALLBACK_HTML), CharEncoding.UTF_8));
                 } else {
-                    doc.println(FileUtils.readFileToString(FileUtils.toFile(FileLocator.resolve(getClass().getResource(Constants.OAUTH_CALLBACK_ERR_HTML))), CharEncoding.UTF_8));
+                    doc.println(IOUtils.toString(getClass().getResourceAsStream(Constants.OAUTH_CALLBACK_ERR_HTML), CharEncoding.UTF_8));
                 }
             } finally {
                 // notify OAuth thread verifier got, or error occurred. requests maybe not all handled here.
@@ -116,7 +115,7 @@ public class JettyCallback extends AbstractHandler implements CallbackHandler {
             response.setStatus(HttpServletResponse.SC_OK);
             baseRequest.setHandled(true);
             PrintWriter doc = response.getWriter();
-            doc.println(FileUtils.readFileToString(FileUtil.toFile(FileLocator.resolve(getClass().getResource(Constants.OAUTH_NOTTARGET_HTML))), CharEncoding.UTF_8));
+            doc.println(IOUtils.toString(getClass().getResourceAsStream(Constants.OAUTH_NOTTARGET_HTML), CharEncoding.UTF_8));
         }
     }
 
