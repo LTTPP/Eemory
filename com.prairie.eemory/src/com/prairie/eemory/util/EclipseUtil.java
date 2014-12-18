@@ -34,6 +34,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.w3c.dom.DOMException;
 
+import com.prairie.eemory.Messages;
 import com.prairie.eemory.enml.FontStyle;
 import com.prairie.eemory.enml.StyleText;
 import com.prairie.eemory.ui.ConfigContentProposalProvider;
@@ -70,9 +71,11 @@ public class EclipseUtil {
         } else if (selection instanceof ITextSelection) {
             IEditorPart editorPart = HandlerUtil.getActiveEditor(event);
             IFile iFile = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
-            if (iFile != null) {// TODO how to handle iFile = null case
+            if (iFile != null) {
                 File file = iFile.getLocation().makeAbsolute().toFile();
                 files.add(file);
+            } else {
+                LogUtil.logError(Messages.Plugin_Error_NoFile);
             }
         }
 

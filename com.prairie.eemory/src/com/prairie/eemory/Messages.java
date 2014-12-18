@@ -32,6 +32,7 @@ public class Messages extends NLS {
     public static String Plugin_OutOfDate;
     public static String Plugin_Error_Occurred;
     public static String Plugin_Error_OutOfDate;
+    public static String Plugin_Error_NoFile;
 
     public static String Plugin_OAuth_TokenNotConfigured;
     public static String Plugin_OAuth_Title;
