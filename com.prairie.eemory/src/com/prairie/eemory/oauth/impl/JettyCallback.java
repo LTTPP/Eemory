@@ -11,7 +11,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -22,6 +21,7 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.oauth.CallbackHandler;
 import com.prairie.eemory.util.HttpUtil;
+import com.prairie.eemory.util.LogUtil;
 
 public class JettyCallback extends AbstractHandler implements CallbackHandler {
 
@@ -42,8 +42,9 @@ public class JettyCallback extends AbstractHandler implements CallbackHandler {
         http.setPort(0);
         server.addConnector(http);
 
-        ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setResourceBase(FileLocator.resolve(getClass().getResource(Constants.OAUTH_RESOURCE_BASE)).getPath());
+        BundledResourceHandler resourceHandler = new BundledResourceHandler();
+        resourceHandler.setLoadingClass(getClass());
+        resourceHandler.setResourceBase(Constants.OAUTH_RESOURCE_BASE);
         resourceHandler.setWelcomeFiles(ArrayUtils.toArray(Constants.OAUTH_DEFAULT_HTML));
 
         HandlerList handlers = new HandlerList();
@@ -102,6 +103,26 @@ public class JettyCallback extends AbstractHandler implements CallbackHandler {
         try {
             System.setProperty(Constants.JETTY_LOG_IMPL_CLASS, EclipseErrorLog.class.getName());
         } catch (Exception ignored) {
+        }
+    }
+
+    private class BundledResourceHandler extends ResourceHandler {
+        private Class<?> loadingClass;
+
+        @Override
+        public void setResourceBase(final String resourceBase) {
+            try {
+                BundledFileResource resource = new BundledFileResource(resourceBase);
+                resource.setLoadingClass(loadingClass);
+                setBaseResource(resource);
+            } catch (Exception e) {
+                LogUtil.logWarning(e.toString());
+                throw new IllegalArgumentException(resourceBase);
+            }
+        }
+
+        public void setLoadingClass(final Class<?> loadingClass) {
+            this.loadingClass = loadingClass;
         }
     }
 
