@@ -20,6 +20,7 @@ Visit [Eemory](http://marketplace.eclipse.org/content/eemory) on Eclipse Marketp
 ## Limits
 
 + Can not handle `>` appear in the value for the attributes of an XML(called ENML in Evernote context) document. This only happens when you clip content to an existing note on Evernote. Even though Eemory will not break your data, just an error dialog will pop up. If you don't clear about what are talking about here, don't worry, this just means Eemory accept a [SGML-compatible](http://www.w3.org/TR/REC-xml/#dt-compat) XML, which is almost most cases.
++ Folded pieces of code or any other text are not supported to clip.
 
 ## Screenshots
 
