@@ -225,11 +225,11 @@ public class CaptureView extends JFrame {
 
             // draw hint
             int stringWidth = graphics.getFontMetrics(getFont()).stringWidth(Messages.Plugin_Runtime_ClipScreenshotToEvernote_Hint);
-            int stringHeight = graphics.getFontMetrics(getFont()).getHeight();
+            int stringHeight = graphics.getFontMetrics(getFont()).getHeight() + 1;
             int charWidth = stringWidth / Messages.Plugin_Runtime_ClipScreenshotToEvernote_Hint.length();
             int start_x = charWidth * 1;
-            int start_y = -(2 + charWidth); // -6
-            stringWidth += charWidth * 4; // 4 chars' width
+            int start_y = -(2 + charWidth);
+            stringWidth += charWidth * 6;
 
             GeomPoint p = rectangle.getTopLeftPoint();
             if (p.getY() - (stringHeight + 2) < 0) {
