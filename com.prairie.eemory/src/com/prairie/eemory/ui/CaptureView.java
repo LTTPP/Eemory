@@ -44,11 +44,7 @@ public class CaptureView extends JFrame {
 
     private final static Cursor DRAW_CURSOR = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
 
-    private static final int PLUGIN_SCREENSHOT_HINT_HEIGHT = 18;
-    private static final int PLUGIN_SCREENSHOT_HINT_WIDTH = 260;
     private static final float PLUGIN_SCREENSHOT_HINT_SCALEFACTOR = 0.3F;
-    private static final int PLUGIN_SCREENSHOT_HINT_TEXT_START_X = 5;
-    private static final int PLUGIN_SCREENSHOT_HINT_TEXT_START_Y = -6;
     private static final float PLUGIN_SCREENSHOT_MASK_FULLSCREEN_SCALEFACTOR = 0.7F;
 
     public CaptureView() throws HeadlessException, AWTException {
@@ -228,14 +224,21 @@ public class CaptureView extends JFrame {
             g2.fillRect(rectangle.getRightRectangle().getTopLeftPoint().getX(), rectangle.getRightRectangle().getTopLeftPoint().getY(), rectangle.getRightRectangle().getWidth(), rectangle.getRightRectangle().getHeight());
 
             // draw hint
+            int stringWidth = graphics.getFontMetrics(getFont()).stringWidth(Messages.Plugin_Runtime_ClipScreenshotToEvernote_Hint);
+            int stringHeight = graphics.getFontMetrics(getFont()).getHeight();
+            int charWidth = stringWidth / Messages.Plugin_Runtime_ClipScreenshotToEvernote_Hint.length();
+            int start_x = charWidth * 1;
+            int start_y = -(2 + charWidth); // -6
+            stringWidth += charWidth * 4; // 4 chars' width
+
             GeomPoint p = rectangle.getTopLeftPoint();
-            if (p.getY() - (PLUGIN_SCREENSHOT_HINT_HEIGHT + 2) < 0) {
-                p = new GeomPoint(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY() + PLUGIN_SCREENSHOT_HINT_HEIGHT + 2);
+            if (p.getY() - (stringHeight + 2) < 0) {
+                p = new GeomPoint(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY() + stringHeight + 2);
             }
-            g2.drawImage(ImageUtil.mask(fullScreen.getSubimage(p.getX(), p.getY() - (PLUGIN_SCREENSHOT_HINT_HEIGHT + 2), PLUGIN_SCREENSHOT_HINT_WIDTH, PLUGIN_SCREENSHOT_HINT_HEIGHT), PLUGIN_SCREENSHOT_HINT_SCALEFACTOR), p.getX(), p.getY() - (PLUGIN_SCREENSHOT_HINT_HEIGHT + 2), null);
+            g2.drawImage(ImageUtil.mask(fullScreen.getSubimage(p.getX(), p.getY() - (stringHeight + 2), stringWidth, stringHeight), PLUGIN_SCREENSHOT_HINT_SCALEFACTOR), p.getX(), p.getY() - (stringHeight + 2), null);
             g2.setColor(Color.WHITE);
             g2.setFont(getFont().deriveFont(Font.BOLD));
-            g2.drawString(Messages.Plugin_Runtime_ClipScreenshotToEvernote_Hint, p.getX() + PLUGIN_SCREENSHOT_HINT_TEXT_START_X, p.getY() + PLUGIN_SCREENSHOT_HINT_TEXT_START_Y);
+            g2.drawString(Messages.Plugin_Runtime_ClipScreenshotToEvernote_Hint, p.getX() + start_x, p.getY() + start_y);
         }
     }
 
