@@ -55,6 +55,7 @@ public class Messages extends NLS {
     public static String DOM_Error8;
     public static String DOM_Error9;
     public static String Throwable_IllegalArgumentException_Message;
+    public static String Throwable_NotSerializable_Message;
 
     static {
         // initialize resource bundle

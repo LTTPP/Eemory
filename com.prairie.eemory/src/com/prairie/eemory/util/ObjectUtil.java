@@ -8,7 +8,10 @@ import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.SerializationException;
 import org.apache.commons.lang3.SerializationUtils;
+
+import com.prairie.eemory.Messages;
 
 public class ObjectUtil {
 
@@ -95,6 +98,9 @@ public class ObjectUtil {
      * Assume object is serializable.
      */
     public static String serialize(final Object object) {
+        if (!(object instanceof Serializable)) {
+            throw new SerializationException(Messages.bind(Messages.Throwable_NotSerializable_Message, object));
+        }
         byte[] bytes = SerializationUtils.serialize((Serializable) object);
         return new String(Base64.encodeBase64(bytes));
     }
