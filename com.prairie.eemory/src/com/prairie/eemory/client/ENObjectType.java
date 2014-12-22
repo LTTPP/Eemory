@@ -31,7 +31,7 @@ public enum ENObjectType {
                 return value;
             }
         }
-        throw new IllegalArgumentException(Messages.Throwable_IllegalArgumentException_Message + name);
+        throw new IllegalArgumentException(Messages.bind(Messages.Throwable_IllegalArgumentException_Message, name));
     }
 
 }
