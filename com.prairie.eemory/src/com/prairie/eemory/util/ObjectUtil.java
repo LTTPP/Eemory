@@ -1,10 +1,6 @@
 package com.prairie.eemory.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.SerializationUtils;
 
 public class ObjectUtil {
 
@@ -94,20 +91,17 @@ public class ObjectUtil {
         return null;
     }
 
-    public static String serialize(final Object object) throws IOException {//TODO effective Java, or if we can get linked notebook for each run - API
-        ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutput = new ObjectOutputStream(byteOutput);
-        objectOutput.writeObject(object);
-        objectOutput.close();
-        return new String(Base64.encodeBase64(byteOutput.toByteArray()));
+    /*
+     * Assume object is serializable.
+     */
+    public static String serialize(final Object object) {
+        byte[] bytes = SerializationUtils.serialize((Serializable) object);
+        return new String(Base64.encodeBase64(bytes));
     }
 
-    public static Object deserialize(final String base64SerializedString) throws IOException, ClassNotFoundException {
-        byte[] data = Base64.decodeBase64(base64SerializedString);
-        ObjectInputStream objectInput = new ObjectInputStream(new ByteArrayInputStream(data));
-        Object object = objectInput.readObject();
-        objectInput.close();
-        return object;
+    public static Object deserialize(final String base64SerializedString) {
+        byte[] bytes = Base64.decodeBase64(base64SerializedString);
+        return SerializationUtils.deserialize(bytes);
     }
 
 }

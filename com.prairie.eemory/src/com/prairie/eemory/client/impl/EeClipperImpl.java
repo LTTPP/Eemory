@@ -142,7 +142,7 @@ public class EeClipperImpl extends EeClipper {
             map.put(n.getName(), ENObjectImpl.forNameAndGuid(n.getName(), n.getGuid()));
         }
 
-        for (LinkedNotebook linkedNotebook : linkedNotebooks) {
+        for (LinkedNotebook linkedNotebook : linkedNotebooks) { // LinkedNotebook must be serializable
             NoteStoreClient linkedNoteStore = StoreClientFactory.getInstance(token).getLinkedNoteStoreClient(linkedNotebook);
             SharedNotebook sharedNotebook = linkedNoteStore.getSharedNotebookByAuth();
 
