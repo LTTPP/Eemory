@@ -193,8 +193,15 @@ public class EeClipperImpl extends EeClipper {
             // args.getNotebook().getLinkedObject() should NOT be null
             client = StoreClientFactory.getInstance(token).getLinkedNoteStoreClient((LinkedNotebook) args.getNotebook().getLinkedObject());
         }
-        NotesMetadataList notesMetadataList = client.findNotesMetadata(filter, 0, com.evernote.edam.limits.Constants.EDAM_USER_NOTES_MAX, resultSpec);
-        List<NoteMetadata> noteList = notesMetadataList.getNotes();
+
+        List<NoteMetadata> noteList = ListUtil.list();
+        int offset = 0, pageSize = com.evernote.edam.limits.Constants.EDAM_USER_NOTES_MAX;
+        NotesMetadataList notesMetadataList = null;
+        do {
+            notesMetadataList = client.findNotesMetadata(filter, offset, pageSize, resultSpec);
+            noteList.addAll(notesMetadataList.getNotes());
+            offset = offset + notesMetadataList.getNotesSize();
+        } while (notesMetadataList != null && offset < notesMetadataList.getTotalNotes());
 
         Map<String, ENNote> map = MapUtil.map();
         for (NoteMetadata n : noteList) {
