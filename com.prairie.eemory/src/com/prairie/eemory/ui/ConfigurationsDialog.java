@@ -542,7 +542,8 @@ public class ConfigurationsDialog extends TitleAreaDialog implements Constants {
             map = MapUtil.map();
             matrix.put(uniqueKey, map);
         }
-        if (!StringUtil.equalsInLogic(getFieldValue(property), map.get(property))) {
+        String fieldValue = isHasInput(property) ? getFieldValue(property) : StringUtils.EMPTY;
+        if (!StringUtil.equalsInLogic(fieldValue, map.get(property))) {
             map.put(property, getFieldValue(property));
             return true;
         }
