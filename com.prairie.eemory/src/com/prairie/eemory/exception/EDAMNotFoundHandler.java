@@ -54,6 +54,14 @@ public class EDAMNotFoundHandler {
             args.setName(name);
             Map<String, ENNote> map = clipper.listNotesWithinNotebook(args);
             noteFound = findNote(map, name);
+        } catch (EDAMNotFoundException e) {
+            if (e.getIdentifier().equals(EDAMDataModel.Notebook_guid.toString())) {
+                ENObject nb = findNotebookByName(notebook.getName());
+                // notebook is found or null, so should not come here again, which will result in a dead loop.
+                noteFound = findNoteByName(nb, name);
+            } else {
+                LogUtil.logCancel(e);
+            }
         } catch (Throwable e) {
             // ignore and give up failure recovery
             LogUtil.logCancel(e);

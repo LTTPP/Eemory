@@ -33,9 +33,8 @@ public interface Constants {
 
     // Data Model
     public static final String ENML_MODEL_NOTE_NOTEGUID = "Note.guid";
-    public static final String ENML_MODEL_NOTE_NOTEGUID_READABLE = "Note";
     public static final String ENML_MODEL_NOTE_NOTEBOOKGUID = "Note.notebookGuid";
-    public static final String ENML_MODEL_NOTE_NOTEBOOKGUID_READABLE = "Notebook";
+    public static final String ENML_MODEL_NOTEBOOKGUID = "Notebook.guid";
     public static final int PLUGIN_CONFIGS_REFRESH_ID = -143259786; // random number
 
     // DOM

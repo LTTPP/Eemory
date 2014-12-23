@@ -10,11 +10,6 @@ public enum EDAMDataModel {
         public String toString() {
             return Constants.ENML_MODEL_NOTE_NOTEGUID;
         }
-
-        @Override
-        public String toReadableString() {
-            return Constants.ENML_MODEL_NOTE_NOTEGUID_READABLE;
-        }
     },
 
     Note_notebookGuid {
@@ -22,14 +17,14 @@ public enum EDAMDataModel {
         public String toString() {
             return Constants.ENML_MODEL_NOTE_NOTEBOOKGUID;
         }
+    },
 
+    Notebook_guid {
         @Override
-        public String toReadableString() {
-            return Constants.ENML_MODEL_NOTE_NOTEBOOKGUID_READABLE;
+        public String toString() {
+            return Constants.ENML_MODEL_NOTEBOOKGUID;
         }
     };
-
-    public abstract String toReadableString();
 
     public static EDAMDataModel forName(final String name) throws IllegalArgumentException {
         EDAMDataModel[] values = EDAMDataModel.values();
