@@ -12,7 +12,7 @@ public class StringEscapeUtil {
      * <p>
      * Escapes the characters in a String using ENML entities.
      * </p>
-     * 
+     *
      * @param string
      *            the String to escape, may be null
      * @return a new escaped String, null if null string input
