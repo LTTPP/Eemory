@@ -17,19 +17,19 @@ import com.evernote.thrift.TException;
 import com.prairie.eemory.client.EDAMLimits;
 import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.client.NoteOps;
+import com.prairie.eemory.client.StoreClientFactory;
 import com.prairie.eemory.enml.ENML;
 import com.prairie.eemory.exception.EDAMDataModel;
-import com.prairie.eemory.exception.OutOfDateException;
 import com.prairie.eemory.util.ListUtil;
 
 public class NoteOpsTextImpl extends NoteOps {
 
-    public NoteOpsTextImpl(final String token) {
-        super(token);
+    public NoteOpsTextImpl(final StoreClientFactory factory) {
+        super(factory);
     }
 
     @Override
-    public void updateOrCreate(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, DOMException, OutOfDateException {
+    public void updateOrCreate(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, DOMException {
         if (ListUtil.isNullOrEmptyList(args.getContent())) {
             return;
         }
@@ -40,7 +40,7 @@ public class NoteOpsTextImpl extends NoteOps {
         }
     }
 
-    private void create(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, OutOfDateException {
+    private void create(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException {
         Note note = new Note();
         note.setTitle(StringUtils.abbreviate(args.getName(), EDAMLimits.EDAM_NOTE_TITLE_LEN_MAX));
         if (StringUtils.isNotBlank(args.getNotebook().getGuid())) {
@@ -63,7 +63,7 @@ public class NoteOpsTextImpl extends NoteOps {
         getNoteStoreClient(args).createNote(note);
     }
 
-    private void update(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, DOMException, ParserConfigurationException, SAXException, IOException, OutOfDateException {
+    private void update(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, DOMException, ParserConfigurationException, SAXException, IOException {
         NoteStoreClient client = getNoteStoreClient(args);
 
         Note note = client.getNote(args.getGuid(), true, false, false, false);
