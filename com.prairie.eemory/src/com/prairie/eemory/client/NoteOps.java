@@ -6,26 +6,25 @@ import com.evernote.edam.error.EDAMSystemException;
 import com.evernote.edam.error.EDAMUserException;
 import com.evernote.edam.type.LinkedNotebook;
 import com.evernote.thrift.TException;
-import com.prairie.eemory.exception.OutOfDateException;
 
 
 public abstract class NoteOps {
 
-    private final String token;
+    private final StoreClientFactory factory;
 
-    public NoteOps(final String token) {
-        this.token = token;
+    public NoteOps(final StoreClientFactory factory) {
+        this.factory = factory;
     }
 
     public abstract void updateOrCreate(ENNote args) throws Exception;
 
-    protected NoteStoreClient getNoteStoreClient(final ENNote args) throws EDAMUserException, EDAMSystemException, TException, OutOfDateException, EDAMNotFoundException {
+    protected NoteStoreClient getNoteStoreClient(final ENNote args) throws EDAMUserException, EDAMSystemException, TException, EDAMNotFoundException {
         NoteStoreClient client;
         if (args.getNotebook().getType() == ENObjectType.LINKED) {
             // args.getNotebook().getLinkedObject() should NOT be null
-            client = StoreClientFactory.getInstance(token).getLinkedNoteStoreClient((LinkedNotebook) args.getNotebook().getLinkedObject());
+            client = factory.getLinkedNoteStoreClient((LinkedNotebook) args.getNotebook().getLinkedObject());
         } else {
-            client = StoreClientFactory.getInstance(token).getNoteStoreClient();
+            client = factory.getNoteStoreClient();
         }
         return client;
     }

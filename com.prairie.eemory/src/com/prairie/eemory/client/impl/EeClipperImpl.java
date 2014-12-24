@@ -40,12 +40,11 @@ import com.prairie.eemory.util.StringUtil;
 
 public class EeClipperImpl extends EeClipper {
 
-    private final String token;
-    private final NoteStoreClient noteStoreClient;
+    private final StoreClientFactory factory;
 
     /**
      * create a Clipper instance which can be reused.
-     *
+     * 
      * @param token
      *            used to auth Evernote
      * @throws TException
@@ -57,19 +56,16 @@ public class EeClipperImpl extends EeClipper {
      * @throws EDAMSystemException
      *             Please refer to Evernote SDK
      */
-    public EeClipperImpl(final String token) throws TException, OutOfDateException, EDAMUserException, EDAMSystemException {
-        this.token = token;
-        noteStoreClient = StoreClientFactory.getInstance(token).getNoteStoreClient();
+    public EeClipperImpl(final String token) throws TException, OutOfDateException, EDAMSystemException {
+        factory = new StoreClientFactory(token);
     }
 
     /**
      * Clip the file(s) as attachment to Evernote.
-     *
+     * 
      * @param args
      *            all things needed to clip file, such as notebook guid, note
      *            guid, tags, comments and file itself.
-     * @throws OutOfDateException
-     *             This plug-in is out of date
      * @throws SAXException
      * @throws ParserConfigurationException
      * @throws IOException
@@ -84,18 +80,16 @@ public class EeClipperImpl extends EeClipper {
      * @throws NoSuchAlgorithmException
      */
     @Override
-    public void clipFile(final ENNote args) throws NoSuchAlgorithmException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, IOException, ParserConfigurationException, SAXException, OutOfDateException {
-        new NoteOpsFileImpl(token).updateOrCreate(args);
+    public void clipFile(final ENNote args) throws NoSuchAlgorithmException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, IOException, ParserConfigurationException, SAXException {
+        new NoteOpsFileImpl(factory).updateOrCreate(args);
     }
 
     /**
      * Clip the selection to Evernote.
-     *
+     * 
      * @param args
      *            all things needed to clip file, such as notebook guid, note
      *            guid, tags, comments and selection itself.
-     * @throws OutOfDateException
-     *             This plug-in is out of date
      * @throws IOException
      * @throws SAXException
      * @throws ParserConfigurationException
@@ -109,33 +103,31 @@ public class EeClipperImpl extends EeClipper {
      *             Please refer to Evernote SDK
      * @throws DOMException
      *             Something wrong when parsing ENML
-     *
+     * 
      */
     @Override
-    public void clipSelection(final ENNote args) throws DOMException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, OutOfDateException {
-        new NoteOpsTextImpl(token).updateOrCreate(args);
+    public void clipSelection(final ENNote args) throws DOMException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException {
+        new NoteOpsTextImpl(factory).updateOrCreate(args);
     }
 
     /**
      * return a user's all notebooks(including linked notebooks).
-     *
+     * 
      * @return The user's notebooks.
-     *
+     * 
      * @throws TException
      *             Please refer to Evernote SDK
      * @throws EDAMSystemException
      *             Please refer to Evernote SDK
      * @throws EDAMUserException
      *             Please refer to Evernote SDK
-     * @throws OutOfDateException
-     *             This plug-in is out of date
      * @throws EDAMNotFoundException
      *             Please refer to Evernote SDK
      */
     @Override
-    public Map<String, ENObject> listNotebooks() throws EDAMUserException, EDAMSystemException, TException, OutOfDateException, EDAMNotFoundException {
-        List<Notebook> notebooks = noteStoreClient.listNotebooks();
-        List<LinkedNotebook> linkedNotebooks = noteStoreClient.listLinkedNotebooks();
+    public Map<String, ENObject> listNotebooks() throws EDAMUserException, EDAMSystemException, TException, EDAMNotFoundException {
+        List<Notebook> notebooks = factory.getNoteStoreClient().listNotebooks();
+        List<LinkedNotebook> linkedNotebooks = factory.getNoteStoreClient().listLinkedNotebooks();
 
         Map<String, ENObject> map = MapUtil.map();
         for (Notebook n : notebooks) {
@@ -143,7 +135,7 @@ public class EeClipperImpl extends EeClipper {
         }
 
         for (LinkedNotebook linkedNotebook : linkedNotebooks) { // LinkedNotebook must be serializable
-            NoteStoreClient linkedNoteStore = StoreClientFactory.getInstance(token).getLinkedNoteStoreClient(linkedNotebook);
+            NoteStoreClient linkedNoteStore = factory.getLinkedNoteStoreClient(linkedNotebook);
             SharedNotebook sharedNotebook = linkedNoteStore.getSharedNotebookByAuth();
 
             if (map.containsKey(linkedNotebook.getShareName())) {
@@ -158,11 +150,11 @@ public class EeClipperImpl extends EeClipper {
 
     /**
      * return a user's all notes(uuid-ENNote) inside the specified notebook.
-     *
+     * 
      * @param args
      *            all things needed to list notes, such as notebook guid.
      * @return The notes in the certain notebook.
-     *
+     * 
      * @throws TException
      *             Please refer to Evernote SDK
      * @throws EDAMNotFoundException
@@ -171,11 +163,9 @@ public class EeClipperImpl extends EeClipper {
      *             Please refer to Evernote SDK
      * @throws EDAMUserException
      *             Please refer to Evernote SDK
-     * @throws OutOfDateException
-     *             This plug-in is out of date
      */
     @Override
-    public Map<String, ENNote> listNotesWithinNotebook(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, OutOfDateException {
+    public Map<String, ENNote> listNotesWithinNotebook(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException {
         NoteFilter filter = new NoteFilter();
         filter.setInactive(false);
         if (StringUtils.isNotBlank(args.getNotebook().getGuid())) {
@@ -188,10 +178,10 @@ public class EeClipperImpl extends EeClipper {
         NotesMetadataResultSpec resultSpec = new NotesMetadataResultSpec();
         resultSpec.setIncludeTitle(true);
 
-        NoteStoreClient client = noteStoreClient;
+        NoteStoreClient client = factory.getNoteStoreClient();
         if (args.getNotebook().getType() == ENObjectType.LINKED) {
             // args.getNotebook().getLinkedObject() should NOT be null
-            client = StoreClientFactory.getInstance(token).getLinkedNoteStoreClient((LinkedNotebook) args.getNotebook().getLinkedObject());
+            client = factory.getLinkedNoteStoreClient((LinkedNotebook) args.getNotebook().getLinkedObject());
         }
 
         List<NoteMetadata> noteList = ListUtil.list();
@@ -216,7 +206,7 @@ public class EeClipperImpl extends EeClipper {
 
     /**
      * return a user's all tags.
-     *
+     * 
      * @return The user's all tags.
      * @throws TException
      *             Please refer to Evernote SDK
@@ -227,7 +217,7 @@ public class EeClipperImpl extends EeClipper {
      */
     @Override
     public List<String> listTags() throws EDAMUserException, EDAMSystemException, TException {
-        return ListUtil.toStringList(noteStoreClient.listTags(), new ListStringizer() {
+        return ListUtil.toStringList(factory.getNoteStoreClient().listTags(), new ListStringizer() {
             @Override
             public String element(final Object o) {
                 return ((Tag) o).getName();
@@ -240,11 +230,11 @@ public class EeClipperImpl extends EeClipper {
         if (!super.isValid()) {
             return false;
         }
-        if (noteStoreClient == null) {
+        if (factory == null) {
             return false;
         }
         try {
-            noteStoreClient.getDefaultNotebook();
+            factory.getNoteStoreClient().getDefaultNotebook();
         } catch (Throwable e) {
             if (e instanceof TTransportException) {
                 return false;

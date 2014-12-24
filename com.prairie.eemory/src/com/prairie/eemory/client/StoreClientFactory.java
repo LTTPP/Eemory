@@ -1,7 +1,5 @@
 package com.prairie.eemory.client;
 
-import java.util.Map;
-
 import com.evernote.auth.EvernoteAuth;
 import com.evernote.clients.ClientFactory;
 import com.evernote.clients.NoteStoreClient;
@@ -16,31 +14,17 @@ import com.prairie.eemory.EemoryPlugin;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.exception.OutOfDateException;
 import com.prairie.eemory.util.EvernoteUtil;
-import com.prairie.eemory.util.MapUtil;
 
 public class StoreClientFactory {
-
-    private static Map<String, StoreClientFactory> instanceMap = MapUtil.map();
 
     private final ClientFactory factory;
 
     private NoteStoreClient noteStoreClient;
     private UserStoreClient userStoreClient;
 
-    private StoreClientFactory(final String token) throws TException, OutOfDateException {
+    public StoreClientFactory(final String token) throws TException, OutOfDateException {
         factory = auth(token);
         checkVersion();
-    }
-
-    public static StoreClientFactory getInstance(final String token) throws TException, OutOfDateException {
-        if (instanceMap.get(token) == null) {
-            synchronized (instanceMap) {
-                if (instanceMap.get(token) == null) {
-                    instanceMap.put(token, new StoreClientFactory(token));
-                }
-            }
-        }
-        return instanceMap.get(token);
     }
 
     private ClientFactory auth(final String token) {
