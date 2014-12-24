@@ -3,6 +3,7 @@ package com.prairie.eemory.enml;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -105,7 +106,7 @@ public class ENML implements Constants {
             // open self-closing en-note tag <en-note ... /> to <en-note ... ></en-note> for following processing
             existingEnml = StringUtils.replacePattern(existingEnml, ENML_TAG_EN_NOTE_SELF_CLOSING_REGEX, ENML_TAG_EN_NOTE_SELF_CLOSING_REPLACEMENT);
             // insert new nodes
-            existingEnml = StringUtils.replacePattern(existingEnml, ENML_TAG_EN_NOTE_START_REGEX, ENML_TAG_EN_NOTE_START_REPLACEMENT_P1 + DomUtil.toString(newAddedNodes));
+            existingEnml = StringUtils.replacePattern(existingEnml, ENML_TAG_EN_NOTE_START_REGEX, ENML_TAG_EN_NOTE_START_REPLACEMENT_P1 + Matcher.quoteReplacement(DomUtil.toString(newAddedNodes)));
 
             validateENML(existingEnml);
             LogUtil.debug(existingEnml);
