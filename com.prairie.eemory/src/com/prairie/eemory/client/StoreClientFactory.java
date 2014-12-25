@@ -33,7 +33,7 @@ public class StoreClientFactory {
     }
 
     private void checkVersion() throws TException, OutOfDateException {
-        UserStoreClient userStore = factory.createUserStoreClient();
+        UserStoreClient userStore = getUserStoreClient();
         boolean versionOk = userStore.checkVersion(EemoryPlugin.getName(), com.evernote.edam.userstore.Constants.EDAM_VERSION_MAJOR, com.evernote.edam.userstore.Constants.EDAM_VERSION_MINOR);
         if (!versionOk) {
             throw new OutOfDateException(Messages.Plugin_Error_OutOfDate);
