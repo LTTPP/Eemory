@@ -51,18 +51,14 @@ public class EeClipperImpl extends EeClipper {
      *             Please refer to Evernote SDK
      * @throws OutOfDateException
      *             This plug-in is out of date
-     * @throws EDAMUserException
-     *             Please refer to Evernote SDK
-     * @throws EDAMSystemException
-     *             Please refer to Evernote SDK
      */
-    public EeClipperImpl(final String token) throws TException, OutOfDateException, EDAMSystemException {
+    public EeClipperImpl(final String token) throws TException, OutOfDateException {
         factory = new StoreClientFactory(token);
     }
 
     /**
      * Clip the file(s) as attachment to Evernote.
-     * 
+     *
      * @param args
      *            all things needed to clip file, such as notebook guid, note
      *            guid, tags, comments and file itself.
@@ -86,7 +82,7 @@ public class EeClipperImpl extends EeClipper {
 
     /**
      * Clip the selection to Evernote.
-     * 
+     *
      * @param args
      *            all things needed to clip file, such as notebook guid, note
      *            guid, tags, comments and selection itself.
@@ -103,7 +99,7 @@ public class EeClipperImpl extends EeClipper {
      *             Please refer to Evernote SDK
      * @throws DOMException
      *             Something wrong when parsing ENML
-     * 
+     *
      */
     @Override
     public void clipSelection(final ENNote args) throws DOMException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException {
@@ -112,9 +108,9 @@ public class EeClipperImpl extends EeClipper {
 
     /**
      * return a user's all notebooks(including linked notebooks).
-     * 
+     *
      * @return The user's notebooks.
-     * 
+     *
      * @throws TException
      *             Please refer to Evernote SDK
      * @throws EDAMSystemException
@@ -150,11 +146,11 @@ public class EeClipperImpl extends EeClipper {
 
     /**
      * return a user's all notes(uuid-ENNote) inside the specified notebook.
-     * 
+     *
      * @param args
      *            all things needed to list notes, such as notebook guid.
      * @return The notes in the certain notebook.
-     * 
+     *
      * @throws TException
      *             Please refer to Evernote SDK
      * @throws EDAMNotFoundException
@@ -206,7 +202,7 @@ public class EeClipperImpl extends EeClipper {
 
     /**
      * return a user's all tags.
-     * 
+     *
      * @return The user's all tags.
      * @throws TException
      *             Please refer to Evernote SDK
@@ -239,6 +235,13 @@ public class EeClipperImpl extends EeClipper {
             if (e instanceof TTransportException) {
                 return false;
             }
+            /*
+             * // As new StoreClientFactory(token); will not identify
+             * auth-expired exception, so the following code is not needed. if
+             * (e instanceof EDAMUserException) { if (((EDAMUserException)
+             * e).getErrorCode() == EDAMErrorCode.AUTH_EXPIRED) { return false;
+             * } }
+             */
         }
         return true;
     }
