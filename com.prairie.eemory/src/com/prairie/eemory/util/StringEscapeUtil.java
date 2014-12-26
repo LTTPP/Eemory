@@ -25,7 +25,8 @@ public class StringEscapeUtil {
 
         escapedXml = escapedXml.replaceAll(StringUtils.SPACE, Constants.HTML_NBSP);
 
-        int tabWidth = Platform.getPreferencesService().getInt(Constants.PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME, Constants.PLUGIN_ORG_ECLIPSE_JDT_CORE_PREF_FORMATTER_TABULATION_SIZE, 0, null);
+        // Note: the tab width justification should depend on various develop platforms, e.g. JDT, CDT etc., but here just make it simple using JDT for all environments even JDT not installed.
+        int tabWidth = Platform.getPreferencesService().getInt(Constants.PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME, Constants.PLUGIN_ORG_ECLIPSE_JDT_CORE_PREF_FORMATTER_TABULATION_SIZE, 4, null);
         escapedXml = escapedXml.replaceAll(ConstantsUtil.TAB, org.apache.commons.lang3.StringUtils.repeat(Constants.HTML_NBSP, tabWidth));
 
         return escapedXml;

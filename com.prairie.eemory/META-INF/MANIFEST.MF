@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.text,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.core.expressions,
- org.eclipse.jdt.core
+ org.eclipse.jdt.core;resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/evernote-api-1.25.2.jar,

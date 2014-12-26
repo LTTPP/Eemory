@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -34,6 +35,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.w3c.dom.DOMException;
 
+import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.enml.FontStyle;
 import com.prairie.eemory.enml.StyleText;
@@ -54,7 +56,7 @@ public class EclipseUtil {
                 Object object = iterator.next();
                 if (object instanceof IFile) {
                     iFile = (IFile) object;
-                } else if (object instanceof ICompilationUnit) {
+                } else if (isBundleInstalled(Constants.PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME) && object instanceof ICompilationUnit) {
                     ICompilationUnit compilationUnit = (ICompilationUnit) object;
                     IResource resource = compilationUnit.getResource();
                     if (resource instanceof IFile) {
@@ -158,6 +160,10 @@ public class EclipseUtil {
         }
 
         return textRanges;
+    }
+
+    public static boolean isBundleInstalled(final String bundleId) {
+        return Platform.getBundle(bundleId) != null;
     }
 
     public static SimpleContentProposalProvider enableFilteringContentAssist(final Control control, final String[] proposals, final String byOperator) {
