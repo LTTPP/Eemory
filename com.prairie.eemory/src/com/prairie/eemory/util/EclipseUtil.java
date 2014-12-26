@@ -49,7 +49,16 @@ public class EclipseUtil {
 
         final List<File> files = ListUtil.list();
 
-        if (selection instanceof IStructuredSelection) {
+        if (selection instanceof ITextSelection) {
+            IEditorPart editorPart = HandlerUtil.getActiveEditor(event);
+            IFile iFile = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
+            if (iFile != null) {
+                File file = iFile.getLocation().makeAbsolute().toFile();
+                files.add(file);
+            } else {
+                LogUtil.logError(Messages.Plugin_Error_NoFile);
+            }
+        } else if (selection instanceof IStructuredSelection) {
             Iterator<?> iterator = ((StructuredSelection) selection).iterator();
             while (iterator.hasNext()) {
                 IFile iFile;
@@ -69,15 +78,6 @@ public class EclipseUtil {
                 }
                 File file = iFile.getLocation().makeAbsolute().toFile();
                 files.add(file);
-            }
-        } else if (selection instanceof ITextSelection) {
-            IEditorPart editorPart = HandlerUtil.getActiveEditor(event);
-            IFile iFile = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
-            if (iFile != null) {
-                File file = iFile.getLocation().makeAbsolute().toFile();
-                files.add(file);
-            } else {
-                LogUtil.logError(Messages.Plugin_Error_NoFile);
             }
         }
 
