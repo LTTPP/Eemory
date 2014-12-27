@@ -11,6 +11,7 @@ public interface Constants {
     public static final String PLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE = "com.prairie.eemory.commands.ClipFileToEvernote";
     public static final String PLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE = "com.prairie.eemory.commands.ClipScreenshotToEvernote";
     public static final String PLUGIN_COMMAND_ID_CONFIGURATIONS = "com.prairie.eemory.commands.Configurations";
+    public static final String PLUGIN_TESTERS_ISFILE = "isFile";
 
     // field properties
     public static final String PLUGIN_CONFIGS_NOTEBOOK = "Plugin.Configurations.Notebook";

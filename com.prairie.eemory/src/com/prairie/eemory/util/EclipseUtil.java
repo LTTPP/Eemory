@@ -12,8 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
@@ -35,7 +35,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.w3c.dom.DOMException;
 
-import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.enml.FontStyle;
 import com.prairie.eemory.enml.StyleText;
@@ -61,23 +60,23 @@ public class EclipseUtil {
         } else if (selection instanceof IStructuredSelection) {
             Iterator<?> iterator = ((StructuredSelection) selection).iterator();
             while (iterator.hasNext()) {
-                IFile iFile;
+                IFile iFile = null;
                 Object object = iterator.next();
                 if (object instanceof IFile) {
                     iFile = (IFile) object;
-                } else if (isBundleInstalled(Constants.PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME) && object instanceof ICompilationUnit) {
-                    ICompilationUnit compilationUnit = (ICompilationUnit) object;
-                    IResource resource = compilationUnit.getResource();
+                } else if (object instanceof IAdaptable) {
+                    IAdaptable adapt = (IAdaptable) object;
+                    Object resource = adapt.getAdapter(IResource.class);
                     if (resource instanceof IFile) {
                         iFile = (IFile) resource;
-                    } else {
-                        continue;
                     }
-                } else {
-                    continue;
                 }
-                File file = iFile.getLocation().makeAbsolute().toFile();
-                files.add(file);
+                if (iFile != null) {
+                    File file = iFile.getLocation().makeAbsolute().toFile();
+                    files.add(file);
+                } else {
+                    LogUtil.logError(Messages.Plugin_Error_NoFile);
+                }
             }
         }
 

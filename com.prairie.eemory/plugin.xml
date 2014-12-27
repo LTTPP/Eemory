@@ -26,34 +26,22 @@
             </commandParameter>
         </command>
     </extension>
+
     <!--extension point="org.eclipse.ui.commandImages"> <image commandId="com.prairie.eemory.commands.ClipFileToEvernote"
     icon="icons/icon_file_16x16.png"/> <image commandId="com.prairie.eemory.commands.ClipSelectionToEvernote"
     icon="icons/icon_selection_16x16.png"/> </extension -->
+
     <extension point="org.eclipse.ui.handlers">
         <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.ClipToEvernote" class="com.prairie.eemory.handlers.EeHandler">
             <enabledWhen>
-                <or>
-                    <with variable="selection">
-                        <iterate ifEmpty="false" operator="and">
-                            <or>
-                                <adapt type="org.eclipse.core.resources.IFile" />
-                                <adapt type="org.eclipse.jdt.core.ICompilationUnit" />
-                            </or>
-                        </iterate>
-                    </with>
-                    <with variable="selection">
-                        <adapt type="org.eclipse.jface.text.ITextSelection" />
-                    </with>
-                </or>
+                <reference definitionId="com.prairie.eemory.definitions.Clipable"/>
             </enabledWhen>
         </handler>
         <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.ClipFileToEvernote" class="com.prairie.eemory.handlers.EeHandler">
         </handler>
         <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.ClipSelectionToEvernote" class="com.prairie.eemory.handlers.EeHandler">
             <enabledWhen>
-                <with variable="selection">
-                    <instanceof value="org.eclipse.jface.text.ITextSelection" />
-                </with>
+                <reference definitionId="com.prairie.eemory.definitions.TextSelection"/>
             </enabledWhen>
         </handler>
         <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.ClipScreenshotToEvernote" class="com.prairie.eemory.handlers.EeHandler">
@@ -61,11 +49,13 @@
         <handler name="Eemory Handler" commandId="com.prairie.eemory.commands.Configurations" class="com.prairie.eemory.handlers.EeHandler">
         </handler>
     </extension>
+
     <!--extension point="org.eclipse.ui.bindings"> <key commandId="com.prairie.eemory.commands.ClipFileToEvernote"
     contextId="org.eclipse.ui.contexts.window" sequence="M1+6" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
     </key> <key commandId="com.prairie.eemory.commands.ClipSelectionToEvernote"
     contextId="org.eclipse.ui.contexts.window" sequence="M1+8" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
     </key> </extension -->
+
     <extension point="org.eclipse.ui.menus">
 
         <menuContribution
@@ -144,25 +134,53 @@
                     </parameter>
                 </command>
                 <visibleWhen checkEnabled="false">
-                    <or>
-                        <with variable="activeMenuSelection">
-                            <iterate ifEmpty="false" operator="and">
-                                <or>
-                                    <adapt type="org.eclipse.core.resources.IFile" />
-                                    <adapt type="org.eclipse.jdt.core.ICompilationUnit" />
-                                </or>
-                            </iterate>
-                        </with>
-                        <with variable="activeMenuEditorInput">
-                            <iterate ifEmpty="false" operator="and">
-                                <adapt type="org.eclipse.core.resources.IFile" />
-                            </iterate>
-                        </with>
-                    </or>
+                    <reference definitionId="com.prairie.eemory.definitions.Clipable"/>
                 </visibleWhen>
             </menu>
         </menuContribution>
 
+    </extension>
+
+    <extension point="org.eclipse.core.expressions.propertyTesters">
+        <propertyTester
+            id="com.prairie.eemory.testers.FileTester"
+            type="org.eclipse.core.runtime.IAdaptable"
+            namespace="com.prairie.eemory.testers"
+            properties="isFile"
+            class="com.prairie.eemory.handlers.FileTester">
+        </propertyTester>
+    </extension>
+
+    <extension point="org.eclipse.core.expressions.definitions">
+        <definition id="com.prairie.eemory.definitions.TextSelection">
+            <with variable="selection">
+                <adapt type="org.eclipse.jface.text.ITextSelection" />
+            </with>
+            <!--<with variable="activeMenuEditorInput">
+                <iterate ifEmpty="false" operator="and">
+                    <adapt type="org.eclipse.core.resources.IFile" />
+                </iterate>
+            </with>-->
+        </definition>
+    </extension>
+
+    <extension point="org.eclipse.core.expressions.definitions">
+        <definition id="com.prairie.eemory.definitions.File">
+            <with variable="selection">
+                <iterate ifEmpty="false"  operator="and">
+                    <test property="com.prairie.eemory.testers.isFile" forcePluginActivation="true"/>
+                </iterate>
+            </with>
+        </definition>
+    </extension>
+
+    <extension point="org.eclipse.core.expressions.definitions">
+        <definition id="com.prairie.eemory.definitions.Clipable">
+            <or>
+                <reference definitionId="com.prairie.eemory.definitions.TextSelection"/>
+                <reference definitionId="com.prairie.eemory.definitions.File"/>
+            </or>
+        </definition>
     </extension>
 
 </plugin>
