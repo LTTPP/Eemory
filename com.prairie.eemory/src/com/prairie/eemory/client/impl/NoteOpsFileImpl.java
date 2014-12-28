@@ -23,6 +23,7 @@ import com.prairie.eemory.client.NoteOps;
 import com.prairie.eemory.client.StoreClientFactory;
 import com.prairie.eemory.enml.ENML;
 import com.prairie.eemory.exception.EDAMDataModel;
+import com.prairie.eemory.exception.NoDataFoundException;
 import com.prairie.eemory.util.EvernoteUtil;
 import com.prairie.eemory.util.FileUtil;
 import com.prairie.eemory.util.ListUtil;
@@ -34,9 +35,9 @@ public class NoteOpsFileImpl extends NoteOps {
     }
 
     @Override
-    public void updateOrCreate(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException {
+    public void updateOrCreate(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, NoDataFoundException {
         if (ListUtil.isNullOrEmptyList(args.getAttachments())) {
-            return;
+            throw new NoDataFoundException();
         }
         if (shouldUpdate(args)) {
             update(args);

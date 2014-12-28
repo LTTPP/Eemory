@@ -35,15 +35,15 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.w3c.dom.DOMException;
 
-import com.prairie.eemory.Messages;
 import com.prairie.eemory.enml.FontStyle;
 import com.prairie.eemory.enml.StyleText;
+import com.prairie.eemory.exception.NoDataFoundException;
 import com.prairie.eemory.ui.ConfigContentProposalProvider;
 import com.prairie.eemory.ui.ConfigTextContentAdapter;
 
 public class EclipseUtil {
 
-    public static List<File> getSelectedFiles(final ExecutionEvent event) {
+    public static List<File> getSelectedFiles(final ExecutionEvent event) throws NoDataFoundException {
         ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 
         final List<File> files = ListUtil.list();
@@ -55,7 +55,7 @@ public class EclipseUtil {
                 File file = iFile.getLocation().makeAbsolute().toFile();
                 files.add(file);
             } else {
-                LogUtil.logError(Messages.Plugin_Error_NoFile);
+                throw new NoDataFoundException(ObjectUtil.toString(selection));
             }
         } else if (selection instanceof IStructuredSelection) {
             Iterator<?> iterator = ((StructuredSelection) selection).iterator();
@@ -75,7 +75,7 @@ public class EclipseUtil {
                     File file = iFile.getLocation().makeAbsolute().toFile();
                     files.add(file);
                 } else {
-                    LogUtil.logError(Messages.Plugin_Error_NoFile);
+                    throw new NoDataFoundException(ObjectUtil.toString(object));
                 }
             }
         }

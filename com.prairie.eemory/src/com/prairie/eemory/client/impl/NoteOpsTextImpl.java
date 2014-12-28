@@ -20,6 +20,7 @@ import com.prairie.eemory.client.NoteOps;
 import com.prairie.eemory.client.StoreClientFactory;
 import com.prairie.eemory.enml.ENML;
 import com.prairie.eemory.exception.EDAMDataModel;
+import com.prairie.eemory.exception.NoDataFoundException;
 import com.prairie.eemory.util.ListUtil;
 
 public class NoteOpsTextImpl extends NoteOps {
@@ -29,9 +30,9 @@ public class NoteOpsTextImpl extends NoteOps {
     }
 
     @Override
-    public void updateOrCreate(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, DOMException {
+    public void updateOrCreate(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, DOMException, NoDataFoundException {
         if (ListUtil.isNullOrEmptyList(args.getContent())) {
-            return;
+            throw new NoDataFoundException();
         }
         if (shouldUpdate(args)) {
             update(args);

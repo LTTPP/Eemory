@@ -31,6 +31,7 @@ import com.prairie.eemory.client.ENObject;
 import com.prairie.eemory.client.ENObjectType;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.StoreClientFactory;
+import com.prairie.eemory.exception.NoDataFoundException;
 import com.prairie.eemory.exception.OutOfDateException;
 import com.prairie.eemory.util.ConstantsUtil;
 import com.prairie.eemory.util.ListStringizer;
@@ -47,10 +48,6 @@ public class EeClipperImpl extends EeClipper {
      * 
      * @param token
      *            used to auth Evernote
-     * @throws TException
-     *             Please refer to Evernote SDK
-     * @throws OutOfDateException
-     *             This plug-in is out of date
      */
     public EeClipperImpl(final String token) throws TException, OutOfDateException {
         factory = new StoreClientFactory(token);
@@ -58,25 +55,13 @@ public class EeClipperImpl extends EeClipper {
 
     /**
      * Clip the file(s) as attachment to Evernote.
-     *
+     * 
      * @param args
      *            all things needed to clip file, such as notebook guid, note
      *            guid, tags, comments and file itself.
-     * @throws SAXException
-     * @throws ParserConfigurationException
-     * @throws IOException
-     * @throws TException
-     *             Please refer to Evernote SDK
-     * @throws EDAMNotFoundException
-     *             Please refer to Evernote SDK
-     * @throws EDAMSystemException
-     *             Please refer to Evernote SDK
-     * @throws EDAMUserException
-     *             Please refer to Evernote SDK
-     * @throws NoSuchAlgorithmException
      */
     @Override
-    public void clipFile(final ENNote args) throws NoSuchAlgorithmException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, IOException, ParserConfigurationException, SAXException {
+    public void clipFile(final ENNote args) throws NoSuchAlgorithmException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, IOException, ParserConfigurationException, SAXException, NoDataFoundException {
         new NoteOpsFileImpl(factory).updateOrCreate(args);
     }
 
@@ -86,23 +71,9 @@ public class EeClipperImpl extends EeClipper {
      * @param args
      *            all things needed to clip file, such as notebook guid, note
      *            guid, tags, comments and selection itself.
-     * @throws IOException
-     * @throws SAXException
-     * @throws ParserConfigurationException
-     * @throws TException
-     *             Please refer to Evernote SDK
-     * @throws EDAMNotFoundException
-     *             Please refer to Evernote SDK
-     * @throws EDAMSystemException
-     *             Please refer to Evernote SDK
-     * @throws EDAMUserException
-     *             Please refer to Evernote SDK
-     * @throws DOMException
-     *             Something wrong when parsing ENML
-     *
      */
     @Override
-    public void clipSelection(final ENNote args) throws DOMException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException {
+    public void clipSelection(final ENNote args) throws DOMException, EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, ParserConfigurationException, SAXException, IOException, NoDataFoundException {
         new NoteOpsTextImpl(factory).updateOrCreate(args);
     }
 
@@ -110,15 +81,6 @@ public class EeClipperImpl extends EeClipper {
      * return a user's all notebooks(including linked notebooks).
      *
      * @return The user's notebooks.
-     *
-     * @throws TException
-     *             Please refer to Evernote SDK
-     * @throws EDAMSystemException
-     *             Please refer to Evernote SDK
-     * @throws EDAMUserException
-     *             Please refer to Evernote SDK
-     * @throws EDAMNotFoundException
-     *             Please refer to Evernote SDK
      */
     @Override
     public Map<String, ENObject> listNotebooks() throws EDAMUserException, EDAMSystemException, TException, EDAMNotFoundException {
@@ -150,15 +112,6 @@ public class EeClipperImpl extends EeClipper {
      * @param args
      *            all things needed to list notes, such as notebook guid.
      * @return The notes in the certain notebook.
-     *
-     * @throws TException
-     *             Please refer to Evernote SDK
-     * @throws EDAMNotFoundException
-     *             Please refer to Evernote SDK
-     * @throws EDAMSystemException
-     *             Please refer to Evernote SDK
-     * @throws EDAMUserException
-     *             Please refer to Evernote SDK
      */
     @Override
     public Map<String, ENNote> listNotesWithinNotebook(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException {
@@ -204,12 +157,6 @@ public class EeClipperImpl extends EeClipper {
      * return a user's all tags.
      *
      * @return The user's all tags.
-     * @throws TException
-     *             Please refer to Evernote SDK
-     * @throws EDAMSystemException
-     *             Please refer to Evernote SDK
-     * @throws EDAMUserException
-     *             Please refer to Evernote SDK
      */
     @Override
     public List<String> listTags() throws EDAMUserException, EDAMSystemException, TException {

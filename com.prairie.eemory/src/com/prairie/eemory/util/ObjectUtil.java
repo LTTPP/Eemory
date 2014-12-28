@@ -10,6 +10,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SerializationException;
 import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.prairie.eemory.Messages;
 
@@ -108,6 +109,10 @@ public class ObjectUtil {
     public static Object deserialize(final String base64SerializedString) {
         byte[] bytes = Base64.decodeBase64(base64SerializedString);
         return SerializationUtils.deserialize(bytes);
+    }
+
+    public static String toString(final Object obj) {
+        return obj == null ? StringUtils.EMPTY : obj.toString();
     }
 
 }
