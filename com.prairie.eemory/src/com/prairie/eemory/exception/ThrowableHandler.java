@@ -85,6 +85,8 @@ public class ThrowableHandler {
             if (clipper != null) {
                 clipper.setInvalid();
             }
+        } else if (e instanceof NoDataFoundException) {
+            return LogUtil.warning(ExceptionUtils.getRootCauseMessage(e));
         }
         return LogUtil.error(e);
     }
