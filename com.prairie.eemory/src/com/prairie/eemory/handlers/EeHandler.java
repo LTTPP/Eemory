@@ -33,6 +33,7 @@ import com.prairie.eemory.client.ENObjectType;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.EeClipperFactory;
 import com.prairie.eemory.client.impl.ENNoteImpl;
+import com.prairie.eemory.exception.NoDataFoundException;
 import com.prairie.eemory.exception.ThrowableHandler;
 import com.prairie.eemory.oauth.OAuth;
 import com.prairie.eemory.ui.CaptureView;
@@ -168,6 +169,9 @@ public class EeHandler extends AbstractHandler implements Constants {
     protected void clipSelectionClicked(final ExecutionEvent event) throws ExecutionException {
         try {
             IEditorPart editor = HandlerUtil.getActiveEditor(event);
+            if (editor == null) {
+                throw new NoDataFoundException(Messages.Plugin_Error_NoText);
+            }
             StyledText styledText = (StyledText) editor.getAdapter(Control.class);
 
             final ENNote args = createENNote();

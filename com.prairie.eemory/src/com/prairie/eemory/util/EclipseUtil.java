@@ -35,6 +35,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.w3c.dom.DOMException;
 
+import com.prairie.eemory.Messages;
 import com.prairie.eemory.enml.FontStyle;
 import com.prairie.eemory.enml.StyleText;
 import com.prairie.eemory.exception.NoDataFoundException;
@@ -50,12 +51,15 @@ public class EclipseUtil {
 
         if (selection instanceof ITextSelection) {
             IEditorPart editorPart = HandlerUtil.getActiveEditor(event);
+            if (editorPart == null) {
+                throw new NoDataFoundException(Messages.Plugin_Error_NoFile);
+            }
             IFile iFile = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
             if (iFile != null) {
                 File file = iFile.getLocation().makeAbsolute().toFile();
                 files.add(file);
             } else {
-                throw new NoDataFoundException(ObjectUtil.toString(selection));
+                throw new NoDataFoundException(Messages.Plugin_Error_NoFile);
             }
         } else if (selection instanceof IStructuredSelection) {
             Iterator<?> iterator = ((StructuredSelection) selection).iterator();
@@ -75,7 +79,7 @@ public class EclipseUtil {
                     File file = iFile.getLocation().makeAbsolute().toFile();
                     files.add(file);
                 } else {
-                    throw new NoDataFoundException(ObjectUtil.toString(object));
+                    throw new NoDataFoundException(Messages.Plugin_Error_NoFile);
                 }
             }
         }

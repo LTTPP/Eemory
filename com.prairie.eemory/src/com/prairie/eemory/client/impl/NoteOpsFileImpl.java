@@ -17,6 +17,7 @@ import com.evernote.edam.error.EDAMUserException;
 import com.evernote.edam.type.Note;
 import com.evernote.edam.type.Resource;
 import com.evernote.thrift.TException;
+import com.prairie.eemory.Messages;
 import com.prairie.eemory.client.EDAMLimits;
 import com.prairie.eemory.client.ENNote;
 import com.prairie.eemory.client.NoteOps;
@@ -37,7 +38,7 @@ public class NoteOpsFileImpl extends NoteOps {
     @Override
     public void updateOrCreate(final ENNote args) throws EDAMUserException, EDAMSystemException, EDAMNotFoundException, TException, NoSuchAlgorithmException, IOException, ParserConfigurationException, SAXException, NoDataFoundException {
         if (ListUtil.isNullOrEmptyList(args.getAttachments())) {
-            throw new NoDataFoundException();
+            throw new NoDataFoundException(Messages.Plugin_Error_NoFile);
         }
         if (shouldUpdate(args)) {
             update(args);
