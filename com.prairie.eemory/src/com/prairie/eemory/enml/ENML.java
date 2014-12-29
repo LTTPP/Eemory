@@ -38,6 +38,8 @@ public class ENML implements Constants {
     private String existingEnml = StringUtils.EMPTY;
     private final List<Node> newAddedNodes;
 
+    private int tabWidth;
+
     public ENML() throws DOMException, ParserConfigurationException {
         document = DomUtil.getBuilder().newDocument();
         document.setXmlStandalone(true);
@@ -50,12 +52,24 @@ public class ENML implements Constants {
         document.appendChild(root);
 
         newAddedNodes = ListUtil.list();
+
+        tabWidth = Constants.TAB_WIDTH;
     }
 
     public ENML(final String enml) {
         document = DomUtil.getBuilder().newDocument();
         existingEnml = enml;
         newAddedNodes = ListUtil.list();
+
+        tabWidth = Constants.TAB_WIDTH;
+    }
+
+    public int getTabWidth() {
+        return tabWidth;
+    }
+
+    public void setTabWidth(final int tabWidth) {
+        this.tabWidth = tabWidth;
     }
 
     public void addResource(final String hashHex, final String mimeType) throws DOMException, ParserConfigurationException {
@@ -145,7 +159,7 @@ public class ENML implements Constants {
     private Node div(final List<StyleText> styleTextBlocks) throws DOMException, ParserConfigurationException {
         Element div = document.createElement(ENML_TAG_DIV);
         for (StyleText styletext : styleTextBlocks) {
-            String escapedXml = StringEscapeUtil.escapeEnml(styletext.getText());
+            String escapedXml = StringEscapeUtil.escapeEnml(styletext.getText(), tabWidth);
             div.appendChild(font(escapedXml, styletext.getFace(), styletext.getColorHexCode(), styletext.getSize(), styletext.getFontStyle()));
         }
         return div;

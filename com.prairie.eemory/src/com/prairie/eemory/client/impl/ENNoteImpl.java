@@ -17,6 +17,7 @@ public class ENNoteImpl extends ENObjectImpl implements ENNote {
     private List<File> attachments;
     private List<String> tags;
     private String comments;
+    private int tabWidth;
 
     public ENNoteImpl() {
         content = ListUtil.list();
@@ -89,6 +90,16 @@ public class ENNoteImpl extends ENObjectImpl implements ENNote {
     @Override
     public void setComments(final String comments) {
         this.comments = comments;
+    }
+
+    @Override
+    public int getTabWidth() {
+        return tabWidth;
+    }
+
+    @Override
+    public void setTabWidth(final int tabWidth) {
+        this.tabWidth = tabWidth;
     }
 
     /**

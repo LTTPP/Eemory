@@ -27,4 +27,8 @@ public interface ENNote extends ENObject {
 
     public abstract void setComments(String comments);
 
+    public abstract int getTabWidth();
+
+    public abstract void setTabWidth(int tabWidth);
+
 }

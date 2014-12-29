@@ -55,6 +55,7 @@ public class NoteOpsFileImpl extends NoteOps {
         }
 
         ENML enml = new ENML();
+        enml.setTabWidth(args.getTabWidth());
         enml.addComment(args.getComments());
 
         for (File f : args.getAttachments()) {
@@ -93,6 +94,7 @@ public class NoteOpsFileImpl extends NoteOps {
         }
 
         ENML enml = new ENML(note.getContent());
+        enml.setTabWidth(args.getTabWidth());
         // update content
         enml.addComment(args.getComments());
 

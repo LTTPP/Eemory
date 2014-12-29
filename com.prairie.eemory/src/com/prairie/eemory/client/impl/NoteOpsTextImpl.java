@@ -50,6 +50,7 @@ public class NoteOpsTextImpl extends NoteOps {
         }
 
         ENML enml = new ENML();
+        enml.setTabWidth(args.getTabWidth());
         enml.addComment(args.getComments());
         enml.addContent(args.getContent());
 
@@ -79,6 +80,7 @@ public class NoteOpsTextImpl extends NoteOps {
 
         // update content
         ENML enml = new ENML(note.getContent());
+        enml.setTabWidth(args.getTabWidth());
         enml.addComment(args.getComments());
         enml.addContent(args.getContent());
 

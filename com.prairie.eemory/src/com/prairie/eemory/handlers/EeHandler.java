@@ -47,6 +47,7 @@ import com.prairie.eemory.util.FileUtil;
 import com.prairie.eemory.util.IDialogSettingsUtil;
 import com.prairie.eemory.util.ListUtil;
 import com.prairie.eemory.util.LogUtil;
+import com.prairie.eemory.util.NumberUtil;
 import com.prairie.eemory.util.ObjectUtil;
 
 public class EeHandler extends AbstractHandler implements Constants {
@@ -123,6 +124,7 @@ public class EeHandler extends AbstractHandler implements Constants {
             if (StringUtils.isBlank(args.getName())) {
                 args.setName(FileUtil.concatNameOfFiles(args.getAttachments()));
             }
+            args.setTabWidth(Constants.TAB_WIDTH);
 
             Job job = new Job(Messages.Plugin_Runtime_ClipFileToEvernote) {
                 @Override
@@ -187,6 +189,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                 args.setName(editor.getTitle() + ConstantsUtil.MINUS + DateTimeUtil.timestamp());
             }
             args.setContent(EclipseUtil.getSelectedStyleText(styledText));
+            args.setTabWidth(NumberUtil.gtZero(styledText.getTabs(), Constants.TAB_WIDTH));
 
             Job job = new Job(Messages.Plugin_Runtime_ClipSelectionToEvernote) {
                 @Override
@@ -253,6 +256,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                 args.setName(DateTimeUtil.timestamp() + ConstantsUtil.DOT + ConstantsUtil.IMG_PNG);
             }
             args.setAttachments(ListUtil.list(file));
+            args.setTabWidth(Constants.TAB_WIDTH);
 
             Job job = new Job(Messages.Plugin_Runtime_ClipFileToEvernote) {
                 @Override

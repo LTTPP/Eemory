@@ -119,10 +119,6 @@ public interface Constants {
     // mime-util
     public static final String MimeDetector = "eu.medsea.mimeutil.detector.MagicMimeMimeDetector";
 
-    // Eclipse
-    public static final String PLUGIN_ORG_ECLIPSE_JDT_CORE_NAME = "org.eclipse.jdt.core";
-    public static final String PLUGIN_ORG_ECLIPSE_JDT_CORE_PREF_FORMATTER_TABULATION_SIZE = "org.eclipse.jdt.core.formatter.tabulation.size";
-
     // Plug-in
     public static final String PLUGIN_DEBUG_MODE = "com.prairie.eemory.debug";
     public static final String PLUGIN_RUN_ON_SANDBOX = "com.evernote.sandbox";
@@ -130,5 +126,6 @@ public interface Constants {
     // Others
     public static final String FileNamePartSimpleDateFormat = "yyyy-MM-dd'T'HH-mm-ss-";
     public static final String TAGS_SEPARATOR = ConstantsUtil.COMMA;
+    public static final int TAB_WIDTH = 4;
 
 }
