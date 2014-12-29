@@ -117,7 +117,7 @@ public class EclipseUtil {
 
             int offset = selection.x + start;
             StyleRange[] ranges = styledText.getStyleRanges(offset, line.length());
-            List<StyleText> textRanges = parseLine(line, ranges, offset, face, String.valueOf(size));
+            List<StyleText> textRanges = parseLine(line, ranges, offset, face, String.valueOf(size), styledText.getForeground(), FontStyle.NORMAL); // XXX Should get real font style from StyledText(not StyleRange), but no idea how to achieve this.
             list.add(textRanges);
 
             start = end < 0 ? end : end + (selectionText.startsWith(StringUtil.CRLF, end) ? StringUtil.CRLF.length() : selectionText.startsWith(StringUtils.CR, end) ? StringUtils.CR.length() : StringUtils.LF.length());
@@ -127,11 +127,11 @@ public class EclipseUtil {
     }
 
     // [PlainText][StyledText][PlainText]
-    private static List<StyleText> parseLine(final String text, final StyleRange[] styleRanges, final int offset, final String face, final String size) {
+    private static List<StyleText> parseLine(final String text, final StyleRange[] styleRanges, final int offset, final String face, final String size, final Color defaultForeColor, final FontStyle defaultForeStyle) {
         List<StyleText> textRanges = ListUtil.list();
 
         if (ArrayUtils.isEmpty(styleRanges)) {
-            StyleText textRange = new StyleText(text);
+            StyleText textRange = new StyleText(text, face, ColorUtil.toHexCode(defaultForeColor.getRed(), defaultForeColor.getGreen(), defaultForeColor.getBlue()), String.valueOf(size), defaultForeStyle);
             textRanges.add(textRange);
             return textRanges;
         }
@@ -143,14 +143,14 @@ public class EclipseUtil {
             // [PlainText] - Part1
             String part = text.substring(count, start);
             if (!StringUtils.isEmpty(part)) {
-                StyleText textRange = new StyleText(part);
+                StyleText textRange = new StyleText(part, face, ColorUtil.toHexCode(defaultForeColor.getRed(), defaultForeColor.getGreen(), defaultForeColor.getBlue()), String.valueOf(size), defaultForeStyle);
                 textRanges.add(textRange);
                 count += part.length();
             }
 
             // // [StyledText]
             part = text.substring(start, start + styleRange.length);
-            Color foreground = styleRange.foreground != null ? styleRange.foreground : ColorUtil.SWT_COLOR_DEFAULT;
+            Color foreground = styleRange.foreground != null ? styleRange.foreground : defaultForeColor;
             StyleText textRange = new StyleText(part, face, ColorUtil.toHexCode(foreground.getRed(), foreground.getGreen(), foreground.getBlue()), size, FontStyle.forNumber(styleRange.fontStyle));
             textRanges.add(textRange);
             count += part.length();
@@ -158,7 +158,7 @@ public class EclipseUtil {
         // [PlainText] - Part2
         String part = text.substring(count);
         if (!StringUtils.isEmpty(part)) {
-            StyleText textRange = new StyleText(part);
+            StyleText textRange = new StyleText(text, face, ColorUtil.toHexCode(defaultForeColor.getRed(), defaultForeColor.getGreen(), defaultForeColor.getBlue()), String.valueOf(size), defaultForeStyle);
             textRanges.add(textRange);
         }
 
