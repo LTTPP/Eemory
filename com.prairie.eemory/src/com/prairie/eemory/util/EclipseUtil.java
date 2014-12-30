@@ -5,9 +5,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IFile;
@@ -33,7 +32,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.w3c.dom.DOMException;
 
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.enml.FontStyle;
@@ -87,7 +85,7 @@ public class EclipseUtil {
         return files;
     }
 
-    public static List<List<StyleText>> getSelectedStyleText(final StyledText styledText) throws DOMException, ParserConfigurationException {
+    public static List<List<StyleText>> getSelectedStyleText(final StyledText styledText) {
         Point selection = styledText.getSelection();
         String selectionText = styledText.getSelectionText();
         if (StringUtils.isEmpty(selectionText)) {
@@ -96,9 +94,15 @@ public class EclipseUtil {
 
         int size = 10; // 10 as default value in eclipse, will be overwritten by custom
         String face = StringUtils.EMPTY;
+        FontStyle foreStyle = FontStyle.NORMAL;
         FontData[] fontDatas = styledText.getFont().getFontData(); // On Windows, only one FontData will be returned per font. On X however, a Font object may be composed of multiple X fonts.
         if (ArrayUtils.isNotEmpty(fontDatas)) {
             size = fontDatas[0].getHeight();
+            try {
+                foreStyle = FontStyle.forNumber(fontDatas[0].getStyle());
+            } catch (IllegalArgumentException e) {
+                foreStyle = FontStyle.NORMAL;
+            }
             List<String> fontFamily = ListUtil.list();
             for (FontData f : fontDatas) {
                 if (StringUtils.isNotBlank(f.getName())) {
@@ -117,7 +121,7 @@ public class EclipseUtil {
 
             int offset = selection.x + start;
             StyleRange[] ranges = styledText.getStyleRanges(offset, line.length());
-            List<StyleText> textRanges = parseLine(line, ranges, offset, face, String.valueOf(size), styledText.getForeground(), FontStyle.NORMAL); // XXX Should get real font style from StyledText(not StyleRange), but no idea how to achieve this.
+            List<StyleText> textRanges = parseLine(line, ranges, offset, face, String.valueOf(size), ObjectUtils.defaultIfNull(styledText.getForeground(), ColorUtil.SWT_COLOR_DEFAULT), foreStyle);
             list.add(textRanges);
 
             start = end < 0 ? end : end + (selectionText.startsWith(StringUtil.CRLF, end) ? StringUtil.CRLF.length() : selectionText.startsWith(StringUtils.CR, end) ? StringUtils.CR.length() : StringUtils.LF.length());
@@ -131,7 +135,7 @@ public class EclipseUtil {
         List<StyleText> textRanges = ListUtil.list();
 
         if (ArrayUtils.isEmpty(styleRanges)) {
-            StyleText textRange = new StyleText(text, face, ColorUtil.toHexCode(defaultForeColor.getRed(), defaultForeColor.getGreen(), defaultForeColor.getBlue()), String.valueOf(size), defaultForeStyle);
+            StyleText textRange = new StyleText(text, face, ColorUtil.toHexCode(defaultForeColor.getRed(), defaultForeColor.getGreen(), defaultForeColor.getBlue()), size, defaultForeStyle);
             textRanges.add(textRange);
             return textRanges;
         }
@@ -143,7 +147,7 @@ public class EclipseUtil {
             // [PlainText] - Part1
             String part = text.substring(count, start);
             if (!StringUtils.isEmpty(part)) {
-                StyleText textRange = new StyleText(part, face, ColorUtil.toHexCode(defaultForeColor.getRed(), defaultForeColor.getGreen(), defaultForeColor.getBlue()), String.valueOf(size), defaultForeStyle);
+                StyleText textRange = new StyleText(part, face, ColorUtil.toHexCode(defaultForeColor.getRed(), defaultForeColor.getGreen(), defaultForeColor.getBlue()), size, defaultForeStyle);
                 textRanges.add(textRange);
                 count += part.length();
             }
@@ -151,14 +155,20 @@ public class EclipseUtil {
             // // [StyledText]
             part = text.substring(start, start + styleRange.length);
             Color foreground = styleRange.foreground != null ? styleRange.foreground : defaultForeColor;
-            StyleText textRange = new StyleText(part, face, ColorUtil.toHexCode(foreground.getRed(), foreground.getGreen(), foreground.getBlue()), size, FontStyle.forNumber(styleRange.fontStyle));
+            FontStyle fontStyle;
+            try {
+                fontStyle = FontStyle.forNumber(styleRange.fontStyle);
+            } catch (IllegalArgumentException e) {
+                fontStyle = defaultForeStyle;
+            }
+            StyleText textRange = new StyleText(part, face, ColorUtil.toHexCode(foreground.getRed(), foreground.getGreen(), foreground.getBlue()), size, fontStyle);
             textRanges.add(textRange);
             count += part.length();
         }
         // [PlainText] - Part2
         String part = text.substring(count);
         if (!StringUtils.isEmpty(part)) {
-            StyleText textRange = new StyleText(text, face, ColorUtil.toHexCode(defaultForeColor.getRed(), defaultForeColor.getGreen(), defaultForeColor.getBlue()), String.valueOf(size), defaultForeStyle);
+            StyleText textRange = new StyleText(part, face, ColorUtil.toHexCode(defaultForeColor.getRed(), defaultForeColor.getGreen(), defaultForeColor.getBlue()), size, defaultForeStyle);
             textRanges.add(textRange);
         }
 
