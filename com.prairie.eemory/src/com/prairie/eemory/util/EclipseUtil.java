@@ -157,7 +157,12 @@ public class EclipseUtil {
             Color foreground = styleRange.foreground != null ? styleRange.foreground : defaultForeColor;
             FontStyle fontStyle;
             try {
-                fontStyle = FontStyle.forNumber(styleRange.fontStyle);
+                FontStyle rangeStyle = FontStyle.forNumber(styleRange.fontStyle);
+                if (rangeStyle == FontStyle.NORMAL && defaultForeStyle != FontStyle.NORMAL) {
+                    fontStyle = defaultForeStyle;
+                } else {
+                    fontStyle = rangeStyle;
+                }
             } catch (IllegalArgumentException e) {
                 fontStyle = defaultForeStyle;
             }
