@@ -30,9 +30,9 @@ Visit [Eemory](http://marketplace.eclipse.org/content/eemory) on Eclipse Marketp
 
 Pre-built package is ready to install and requires a minimum of JDK 1.6.
 
-+ Install from Eclipse Marketplace within Eclipse(recommended).
-+ Install from update site URL: `http://dl.bintray.com/prairie/eemory-update-site`.
-+ Install from [archived update site](https://github.com/prairie/Eemory/releases) locally.
++ Install via Eclipse Marketplace within Eclipse(recommended).
++ Install via update site URL: `http://dl.bintray.com/prairie/eemory-update-site`.
++ Install via [archived update site](https://github.com/prairie/Eemory/releases) locally.
 
 New to Eclipse plug-in? Please check out this [Wiki](https://github.com/prairie/Eemory/wiki/Installation-instructions) for complete instructions, or go to [Eclipse Marketplace](http://marketplace.eclipse.org/content/eemory) website for more information.
 
