@@ -34,6 +34,8 @@ public class Messages extends NLS {
     public static String Plugin_Error_OutOfDate;
     public static String Plugin_Error_NoFile;
     public static String Plugin_Error_NoText;
+    public static String Plugin_OAuth_Cancel;
+    public static String Plugin_OAuth_Copy;
 
     public static String Plugin_OAuth_TokenNotConfigured;
     public static String Plugin_OAuth_Title;
@@ -44,6 +46,7 @@ public class Messages extends NLS {
     public static String Plugin_OAuth_AuthExpired_Message;
     public static String Plugin_OAuth_AuthExpired_Title;
     public static String Plugin_OAuth_AuthExpired_ReAuth;
+    public static String Plugin_OAuth_DoItManually;
 
     public static String DOM_Error0;
     public static String DOM_Error1;

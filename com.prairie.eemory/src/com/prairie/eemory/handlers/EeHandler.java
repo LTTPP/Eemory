@@ -91,7 +91,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                     public void run(final IProgressMonitor monitor) {
                         monitor.beginTask(Messages.Plugin_OAuth_Waiting, IProgressMonitor.UNKNOWN);
                         try {
-                            String token = new OAuth().auth();
+                            String token = new OAuth().auth(shell);
                             if (StringUtils.isNotBlank(token)) {
                                 IDialogSettingsUtil.set(PLUGIN_SETTINGS_KEY_TOKEN, EncryptionUtil.encrypt(token));
                             }

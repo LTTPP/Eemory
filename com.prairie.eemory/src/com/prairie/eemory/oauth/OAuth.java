@@ -3,7 +3,11 @@ package com.prairie.eemory.oauth;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.scribe.builder.ServiceBuilder;
@@ -13,7 +17,11 @@ import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 
 import com.evernote.auth.EvernoteService;
+import com.prairie.eemory.Constants;
+import com.prairie.eemory.Messages;
 import com.prairie.eemory.oauth.impl.JettyCallback;
+import com.prairie.eemory.util.ClipboardUtil;
+import com.prairie.eemory.util.EclipseUtil;
 import com.prairie.eemory.util.EncryptionUtil;
 import com.prairie.eemory.util.EvernoteUtil;
 
@@ -29,13 +37,22 @@ public class OAuth {
         callback.ready();
     }
 
-    public String auth() throws PartInitException, MalformedURLException, InterruptedException {
+    public String auth(final Shell shell) throws PartInitException, MalformedURLException, InterruptedException {
         try {
             Class<? extends EvernoteApi> apiClass = EvernoteUtil.evernoteService() == EvernoteService.PRODUCTION ? EvernoteApi.class : EvernoteApi.Sandbox.class;
             OAuthService service = new ServiceBuilder().provider(apiClass).apiKey(CONSUMER_KEY).apiSecret(EncryptionUtil.decrypt(CONSUMER_SECRET)).callback(callback.getCallbackURL()).build();
             Token requestToken = service.getRequestToken();
             String authUrl = service.getAuthorizationUrl(requestToken);
-            PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(authUrl));
+            try {
+                PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(authUrl));
+            } catch (PartInitException couldNotOpenBrowser) {
+                int opt = EclipseUtil.openCustomImageTypeWithCustomButtonsSyncly(shell, Messages.Plugin_OAuth_Title, Messages.Plugin_OAuth_DoItManually, new Image(Display.getDefault(), getClass().getClassLoader().getResourceAsStream(Constants.OAUTH_EVERNOTE_TRADEMARK)), ArrayUtils.toArray(Messages.Plugin_OAuth_Copy, Messages.Plugin_OAuth_Cancel));
+                if (opt == 0) {
+                    ClipboardUtil.copy(authUrl);
+                } else {
+                    return StringUtils.EMPTY;
+                }
+            }
 
             // wait for callback handling
             synchronized (callback) {
