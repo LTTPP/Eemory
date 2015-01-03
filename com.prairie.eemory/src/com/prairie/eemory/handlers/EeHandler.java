@@ -175,6 +175,9 @@ public class EeHandler extends AbstractHandler implements Constants {
                 throw new NoDataFoundException(Messages.Plugin_Error_NoText);
             }
             StyledText styledText = (StyledText) editor.getAdapter(Control.class);
+            if (styledText == null) {
+                throw new NoDataFoundException(Messages.Plugin_Error_NoText);
+            }
 
             final ENNote args = createENNote();
 
