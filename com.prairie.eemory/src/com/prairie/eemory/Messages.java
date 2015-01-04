@@ -65,6 +65,7 @@ public class Messages extends NLS {
     public static String Plugin_Debug_Default_Font_Style;
     public static String Plugin_Debug_StyleRange_Font_Style;
     public static String Plugin_Debug_FinalConcluded_Font_Style;
+    public static String Plugin_Debug_NewClipper;
 
     static {
         // initialize resource bundle

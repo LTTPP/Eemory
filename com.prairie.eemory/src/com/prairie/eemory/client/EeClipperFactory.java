@@ -7,9 +7,11 @@ import org.apache.commons.lang3.StringUtils;
 import com.evernote.edam.error.EDAMSystemException;
 import com.evernote.edam.error.EDAMUserException;
 import com.evernote.thrift.TException;
+import com.prairie.eemory.Messages;
 import com.prairie.eemory.client.impl.EeClipperImpl;
 import com.prairie.eemory.client.impl.EeClipperNop;
 import com.prairie.eemory.exception.OutOfDateException;
+import com.prairie.eemory.util.LogUtil;
 import com.prairie.eemory.util.MapUtil;
 
 /**
@@ -85,6 +87,7 @@ public class EeClipperFactory {
                 synchronized (realEeClipperMap) {
                     if (!clipper.isValid()) {
                         clipper = getEeClipper(token);
+                        LogUtil.debug(Messages.bind(Messages.Plugin_Debug_NewClipper, token));
                     }
                 }
             }
