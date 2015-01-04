@@ -295,8 +295,8 @@ public class CaptureView extends JFrame {
             }
         }
 
+        LogUtil.debug(Messages.Plugin_Debug_WaitingCaptureScreenshot);
         while (view.isVisible()) {
-            LogUtil.debug(Messages.Plugin_Debug_WaitingCaptureScreenshot);
             Thread.sleep(100);
         }
         return view.getScreenshot();
