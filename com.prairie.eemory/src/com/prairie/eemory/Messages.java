@@ -61,6 +61,11 @@ public class Messages extends NLS {
     public static String Throwable_IllegalArgumentException_Message;
     public static String Throwable_NotSerializable_Message;
 
+    // For Debug
+    public static String Plugin_Debug_Default_Font_Style;
+    public static String Plugin_Debug_StyleRange_Font_Style;
+    public static String Plugin_Debug_FinalConcluded_Font_Style;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

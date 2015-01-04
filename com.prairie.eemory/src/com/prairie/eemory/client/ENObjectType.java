@@ -2,6 +2,7 @@ package com.prairie.eemory.client;
 
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
+import com.prairie.eemory.util.LogUtil;
 
 public enum ENObjectType {
 
@@ -31,6 +32,7 @@ public enum ENObjectType {
                 return value;
             }
         }
+        LogUtil.debug(Messages.bind(Messages.Throwable_IllegalArgumentException_Message, name));
         throw new IllegalArgumentException(Messages.bind(Messages.Throwable_IllegalArgumentException_Message, name));
     }
 

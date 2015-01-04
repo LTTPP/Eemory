@@ -98,11 +98,14 @@ public class EclipseUtil {
         FontData[] fontDatas = styledText.getFont().getFontData(); // On Windows, only one FontData will be returned per font. On X however, a Font object may be composed of multiple X fonts.
         if (ArrayUtils.isNotEmpty(fontDatas)) {
             size = fontDatas[0].getHeight();
+
             try {
                 foreStyle = FontStyle.forNumber(fontDatas[0].getStyle());
             } catch (IllegalArgumentException e) {
                 foreStyle = FontStyle.NORMAL;
             }
+            LogUtil.debug(Messages.bind(Messages.Plugin_Debug_Default_Font_Style, foreStyle));
+
             List<String> fontFamily = ListUtil.list();
             for (FontData f : fontDatas) {
                 if (StringUtils.isNotBlank(f.getName())) {
@@ -158,6 +161,8 @@ public class EclipseUtil {
             FontStyle fontStyle;
             try {
                 FontStyle rangeStyle = FontStyle.forNumber(styleRange.fontStyle);
+                LogUtil.debug(Messages.bind(Messages.Plugin_Debug_StyleRange_Font_Style, rangeStyle));
+
                 if (rangeStyle == FontStyle.NORMAL && defaultForeStyle != FontStyle.NORMAL) {
                     fontStyle = defaultForeStyle;
                 } else {
@@ -166,6 +171,8 @@ public class EclipseUtil {
             } catch (IllegalArgumentException e) {
                 fontStyle = defaultForeStyle;
             }
+            LogUtil.debug(Messages.bind(Messages.Plugin_Debug_FinalConcluded_Font_Style, fontStyle));
+
             StyleText textRange = new StyleText(part, face, ColorUtil.toHexCode(foreground.getRed(), foreground.getGreen(), foreground.getBlue()), size, fontStyle);
             textRanges.add(textRange);
             count += part.length();

@@ -2,6 +2,7 @@ package com.prairie.eemory.enml;
 
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
+import com.prairie.eemory.util.LogUtil;
 
 public enum FontStyle {
 
@@ -63,6 +64,7 @@ public enum FontStyle {
                 return value;
             }
         }
+        LogUtil.debug(Messages.bind(Messages.Throwable_IllegalArgumentException_Message, code));
         throw new IllegalArgumentException(Messages.bind(Messages.Throwable_IllegalArgumentException_Message, code));
     }
 }
