@@ -29,6 +29,7 @@ import com.prairie.eemory.Messages;
 import com.prairie.eemory.ui.GeomRectangle.Position;
 import com.prairie.eemory.util.ColorUtil;
 import com.prairie.eemory.util.ImageUtil;
+import com.prairie.eemory.util.LogUtil;
 import com.prairie.eemory.util.Times;
 
 @SuppressWarnings("serial")
@@ -286,6 +287,7 @@ public class CaptureView extends JFrame {
             view.setVisible(true);
         } else {
             GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+            LogUtil.debug(Messages.bind(Messages.Plugin_Debug_IsFullScreenSupported, device.isFullScreenSupported()));
             if (device.isFullScreenSupported()) {
                 device.setFullScreenWindow(view);
             } else {
@@ -294,6 +296,7 @@ public class CaptureView extends JFrame {
         }
 
         while (view.isVisible()) {
+            LogUtil.debug(Messages.Plugin_Debug_WaitingCaptureScreenshot);
             Thread.sleep(100);
         }
         return view.getScreenshot();
