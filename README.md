@@ -28,7 +28,7 @@ Visit [Eemory](http://marketplace.eclipse.org/content/eemory) on Eclipse Marketp
 
 ## Installation
 
-Pre-built package is ready to install and requires a minimum of JDK 1.6.
+Pre-built package is ready to install and requires Java 7+.
 
 + Install via Eclipse Marketplace within Eclipse(recommended).
 + Install via update site URL: `http://dl.bintray.com/prairie/eemory-update-site`.
