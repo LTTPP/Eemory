@@ -37,7 +37,7 @@ public class OAuth {
         callback.ready();
     }
 
-    public String auth(final Shell shell) throws PartInitException, MalformedURLException, InterruptedException {
+    public String auth(final Shell shell) throws MalformedURLException, InterruptedException {
         try {
             Class<? extends EvernoteApi> apiClass = EvernoteUtil.evernoteService() == EvernoteService.PRODUCTION ? EvernoteApi.class : EvernoteApi.Sandbox.class;
             OAuthService service = new ServiceBuilder().provider(apiClass).apiKey(CONSUMER_KEY).apiSecret(EncryptionUtil.decrypt(CONSUMER_SECRET)).callback(callback.getCallbackURL()).build();
