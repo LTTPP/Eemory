@@ -53,7 +53,7 @@ public class CaptureView extends JFrame {
         fullScreen = ImageUtil.captureScreen(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setUndecorated(true);
-        setResizable(false);
+        setResizable(true); // Fix bug: fullscreen doesn't cover tool bars on Ubuntu.
         setAlwaysOnTop(true);
         setCursor(DRAW_CURSOR);
 
