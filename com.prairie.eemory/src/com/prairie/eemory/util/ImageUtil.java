@@ -1,7 +1,6 @@
 package com.prairie.eemory.util;
 
 import java.awt.AWTException;
-import java.awt.HeadlessException;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
@@ -17,7 +16,7 @@ public class ImageUtil {
         return rescaledScreenshot;
     }
 
-    public static BufferedImage captureScreen(final Rectangle screenRect) throws HeadlessException, AWTException {
+    public static BufferedImage captureScreen(final Rectangle screenRect) throws AWTException {
         if (robot == null) {
             robot = new Robot();
         }

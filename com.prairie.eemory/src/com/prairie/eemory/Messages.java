@@ -68,6 +68,7 @@ public class Messages extends NLS {
     public static String Plugin_Debug_NewClipper;
     public static String Plugin_Debug_IsFullScreenSupported;
     public static String Plugin_Debug_WaitingCaptureScreenshot;
+    public static String Plugin_Debug_CapturedScreenshot;
 
     static {
         // initialize resource bundle

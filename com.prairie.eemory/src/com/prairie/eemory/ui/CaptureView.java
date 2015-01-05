@@ -22,6 +22,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang3.SystemUtils;
 
@@ -64,8 +65,7 @@ public class CaptureView extends JFrame {
             public void keyReleased(final KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     rectangle.clear();
-                    setVisible(false);
-                    dispose();
+                    escape();
                 }
             }
         });
@@ -83,8 +83,7 @@ public class CaptureView extends JFrame {
                             isCaptured = true;
                         }
                     } else if (e.getClickCount() == 2) {
-                        setVisible(false);
-                        dispose();
+                        escape();
                     }
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
                     if (e.getClickCount() == 1) {
@@ -95,8 +94,7 @@ public class CaptureView extends JFrame {
                             setCursor(DRAW_CURSOR);
                         } else {
                             rectangle.clear();
-                            setVisible(false);
-                            dispose();
+                            escape();
                         }
                     }
                 }
@@ -273,6 +271,14 @@ public class CaptureView extends JFrame {
         validate();
     }
 
+    private void escape() {
+        setVisible(false);
+        dispose();
+        synchronized (notifier) {
+            notifier.notifyAll();
+        }
+    }
+
     public BufferedImage getScreenshot() {
         if (!rectangle.isRealRectangle()) {
             return null;
@@ -280,25 +286,43 @@ public class CaptureView extends JFrame {
         return fullScreen.getSubimage(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY(), rectangle.getWidth(), rectangle.getHeight());
     }
 
-    public static BufferedImage showView() throws HeadlessException, AWTException, InterruptedException {
-        final CaptureView view = new CaptureView();
+    // Starter method to launch Capture View //
 
-        if (SystemUtils.IS_OS_WINDOWS) {
-            view.setVisible(true);
-        } else {
-            GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-            LogUtil.debug(Messages.bind(Messages.Plugin_Debug_IsFullScreenSupported, device.isFullScreenSupported()));
-            if (device.isFullScreenSupported()) {
-                device.setFullScreenWindow(view);
-            } else {
-                view.setVisible(true);
+    private static CaptureView view = null;
+    private static Object notifier = new Object();
+
+    public static BufferedImage showView() throws InterruptedException {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    view = new CaptureView();
+                    if (SystemUtils.IS_OS_WINDOWS) {
+                        view.setVisible(true);
+                    } else {
+                        GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+                        LogUtil.debug(Messages.bind(Messages.Plugin_Debug_IsFullScreenSupported, device.isFullScreenSupported()));
+                        if (device.isFullScreenSupported()) {
+                            device.setFullScreenWindow(view);
+                        } else {
+                            view.setVisible(true);
+                        }
+                    }
+                } catch (Exception e) {
+                    view = null;
+                    notifier.notifyAll();
+                }
             }
+        });
+
+        synchronized (notifier) {
+            LogUtil.debug(Messages.Plugin_Debug_WaitingCaptureScreenshot);
+            notifier.wait();
         }
 
-        LogUtil.debug(Messages.Plugin_Debug_WaitingCaptureScreenshot);
-        while (view.isVisible()) {
-            Thread.sleep(100);
-        }
-        return view.getScreenshot();
+        BufferedImage capturedScreenshot = view != null ? view.getScreenshot() : null;
+        LogUtil.debug(Messages.bind(Messages.Plugin_Debug_CapturedScreenshot, capturedScreenshot));
+
+        return capturedScreenshot;
     }
 }

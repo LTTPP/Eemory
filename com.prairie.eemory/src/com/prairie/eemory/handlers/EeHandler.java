@@ -242,6 +242,7 @@ public class EeHandler extends AbstractHandler implements Constants {
 
             final BufferedImage screenshot = CaptureView.showView();
             if (screenshot == null) {
+                LogUtil.debug(Messages.Plugin_Error_NoFile);
                 return;
             }
 
