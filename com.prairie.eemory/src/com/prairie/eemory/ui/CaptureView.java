@@ -228,7 +228,7 @@ public class CaptureView extends JFrame {
             int charWidth = stringWidth / Messages.Plugin_Runtime_ClipScreenshotToEvernote_Hint.length();
             int start_x = charWidth * 1;
             int start_y = -(2 + charWidth);
-            stringWidth += charWidth * 6;
+            stringWidth += charWidth * 8;
 
             GeomPoint p = rectangle.getTopLeftPoint();
             if (p.getY() - (stringHeight + 2) < 0) {
