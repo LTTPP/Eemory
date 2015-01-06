@@ -230,9 +230,15 @@ public class CaptureView extends JFrame {
             int start_y = -(2 + charWidth);
             stringWidth += charWidth * 8;
 
+            if (stringWidth > Toolkit.getDefaultToolkit().getScreenSize().getWidth()) {
+                stringWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+            }
             GeomPoint p = rectangle.getTopLeftPoint();
             if (p.getY() - (stringHeight + 2) < 0) {
-                p = new GeomPoint(rectangle.getTopLeftPoint().getX(), rectangle.getTopLeftPoint().getY() + stringHeight + 2);
+                p = new GeomPoint(p.getX(), p.getY() + stringHeight + 2);
+            }
+            if (p.getX() + stringWidth > Toolkit.getDefaultToolkit().getScreenSize().getWidth()) {
+                p = new GeomPoint((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - stringWidth, p.getY());
             }
             g2.drawImage(ImageUtil.mask(fullScreen.getSubimage(p.getX(), p.getY() - (stringHeight + 2), stringWidth, stringHeight), PLUGIN_SCREENSHOT_HINT_SCALEFACTOR), p.getX(), p.getY() - (stringHeight + 2), null);
             g2.setColor(Color.WHITE);
