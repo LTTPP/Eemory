@@ -10,6 +10,14 @@ public class ImageUtil {
 
     private static Robot robot;
 
+    static {
+        try {
+            robot = new Robot();
+        } catch (AWTException e) {
+            LogUtil.logError(e);
+        }
+    }
+
     public static BufferedImage mask(final BufferedImage image, final float scaleFactor) {
         RescaleOp ro = new RescaleOp(scaleFactor, 0, null);
         BufferedImage rescaledScreenshot = ro.filter(image, null);
@@ -18,7 +26,7 @@ public class ImageUtil {
 
     public static BufferedImage captureScreen(final Rectangle screenRect) throws AWTException {
         if (robot == null) {
-            robot = new Robot();
+            throw new AWTException("the platform configuration does not allow low-level input control");
         }
         return robot.createScreenCapture(screenRect);
     }
