@@ -36,8 +36,10 @@ import com.prairie.eemory.client.impl.ENNoteImpl;
 import com.prairie.eemory.exception.NoDataFoundException;
 import com.prairie.eemory.exception.ThrowableHandler;
 import com.prairie.eemory.oauth.OAuth;
+import com.prairie.eemory.ui.ScreenCaptureProcessor;
 import com.prairie.eemory.ui.CaptureView;
 import com.prairie.eemory.ui.ConfigurationsDialog;
+import com.prairie.eemory.ui.SyncQuickOrganizeDialog;
 import com.prairie.eemory.ui.QuickOrganizeDialog;
 import com.prairie.eemory.util.ConstantsUtil;
 import com.prairie.eemory.util.DateTimeUtil;
@@ -50,7 +52,7 @@ import com.prairie.eemory.util.LogUtil;
 import com.prairie.eemory.util.NumberUtil;
 import com.prairie.eemory.util.ObjectUtil;
 
-public class EeHandler extends AbstractHandler implements Constants {
+public class EeHandler extends AbstractHandler implements ScreenCaptureProcessor, Constants {
 
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {
@@ -124,7 +126,7 @@ public class EeHandler extends AbstractHandler implements Constants {
             if (StringUtils.isBlank(args.getName())) {
                 args.setName(FileUtil.concatNameOfFiles(args.getAttachments()));
             }
-            args.setTabWidth(Constants.TAB_WIDTH);
+            args.setTabWidth(TAB_WIDTH);
 
             Job job = new Job(Messages.Plugin_Runtime_ClipFileToEvernote) {
                 @Override
@@ -141,7 +143,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                         clipper.clipFile(args);
                         monitor.worked(2);
                     } catch (Throwable e) {
-                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, event);
+                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, HandlerUtil.getActiveShell(event));
                         if (status == LogUtil.ok()) {
                             try {
                                 clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
@@ -192,7 +194,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                 args.setName(editor.getTitle() + ConstantsUtil.MINUS + DateTimeUtil.timestamp());
             }
             args.setContent(EclipseUtil.getSelectedStyleText(styledText));
-            args.setTabWidth(NumberUtil.gtZero(styledText.getTabs(), Constants.TAB_WIDTH));
+            args.setTabWidth(NumberUtil.gtZero(styledText.getTabs(), TAB_WIDTH));
 
             Job job = new Job(Messages.Plugin_Runtime_ClipSelectionToEvernote) {
                 @Override
@@ -209,7 +211,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                         clipper.clipSelection(args);
                         monitor.worked(2);
                     } catch (Throwable e) {
-                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, event);
+                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, HandlerUtil.getActiveShell(event));
                         if (status == LogUtil.ok()) {
                             try {
                                 clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);
@@ -236,11 +238,31 @@ public class EeHandler extends AbstractHandler implements Constants {
         }
     }
 
+    private Shell shellForClipScreenshot; // Shell does not change with each call, so this should be thread-safe.
     protected void clipScreenshotClicked(final ExecutionEvent event) throws ExecutionException {
         try {
-            Thread.sleep(800); // wait for right click menu to hide
+            shellForClipScreenshot = HandlerUtil.getActiveShellChecked(event);
 
-            final BufferedImage screenshot = CaptureView.showView();
+            Thread.sleep(500); // wait for right click menu to hide
+
+            CaptureView.showView(this);
+
+        } catch (Throwable e) {
+            throw ThrowableHandler.handleExecErr(e);
+        }
+    }
+
+    @Override
+    public void process(final BufferedImage imageCaptured) {
+        try {
+            clipScreenshot(imageCaptured);
+        } catch (ExecutionException e) {
+            LogUtil.logError(e);
+        }
+    }
+
+    private void clipScreenshot(final BufferedImage screenshot) throws ExecutionException {
+        try {
             if (screenshot == null) {
                 LogUtil.debug(Messages.Plugin_Error_NoFile);
                 return;
@@ -248,7 +270,7 @@ public class EeHandler extends AbstractHandler implements Constants {
 
             final ENNote args = createENNote();
 
-            int option = QuickOrganizeDialog.show(HandlerUtil.getActiveShellChecked(event));
+            int option = new SyncQuickOrganizeDialog(shellForClipScreenshot).show();
             if (option == QuickOrganizeDialog.OK) {
                 args.adopt(QuickOrganizeDialog.getThis().getQuickSettings());
             } else if (option == QuickOrganizeDialog.CANCEL) {
@@ -260,7 +282,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                 args.setName(DateTimeUtil.timestamp() + ConstantsUtil.DOT + ConstantsUtil.IMG_PNG);
             }
             args.setAttachments(ListUtil.list(file));
-            args.setTabWidth(Constants.TAB_WIDTH);
+            args.setTabWidth(TAB_WIDTH);
 
             Job job = new Job(Messages.Plugin_Runtime_ClipFileToEvernote) {
                 @Override
@@ -280,7 +302,7 @@ public class EeHandler extends AbstractHandler implements Constants {
                         clipper.clipFile(args);
                         monitor.worked(3);
                     } catch (Throwable e) {
-                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, event);
+                        IStatus status = ThrowableHandler.handleJobErr(e, clipper, args, shellForClipScreenshot);
                         if (status == LogUtil.ok()) {
                             try {
                                 clipper = EeClipperFactory.getInstance().getEeClipper(EncryptionUtil.decrypt(IDialogSettingsUtil.get(PLUGIN_SETTINGS_KEY_TOKEN)), false);

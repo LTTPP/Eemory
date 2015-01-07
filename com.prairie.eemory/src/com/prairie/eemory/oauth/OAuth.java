@@ -21,7 +21,7 @@ import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.oauth.impl.JettyCallback;
 import com.prairie.eemory.util.ClipboardUtil;
-import com.prairie.eemory.util.EclipseUtil;
+import com.prairie.eemory.util.SyncEclipseUtil;
 import com.prairie.eemory.util.EncryptionUtil;
 import com.prairie.eemory.util.EvernoteUtil;
 
@@ -46,7 +46,7 @@ public class OAuth {
             try {
                 PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(authUrl));
             } catch (PartInitException couldNotOpenBrowser) {
-                int opt = EclipseUtil.openCustomImageTypeWithCustomButtonsSyncly(shell, Messages.Plugin_OAuth_Title, Messages.Plugin_OAuth_DoItManually, new Image(Display.getDefault(), getClass().getClassLoader().getResourceAsStream(Constants.OAUTH_EVERNOTE_TRADEMARK)), ArrayUtils.toArray(Messages.Plugin_OAuth_Copy, Messages.Plugin_OAuth_Cancel));
+                int opt = new SyncEclipseUtil().openCustomImageTypeWithCustomButtonsSyncly(shell, Messages.Plugin_OAuth_Title, Messages.Plugin_OAuth_DoItManually, new Image(Display.getDefault(), getClass().getClassLoader().getResourceAsStream(Constants.OAUTH_EVERNOTE_TRADEMARK)), ArrayUtils.toArray(Messages.Plugin_OAuth_Copy, Messages.Plugin_OAuth_Cancel));
                 if (opt == 0) {
                     ClipboardUtil.copy(authUrl);
                 } else {

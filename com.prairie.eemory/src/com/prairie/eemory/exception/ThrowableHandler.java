@@ -1,12 +1,10 @@
 package com.prairie.eemory.exception;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.evernote.edam.error.EDAMNotFoundException;
 import com.evernote.edam.error.EDAMUserException;
@@ -67,17 +65,12 @@ public class ThrowableHandler {
         return handleJobErr(e, clipper, null, null);
     }
 
-    public static IStatus handleJobErr(final Throwable e, final EeClipper clipper, final ENNote args, final ExecutionEvent event) {
+    public static IStatus handleJobErr(final Throwable e, final EeClipper clipper, final ENNote args, final Shell shell) {
         if (e instanceof EDAMNotFoundException) {
             if (args != null) {
                 return new EDAMNotFoundHandler(EncryptionUtil.decrypt(IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_TOKEN))).fixNotFoundException((EDAMNotFoundException) e, args);
             }
         } else if (e instanceof EDAMUserException) {
-            Shell shell = null;
-            try {
-                shell = HandlerUtil.getActiveShellChecked(event);
-            } catch (ExecutionException ignored) {
-            }
             return new EDAMUserExceptionHandler().handleRuntime(shell, (EDAMUserException) e, clipper);
         } else if (e instanceof OutOfDateException) {
             return LogUtil.error(Messages.bind(Messages.Plugin_OutOfDate, EemoryPlugin.getVersion()));

@@ -227,18 +227,6 @@ public class EclipseUtil {
         });
     }
 
-    private static int opt = 0;
-
-    public static int openErrorWithCustomButtonsSyncly(final Shell shell, final String title, final String message, final String[] buttons) {
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                opt = openErrorWithCustomButtons(shell, title, message, buttons);
-            }
-        });
-        return opt;
-    }
-
     public static int openCustomImageTypeWithCustomButtons(final Shell shell, final String title, final String message, final Image dialogImage, final String[] buttons) {
         MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.NONE, buttons, 0) {
             @Override
@@ -247,18 +235,6 @@ public class EclipseUtil {
             }
         };
         return dialog.open();
-    }
-
-    private static int opt1 = 0;
-
-    public static int openCustomImageTypeWithCustomButtonsSyncly(final Shell shell, final String title, final String message, final Image dialogImage, final String[] buttons) {
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                opt1 = openCustomImageTypeWithCustomButtons(shell, title, message, dialogImage, buttons);
-            }
-        });
-        return opt1;
     }
 
     public static int openInformationWithCustomButtons(final Shell shell, final String title, final String message, final String[] buttons) {

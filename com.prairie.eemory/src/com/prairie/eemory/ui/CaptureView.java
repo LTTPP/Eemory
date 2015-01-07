@@ -49,7 +49,7 @@ public class CaptureView extends JFrame {
     private static final float PLUGIN_SCREENSHOT_HINT_SCALEFACTOR = 0.3F;
     private static final float PLUGIN_SCREENSHOT_MASK_FULLSCREEN_SCALEFACTOR = 0.7F;
 
-    public CaptureView() throws HeadlessException, AWTException {
+    public CaptureView(final ScreenCaptureProcessor processor) throws HeadlessException, AWTException {
 
         fullScreen = ImageUtil.captureScreen(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
@@ -84,6 +84,14 @@ public class CaptureView extends JFrame {
                         }
                     } else if (e.getClickCount() == 2) {
                         escape();
+
+                        // Perform action against captured image
+                        LogUtil.debug(Messages.bind(Messages.Plugin_Debug_CapturedScreenshot, getScreenshot()));
+                        if (processor != null) {
+                            processor.process(getScreenshot());
+                        } else {
+                            LogUtil.debug(Messages.Plugin_Debug_NoScreenCaptureProcessor);
+                        }
                     }
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
                     if (e.getClickCount() == 1) {
@@ -280,9 +288,6 @@ public class CaptureView extends JFrame {
     private void escape() {
         setVisible(false);
         dispose();
-        synchronized (notifier) {
-            notifier.notifyAll();
-        }
     }
 
     public BufferedImage getScreenshot() {
@@ -293,16 +298,12 @@ public class CaptureView extends JFrame {
     }
 
     // Starter method to launch Capture View //
-
-    private static CaptureView view = null;
-    private static Object notifier = new Object();
-
-    public static BufferedImage showView() throws InterruptedException {
+    public static void showView(final ScreenCaptureProcessor processor) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 try {
-                    view = new CaptureView();
+                    CaptureView view = new CaptureView(processor);
                     if (SystemUtils.IS_OS_WINDOWS) {
                         view.setVisible(true);
                     } else {
@@ -315,20 +316,10 @@ public class CaptureView extends JFrame {
                         }
                     }
                 } catch (Exception e) {
-                    view = null;
-                    notifier.notifyAll();
+                    LogUtil.logError(e);
                 }
             }
         });
-
-        synchronized (notifier) {
-            LogUtil.debug(Messages.Plugin_Debug_WaitingCaptureScreenshot);
-            notifier.wait();
-        }
-
-        BufferedImage capturedScreenshot = view != null ? view.getScreenshot() : null;
-        LogUtil.debug(Messages.bind(Messages.Plugin_Debug_CapturedScreenshot, capturedScreenshot));
-
-        return capturedScreenshot;
     }
+
 }
