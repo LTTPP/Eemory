@@ -27,8 +27,11 @@ public class Messages extends NLS {
     public static String Plugin_Runtime_ClipSelectionToEvernote;
     public static String Plugin_Runtime_ClipScreenshotToEvernote_Hint;
     public static String Plugin_Runtime_CreateNewNote;
+    public static String Plugin_Runtime_CreateNewNoteInNotebook;
     public static String Plugin_Runtime_ClipToDefault;
     public static String Plugin_Runtime_CreateNewNoteWithGivenName;
+    public static String Plugin_Runtime_CreateNewNoteWithGivenNameInNotebook;
+    public static String Plugin_Runtime_ClipToNotebook_Default;
     public static String Plugin_OutOfDate;
     public static String Plugin_Error_Occurred;
     public static String Plugin_Error_OutOfDate;

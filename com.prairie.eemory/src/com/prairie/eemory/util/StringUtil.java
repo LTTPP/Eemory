@@ -119,4 +119,8 @@ public final class StringUtil {
     public static String toQuotedString(final String str) {
         return ConstantsUtil.DOUBLE_QUOTATION + str + ConstantsUtil.DOUBLE_QUOTATION;
     }
+
+    public static String toSingleQuotedString(final String str) {
+        return ConstantsUtil.SINGLE_QUOTE + str + ConstantsUtil.SINGLE_QUOTE;
+    }
 }

@@ -323,16 +323,25 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
 
     private boolean confirmDefault() {
         boolean confirm = false;
+
         String msg = StringUtils.EMPTY;
         if (!isNoteQuickSpecified()) {
             if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID)) {
-                msg = StringUtils.isBlank(quickSettings.getName()) ? Messages.Plugin_Runtime_CreateNewNote : Messages.bind(Messages.Plugin_Runtime_CreateNewNoteWithGivenName, quickSettings.getName());
-                confirm = true;
+                if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID)) {
+                    // When notebook is quick specified, its name must be not blank and valid.
+                    String nbName = isNotebookQuickSpecified() ? StringUtil.toSingleQuotedString(quickSettings.getNotebook().getName()) : Messages.Plugin_Runtime_ClipToNotebook_Default;
+                    msg = StringUtils.isBlank(quickSettings.getName()) ? Messages.bind(Messages.Plugin_Runtime_CreateNewNoteInNotebook, nbName) : Messages.bind(Messages.Plugin_Runtime_CreateNewNoteWithGivenNameInNotebook, quickSettings.getName(), nbName);
+                    confirm = true;
+                } else {
+                    msg = StringUtils.isBlank(quickSettings.getName()) ? Messages.Plugin_Runtime_CreateNewNote : Messages.bind(Messages.Plugin_Runtime_CreateNewNoteWithGivenName, quickSettings.getName());
+                    confirm = true;
+                }
             } else if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID) && !isNotebookQuickSpecified()) {
                 msg = Messages.Plugin_Runtime_ClipToDefault;
                 confirm = true;
             }
         }
+
         return confirm ? MessageDialog.openQuestion(shell, Messages.Plugin_Configs_QuickOrgnize_Shell_Title, msg) : true;
     }
 
@@ -347,7 +356,7 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
     private void saveQuickSettings() {
         quickSettings = new ENNoteImpl();
 
-        quickSettings.getNotebook().setName(getFieldValue(PLUGIN_CONFIGS_NOTEBOOK)); // Notice: set notebook name field value(not real name of notebook) as notebook name for error handling later
+        quickSettings.getNotebook().setName(getFieldValue(PLUGIN_CONFIGS_NOTEBOOK)); // Note: set notebook field value(not real name of notebook) to notebook name for error handling later.
         ENObject nb = notebooks.get(getFieldValue(PLUGIN_CONFIGS_NOTEBOOK));
         if (nb != null) {
             quickSettings.getNotebook().setGuid(nb.getGuid());

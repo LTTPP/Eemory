@@ -25,6 +25,7 @@ public class ConstantsUtil {
     public static final String EQUAL = "=";
     public static final String EXCLAMATION = "!";
     public static final String DOUBLE_QUOTATION = "\"";
+    public static final String SINGLE_QUOTE = "'";
     public static String SLASH = "/";
     public static String BACKSLASH = "\\";
     public static String QUESTION_MARK = "?";
