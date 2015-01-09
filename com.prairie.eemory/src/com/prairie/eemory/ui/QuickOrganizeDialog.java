@@ -324,12 +324,14 @@ public class QuickOrganizeDialog extends Dialog implements Constants {
     private boolean confirmDefault() {
         boolean confirm = false;
         String msg = StringUtils.EMPTY;
-        if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID) && !isNoteQuickSpecified()) {
-            msg = StringUtils.isBlank(quickSettings.getName()) ? Messages.Plugin_Runtime_CreateNewNote : Messages.bind(Messages.Plugin_Runtime_CreateNewNoteWithGivenName, quickSettings.getName());
-            confirm = true;
-        } else if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID) && !isNotebookQuickSpecified() && !isNoteQuickSpecified()) {
-            msg = Messages.Plugin_Runtime_ClipToDefault;
-            confirm = true;
+        if (!isNoteQuickSpecified()) {
+            if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTE, PLUGIN_SETTINGS_KEY_GUID)) {
+                msg = StringUtils.isBlank(quickSettings.getName()) ? Messages.Plugin_Runtime_CreateNewNote : Messages.bind(Messages.Plugin_Runtime_CreateNewNoteWithGivenName, quickSettings.getName());
+                confirm = true;
+            } else if (shouldShow(PLUGIN_SETTINGS_SECTION_NOTEBOOK, PLUGIN_SETTINGS_KEY_GUID) && !isNotebookQuickSpecified()) {
+                msg = Messages.Plugin_Runtime_ClipToDefault;
+                confirm = true;
+            }
         }
         return confirm ? MessageDialog.openQuestion(shell, Messages.Plugin_Configs_QuickOrgnize_Shell_Title, msg) : true;
     }
