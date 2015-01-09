@@ -21,9 +21,9 @@ import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.oauth.impl.JettyCallback;
 import com.prairie.eemory.util.ClipboardUtil;
-import com.prairie.eemory.util.SyncEclipseUtil;
 import com.prairie.eemory.util.EncryptionUtil;
 import com.prairie.eemory.util.EvernoteUtil;
+import com.prairie.eemory.util.SyncEclipseUtil;
 
 public class OAuth {
 
