@@ -208,8 +208,8 @@ public class DocumentImpl extends NodeImpl implements Document {
 
     @Override
     public String toString() {
-        String standalone = this.standalone ? StringUtils.EMPTY : StringUtils.SPACE + Constants.STANDALONE + ConstantsUtil.EQUAL + ConstantsUtil.DOUBLE_QUOTATION + Constants.NO + ConstantsUtil.DOUBLE_QUOTATION;
-        String head = ConstantsUtil.LEFT_ANGLE_BRACKET + ConstantsUtil.QUESTION_MARK + Constants.XML + StringUtils.SPACE + Constants.VERSION + ConstantsUtil.EQUAL + ConstantsUtil.DOUBLE_QUOTATION + xmlVersion + ConstantsUtil.DOUBLE_QUOTATION + StringUtils.SPACE + Constants.ENCODING + ConstantsUtil.EQUAL + ConstantsUtil.DOUBLE_QUOTATION + encoding + ConstantsUtil.DOUBLE_QUOTATION + standalone + ConstantsUtil.QUESTION_MARK + ConstantsUtil.RIGHT_ANGLE_BRACKET;
+        String standalone = this.standalone ? StringUtils.EMPTY : StringUtils.SPACE + Constants.STANDALONE + ConstantsUtil.EQUAL + ConstantsUtil.DOUBLE_QUOTE + Constants.NO + ConstantsUtil.DOUBLE_QUOTE;
+        String head = ConstantsUtil.LEFT_ANGLE_BRACKET + ConstantsUtil.QUESTION_MARK + Constants.XML + StringUtils.SPACE + Constants.VERSION + ConstantsUtil.EQUAL + ConstantsUtil.DOUBLE_QUOTE + xmlVersion + ConstantsUtil.DOUBLE_QUOTE + StringUtils.SPACE + Constants.ENCODING + ConstantsUtil.EQUAL + ConstantsUtil.DOUBLE_QUOTE + encoding + ConstantsUtil.DOUBLE_QUOTE + standalone + ConstantsUtil.QUESTION_MARK + ConstantsUtil.RIGHT_ANGLE_BRACKET;
 
         String body = StringUtils.EMPTY;
         Node doctype = null;

@@ -84,7 +84,7 @@ public class AttributeImpl extends NodeImpl implements Attribute {
 
     @Override
     public String toString() {
-        return getName() + ConstantsUtil.EQUAL + ConstantsUtil.DOUBLE_QUOTATION + getValue() + ConstantsUtil.DOUBLE_QUOTATION;
+        return getName() + ConstantsUtil.EQUAL + ConstantsUtil.DOUBLE_QUOTE + getValue() + ConstantsUtil.DOUBLE_QUOTE;
     }
 
 }

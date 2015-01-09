@@ -65,9 +65,9 @@ public class DocumentTypeImpl extends NodeImpl implements DocumentType {
     @Override
     public String toString() {
         if (StringUtils.isBlank(publicId)) {
-            return ConstantsUtil.LEFT_ANGLE_BRACKET + ConstantsUtil.EXCLAMATION + Constants.ENML_DOCTYPE + StringUtils.SPACE + name + StringUtils.SPACE + Constants.ENML_DOCTYPE_SYSTEM + StringUtils.SPACE + ConstantsUtil.DOUBLE_QUOTATION + systemId + ConstantsUtil.DOUBLE_QUOTATION + ConstantsUtil.RIGHT_ANGLE_BRACKET;
+            return ConstantsUtil.LEFT_ANGLE_BRACKET + ConstantsUtil.EXCLAMATION + Constants.ENML_DOCTYPE + StringUtils.SPACE + name + StringUtils.SPACE + Constants.ENML_DOCTYPE_SYSTEM + StringUtils.SPACE + ConstantsUtil.DOUBLE_QUOTE + systemId + ConstantsUtil.DOUBLE_QUOTE + ConstantsUtil.RIGHT_ANGLE_BRACKET;
         } else {
-            return ConstantsUtil.LEFT_ANGLE_BRACKET + ConstantsUtil.EXCLAMATION + Constants.ENML_DOCTYPE + StringUtils.SPACE + name + StringUtils.SPACE + Constants.ENML_DOCTYPE_PUBLIC + StringUtils.SPACE + ConstantsUtil.DOUBLE_QUOTATION + publicId + ConstantsUtil.DOUBLE_QUOTATION + StringUtils.SPACE + ConstantsUtil.DOUBLE_QUOTATION + systemId + ConstantsUtil.DOUBLE_QUOTATION + ConstantsUtil.RIGHT_ANGLE_BRACKET;
+            return ConstantsUtil.LEFT_ANGLE_BRACKET + ConstantsUtil.EXCLAMATION + Constants.ENML_DOCTYPE + StringUtils.SPACE + name + StringUtils.SPACE + Constants.ENML_DOCTYPE_PUBLIC + StringUtils.SPACE + ConstantsUtil.DOUBLE_QUOTE + publicId + ConstantsUtil.DOUBLE_QUOTE + StringUtils.SPACE + ConstantsUtil.DOUBLE_QUOTE + systemId + ConstantsUtil.DOUBLE_QUOTE + ConstantsUtil.RIGHT_ANGLE_BRACKET;
         }
     }
 

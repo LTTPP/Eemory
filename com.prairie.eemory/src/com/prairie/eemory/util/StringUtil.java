@@ -117,7 +117,7 @@ public final class StringUtil {
      * @return quoted string
      */
     public static String toQuotedString(final String str) {
-        return ConstantsUtil.DOUBLE_QUOTATION + str + ConstantsUtil.DOUBLE_QUOTATION;
+        return ConstantsUtil.DOUBLE_QUOTE + str + ConstantsUtil.DOUBLE_QUOTE;
     }
 
     public static String toSingleQuotedString(final String str) {
