@@ -62,6 +62,7 @@ Need more information? Please check out this [Wiki](https://github.com/prairie/E
 ## Authors and Contributors
 
 + Jianwei Liu
++ Huilan Zhang(QA)
 
 ## License
 
