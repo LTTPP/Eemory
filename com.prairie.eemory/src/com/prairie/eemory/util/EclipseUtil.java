@@ -3,7 +3,9 @@ package com.prairie.eemory.util;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -14,6 +16,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
@@ -27,12 +30,15 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.enml.FontStyle;
 import com.prairie.eemory.enml.StyleText;
@@ -227,34 +233,77 @@ public class EclipseUtil {
         });
     }
 
-    public static int openCustomImageTypeWithCustomButtons(final Shell shell, final String title, final String message, final Image dialogImage, final String[] buttons) {
-        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.NONE, buttons, 0) {
-            @Override
-            public Image getImage() {
-                return dialogImage;
-            }
-        };
-        return dialog.open();
+    public static String openCustomImageTypeWithCustomButtons(final Shell shell, final String title, final String message, final Image dialogImage, final LinkedHashMap<String, String> buttons) {
+        return String.valueOf(openCustomImageTypeWithCustomButtons(shell, title, message, dialogImage, buttons, null, false).get(Constants.returnCode));
     }
 
-    public static int openInformationWithCustomButtons(final Shell shell, final String title, final String message, final String[] buttons) {
-        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.INFORMATION, buttons, 0);
-        return dialog.open();
+    public static Map<String, Object> openCustomImageTypeWithCustomButtons(final Shell shell, final String title, final String message, final Image dialogImage, final LinkedHashMap<String, String> buttons, final String toggleMessage, final boolean defaultToggleState) {
+        MessageDialog dialog;
+
+        if (StringUtils.isBlank(toggleMessage)) {
+            dialog = new MessageDialog(shell, title, null, message, MessageDialog.NONE, buttons.values().toArray(new String[buttons.size()]), 0) {
+                @Override
+                public Image getImage() {
+                    return dialogImage;
+                }
+            };
+        } else {
+            dialog = new MessageDialogWithToggle(shell, title, null, message, MessageDialog.NONE, buttons.values().toArray(new String[buttons.size()]), 0, toggleMessage, defaultToggleState) {
+                @Override
+                public Image getImage() {
+                    return dialogImage;
+                }
+
+                @Override
+                protected void createButtonsForButtonBar(final Composite parent) {
+                    String[] buttonLabels = getButtonLabels();
+                    Button[] buttons = new Button[buttonLabels.length];
+                    int defaultButtonIndex = getDefaultButtonIndex();
+
+                    for (int i = 0; i < buttonLabels.length; i++) {
+                        String label = buttonLabels[i];
+                        Button button = createButton(parent, i, label, defaultButtonIndex == i);
+                        buttons[i] = button;
+                    }
+
+                    setButtons(buttons);
+                }
+            };
+        }
+
+        dialog.open();
+
+        Map<String, Object> map = MapUtil.map();
+        map.put(Constants.returnCode, buttons.keySet().toArray()[dialog.getReturnCode()]);
+        if (dialog instanceof MessageDialogWithToggle) {
+            map.put(Constants.toggleState, ((MessageDialogWithToggle) dialog).getToggleState());
+        }
+
+        return map;
     }
 
-    public static int openQuestionWithCustomButtons(final Shell shell, final String title, final String message, final String[] buttons) {
-        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.QUESTION_WITH_CANCEL, buttons, 0);
-        return dialog.open();
+    public static String openInformationWithCustomButtons(final Shell shell, final String title, final String message, final LinkedHashMap<String, String> buttons) {
+        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.INFORMATION, buttons.values().toArray(new String[buttons.size()]), 0);
+        dialog.open();
+        return (String) buttons.keySet().toArray()[dialog.getReturnCode()];
     }
 
-    public static int openWarningWithCustomButtons(final Shell shell, final String title, final String message, final String[] buttons) {
-        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.WARNING, buttons, 0);
-        return dialog.open();
+    public static String openQuestionWithCustomButtons(final Shell shell, final String title, final String message, final LinkedHashMap<String, String> buttons) {
+        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.QUESTION_WITH_CANCEL, buttons.values().toArray(new String[buttons.size()]), 0);
+        dialog.open();
+        return (String) buttons.keySet().toArray()[dialog.getReturnCode()];
     }
 
-    public static int openErrorWithCustomButtons(final Shell shell, final String title, final String message, final String[] buttons) {
-        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.ERROR, buttons, 0);
-        return dialog.open();
+    public static String openWarningWithCustomButtons(final Shell shell, final String title, final String message, final LinkedHashMap<String, String> buttons) {
+        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.WARNING, buttons.values().toArray(new String[buttons.size()]), 0);
+        dialog.open();
+        return (String) buttons.keySet().toArray()[dialog.getReturnCode()];
+    }
+
+    public static String openErrorWithCustomButtons(final Shell shell, final String title, final String message, final LinkedHashMap<String, String> buttons) {
+        MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.ERROR, buttons.values().toArray(new String[buttons.size()]), 0);
+        dialog.open();
+        return (String) buttons.keySet().toArray()[dialog.getReturnCode()];
     }
 
 }

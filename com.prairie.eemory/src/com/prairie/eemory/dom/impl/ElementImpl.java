@@ -144,7 +144,7 @@ public class ElementImpl extends NodeImpl implements Element {
 
     @Override
     public boolean hasAttributes() {
-        return !MapUtil.isNullOrEmptyMap(attrs);
+        return !MapUtil.isEmpty(attrs);
     }
 
     @Override

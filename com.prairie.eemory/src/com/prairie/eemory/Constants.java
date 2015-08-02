@@ -4,6 +4,10 @@ import com.prairie.eemory.util.ConstantsUtil;
 
 public interface Constants {
 
+    public static final String EVERNOTE_INTERNATIONAL = "Evernote International";
+    public static final String EVERNOTE_YINXIANG = "印象笔记";
+    public static final String EVERNOTE_SANDBOX = "Evernote Sandbox";
+
     // Command IDs
     public static final String PLUGIN_COMMAND_PARAM_ID = "com.prairie.eemory.command.parameter";
     public static final String PLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE = "com.prairie.eemory.commands.ClipToEvernote";
@@ -31,6 +35,7 @@ public interface Constants {
     public static final String PLUGIN_SETTINGS_KEY_OBJECT = "object";
     public static final String PLUGIN_SETTINGS_KEY_CHECKED = "isChecked";
     public static final String PLUGIN_SETTINGS_KEY_UUID = "uuid";
+    public static final String PLUGIN_SETTINGS_KEY_BRAND = "brand";
 
     // Data Model
     public static final String ENML_MODEL_NOTE_NOTEGUID = "Note.guid";
@@ -123,9 +128,17 @@ public interface Constants {
     public static final String PLUGIN_DEBUG_MODE = "com.prairie.eemory.debug";
     public static final String PLUGIN_RUN_ON_SANDBOX = "com.evernote.sandbox";
 
+    // Button properties
+    public static final String Plugin_OAuth_AuthExpired_ReAuth = "Plugin_OAuth_AuthExpired_ReAuth";
+    public static final String Plugin_OAuth_NotNow = "Plugin_OAuth_NotNow";
+    public static final String Plugin_OAuth_Copy = "Plugin_OAuth_Copy";
+    public static final String Plugin_OAuth_Cancel = "Plugin_OAuth_Cancel";
+
     // Others
     public static final String FileNamePartSimpleDateFormat = "yyyy-MM-dd'T'HH-mm-ss-";
     public static final String TAGS_SEPARATOR = ConstantsUtil.COMMA;
     public static final int TAB_WIDTH = 4;
+    public static final String returnCode = "returnCode";
+    public static final String toggleState = "toggleState";
 
 }

@@ -45,11 +45,11 @@ public class ArrayUtil {
         return true;
     }
 
-    public static <T> boolean isNullArray(final T[] array) {
+    public static <T> boolean isNull(final T[] array) {
         return array == null;
     }
 
-    public static <T> boolean isNullOrEmptyArray(final T[] array) {
+    public static <T> boolean isEmpty(final T[] array) {
         return array == null || array.length == 0;
     }
 
@@ -61,7 +61,7 @@ public class ArrayUtil {
         if (!deep) {
             return ObjectUtils.clone(source);
         }
-        if (isNullArray(source)) {
+        if (isNull(source)) {
             return null;
         }
 

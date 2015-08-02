@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -19,28 +18,27 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
-import com.prairie.eemory.client.ENNote;
-import com.prairie.eemory.client.ENObjectType;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.EeClipperFactory;
-import com.prairie.eemory.client.impl.ENNoteImpl;
+import com.prairie.eemory.client.impl.model.ENNoteImpl;
+import com.prairie.eemory.client.masterdata.ENObjectType;
+import com.prairie.eemory.client.model.ENNote;
 import com.prairie.eemory.exception.NoDataFoundException;
 import com.prairie.eemory.exception.ThrowableHandler;
 import com.prairie.eemory.oauth.OAuth;
-import com.prairie.eemory.ui.ScreenCaptureProcessor;
 import com.prairie.eemory.ui.CaptureView;
 import com.prairie.eemory.ui.ConfigurationsDialog;
-import com.prairie.eemory.ui.SyncQuickOrganizeDialog;
+import com.prairie.eemory.ui.BootstrappingDialog;
 import com.prairie.eemory.ui.QuickOrganizeDialog;
+import com.prairie.eemory.ui.ScreenCaptureProcessor;
+import com.prairie.eemory.ui.SyncQuickOrganizeDialog;
 import com.prairie.eemory.util.ConstantsUtil;
 import com.prairie.eemory.util.DateTimeUtil;
 import com.prairie.eemory.util.EclipseUtil;
@@ -85,8 +83,7 @@ public class EeHandler extends AbstractHandler implements ScreenCaptureProcessor
 
     protected void oauth(final ExecutionEvent event) throws ExecutionException {
         final Shell shell = HandlerUtil.getActiveShellChecked(event);
-        int opt = EclipseUtil.openCustomImageTypeWithCustomButtons(shell, Messages.Plugin_OAuth_Title, Messages.Plugin_OAuth_TokenNotConfigured, new Image(Display.getDefault(), getClass().getClassLoader().getResourceAsStream(OAUTH_EVERNOTE_TRADEMARK)), ArrayUtils.toArray(Messages.Plugin_OAuth_Configure, Messages.Plugin_OAuth_NotNow));
-        if (opt == 0) {
+        if (BootstrappingDialog.show(shell)) {
             try {
                 new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                     @Override

@@ -1,14 +1,16 @@
 package com.prairie.eemory.util;
 
+import java.util.LinkedHashMap;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public class SyncEclipseUtil {
 
-    private int opt = 0;
+    private String opt;
 
-    public int openCustomImageTypeWithCustomButtonsSyncly(final Shell shell, final String title, final String message, final Image dialogImage, final String[] buttons) {
+    public String openCustomImageTypeWithCustomButtonsSyncly(final Shell shell, final String title, final String message, final Image dialogImage, final LinkedHashMap<String, String> buttons) {
         Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {

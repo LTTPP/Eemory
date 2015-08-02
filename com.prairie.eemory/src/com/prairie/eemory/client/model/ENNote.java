@@ -1,4 +1,4 @@
-package com.prairie.eemory.client;
+package com.prairie.eemory.client.model;
 
 import java.io.File;
 import java.util.List;

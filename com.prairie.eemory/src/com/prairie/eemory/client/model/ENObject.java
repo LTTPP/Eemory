@@ -1,4 +1,6 @@
-package com.prairie.eemory.client;
+package com.prairie.eemory.client.model;
+
+import com.prairie.eemory.client.masterdata.ENObjectType;
 
 public interface ENObject {
 

@@ -50,6 +50,8 @@ public class Messages extends NLS {
     public static String Plugin_OAuth_AuthExpired_Title;
     public static String Plugin_OAuth_AuthExpired_ReAuth;
     public static String Plugin_OAuth_DoItManually;
+    public static String Plugin_OAuth_SWITCH_YXBJ;
+    public static String Plugin_OAuth_SWITCH_INTL;
 
     public static String DOM_Error0;
     public static String DOM_Error1;

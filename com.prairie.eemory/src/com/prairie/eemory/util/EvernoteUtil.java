@@ -8,12 +8,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.evernote.auth.EvernoteService;
 import com.evernote.edam.type.Data;
 import com.evernote.edam.type.Resource;
 import com.evernote.edam.type.ResourceAttributes;
 import com.prairie.eemory.Constants;
+import com.prairie.eemory.client.masterdata.EvernoteBrand;
 
 public class EvernoteUtil {
 
@@ -49,11 +51,31 @@ public class EvernoteUtil {
     }
 
     public static EvernoteService evernoteService() {
+        return brand().service();
+    }
+
+    public static EvernoteBrand brand() {
         String runOnSandbox = System.getProperty(Constants.PLUGIN_RUN_ON_SANDBOX);
         if (BooleanUtils.toBoolean(runOnSandbox)) {
-            return EvernoteService.SANDBOX;
+            return EvernoteBrand.EVERNOTE_SANDBOX;
         } else {
-            return EvernoteService.PRODUCTION;
+            String brandValue = IDialogSettingsUtil.get(Constants.PLUGIN_SETTINGS_KEY_BRAND);
+            if (StringUtils.isBlank(brandValue)) {
+                return bootstrap();
+            }
+            EvernoteBrand brand = EvernoteBrand.valueOf(brandValue);
+            if (brand == null) {
+                return bootstrap();
+            }
+            return brand;
+        }
+    }
+
+    private static EvernoteBrand bootstrap() {
+        if (LocaleUtil.isChina()) {
+            return EvernoteBrand.EVERNOTE_YINXIANG;
+        } else {
+            return EvernoteBrand.EVERNOTE_INTERNATIONAL;
         }
     }
 

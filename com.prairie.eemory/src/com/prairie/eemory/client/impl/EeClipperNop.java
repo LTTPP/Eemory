@@ -3,9 +3,9 @@ package com.prairie.eemory.client.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.prairie.eemory.client.ENNote;
-import com.prairie.eemory.client.ENObject;
 import com.prairie.eemory.client.EeClipper;
+import com.prairie.eemory.client.model.ENNote;
+import com.prairie.eemory.client.model.ENObject;
 import com.prairie.eemory.util.ListUtil;
 import com.prairie.eemory.util.MapUtil;
 

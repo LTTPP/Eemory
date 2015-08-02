@@ -3,6 +3,9 @@ package com.prairie.eemory.client;
 import java.util.List;
 import java.util.Map;
 
+import com.prairie.eemory.client.model.ENNote;
+import com.prairie.eemory.client.model.ENObject;
+
 public abstract class EeClipper {
 
     private boolean valid = true;

@@ -2,6 +2,7 @@ package com.prairie.eemory.util;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
@@ -14,6 +15,10 @@ public final class MapUtil {
 
     public static <K, V> Map<K, V> map() {
         return new HashMap<K, V>();
+    }
+
+    public static <K, V> LinkedHashMap<K, V> orderedMap() {
+        return new LinkedHashMap<K, V>();
     }
 
     public static <K, V> Map<K, V> map(final int initialCapacity) {
@@ -46,11 +51,11 @@ public final class MapUtil {
         return new TreeMap<K, V>(source);
     }
 
-    public static <K, V> boolean isNullOrEmptyMap(final Map<K, V> map) {
+    public static <K, V> boolean isEmpty(final Map<K, V> map) {
         return map == null || map.isEmpty();
     }
 
-    public static <K, V> boolean isNullMap(final Map<K, V> map) {
+    public static <K, V> boolean isNull(final Map<K, V> map) {
         return map == null;
     }
 
@@ -58,7 +63,7 @@ public final class MapUtil {
         if (map1 == map2) {
             return true;
         }
-        if (isNullMap(map1) || isNullMap(map2)) {
+        if (isNull(map1) || isNull(map2)) {
             return false;
         }
         if (map1.size() != map2.size()) {
@@ -80,7 +85,7 @@ public final class MapUtil {
         if (!deep) {
             return ObjectUtils.clone(source);
         }
-        if (isNullMap(source)) {
+        if (isNull(source)) {
             return null;
         }
         Map<K, V> map = map(source.size());

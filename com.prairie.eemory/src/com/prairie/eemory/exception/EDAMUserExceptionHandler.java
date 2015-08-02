@@ -1,6 +1,7 @@
 package com.prairie.eemory.exception;
 
-import org.apache.commons.lang3.ArrayUtils;
+import java.util.LinkedHashMap;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -19,8 +20,10 @@ import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.oauth.OAuth;
 import com.prairie.eemory.util.EclipseUtil;
 import com.prairie.eemory.util.EncryptionUtil;
+import com.prairie.eemory.util.EvernoteUtil;
 import com.prairie.eemory.util.IDialogSettingsUtil;
 import com.prairie.eemory.util.LogUtil;
+import com.prairie.eemory.util.MapUtil;
 
 public class EDAMUserExceptionHandler {
 
@@ -67,8 +70,12 @@ public class EDAMUserExceptionHandler {
     }
 
     private void oauth(final Shell shell) throws ExecutionException {
-        int opt = EclipseUtil.openCustomImageTypeWithCustomButtons(shell, Messages.Plugin_OAuth_AuthExpired_Title, Messages.Plugin_OAuth_AuthExpired_Message, new Image(Display.getDefault(), getClass().getClassLoader().getResourceAsStream(Constants.OAUTH_EVERNOTE_TRADEMARK_DISCONNECTED)), ArrayUtils.toArray(Messages.Plugin_OAuth_AuthExpired_ReAuth, Messages.Plugin_OAuth_NotNow));
-        if (opt == 0) {
+        LinkedHashMap<String, String> btns = MapUtil.orderedMap();
+        btns.put(Constants.Plugin_OAuth_AuthExpired_ReAuth, Messages.Plugin_OAuth_AuthExpired_ReAuth);
+        btns.put(Constants.Plugin_OAuth_NotNow, Messages.Plugin_OAuth_NotNow);
+
+        String opt = EclipseUtil.openCustomImageTypeWithCustomButtons(shell, Messages.Plugin_OAuth_AuthExpired_Title, Messages.bind(Messages.Plugin_OAuth_AuthExpired_Message, EvernoteUtil.brand().brandName()), new Image(Display.getDefault(), getClass().getClassLoader().getResourceAsStream(Constants.OAUTH_EVERNOTE_TRADEMARK_DISCONNECTED)), btns);
+        if (Constants.Plugin_OAuth_AuthExpired_ReAuth.equals(opt)) {
             try {
                 new ProgressMonitorDialog(shell).run(true, true, new IRunnableWithProgress() {
                     @Override

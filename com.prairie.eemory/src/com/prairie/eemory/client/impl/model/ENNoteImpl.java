@@ -1,12 +1,12 @@
-package com.prairie.eemory.client.impl;
+package com.prairie.eemory.client.impl.model;
 
 import java.io.File;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.prairie.eemory.client.ENNote;
-import com.prairie.eemory.client.ENObject;
+import com.prairie.eemory.client.model.ENNote;
+import com.prairie.eemory.client.model.ENObject;
 import com.prairie.eemory.enml.StyleText;
 import com.prairie.eemory.util.ListUtil;
 

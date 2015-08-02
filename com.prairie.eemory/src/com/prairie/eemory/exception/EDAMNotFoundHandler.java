@@ -8,11 +8,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 
 import com.evernote.edam.error.EDAMNotFoundException;
-import com.prairie.eemory.client.ENNote;
-import com.prairie.eemory.client.ENObject;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.EeClipperFactory;
-import com.prairie.eemory.client.impl.ENNoteImpl;
+import com.prairie.eemory.client.impl.model.ENNoteImpl;
+import com.prairie.eemory.client.model.ENNote;
+import com.prairie.eemory.client.model.ENObject;
 import com.prairie.eemory.util.ListUtil;
 import com.prairie.eemory.util.LogUtil;
 
