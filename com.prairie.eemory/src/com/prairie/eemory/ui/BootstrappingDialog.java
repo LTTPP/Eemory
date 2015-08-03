@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
-import com.prairie.eemory.client.masterdata.EvernoteBrand;
+import com.prairie.eemory.client.metadata.EvernoteBrand;
 import com.prairie.eemory.util.EvernoteUtil;
 import com.prairie.eemory.util.IDialogSettingsUtil;
 import com.prairie.eemory.util.ListUtil;

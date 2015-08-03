@@ -17,7 +17,7 @@ import com.evernote.thrift.TException;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.client.NoteOps;
 import com.prairie.eemory.client.StoreClientFactory;
-import com.prairie.eemory.client.masterdata.EDAMLimits;
+import com.prairie.eemory.client.metadata.EDAMLimits;
 import com.prairie.eemory.client.model.ENNote;
 import com.prairie.eemory.enml.ENML;
 import com.prairie.eemory.exception.EDAMDataModel;

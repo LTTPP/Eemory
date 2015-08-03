@@ -1,4 +1,4 @@
-package com.prairie.eemory.client.masterdata;
+package com.prairie.eemory.client.metadata;
 
 import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;

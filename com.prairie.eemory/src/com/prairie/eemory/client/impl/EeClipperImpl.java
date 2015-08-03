@@ -30,7 +30,7 @@ import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.StoreClientFactory;
 import com.prairie.eemory.client.impl.model.ENNoteImpl;
 import com.prairie.eemory.client.impl.model.ENObjectImpl;
-import com.prairie.eemory.client.masterdata.ENObjectType;
+import com.prairie.eemory.client.metadata.ENObjectType;
 import com.prairie.eemory.client.model.ENNote;
 import com.prairie.eemory.client.model.ENObject;
 import com.prairie.eemory.exception.NoDataFoundException;

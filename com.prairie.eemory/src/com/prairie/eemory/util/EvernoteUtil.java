@@ -15,7 +15,7 @@ import com.evernote.edam.type.Data;
 import com.evernote.edam.type.Resource;
 import com.evernote.edam.type.ResourceAttributes;
 import com.prairie.eemory.Constants;
-import com.prairie.eemory.client.masterdata.EvernoteBrand;
+import com.prairie.eemory.client.metadata.EvernoteBrand;
 
 public class EvernoteUtil {
 

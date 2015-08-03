@@ -46,7 +46,7 @@ import com.prairie.eemory.Messages;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.EeClipperFactory;
 import com.prairie.eemory.client.impl.model.ENNoteImpl;
-import com.prairie.eemory.client.masterdata.ENObjectType;
+import com.prairie.eemory.client.metadata.ENObjectType;
 import com.prairie.eemory.client.model.ENNote;
 import com.prairie.eemory.exception.NoDataFoundException;
 import com.prairie.eemory.exception.ThrowableHandler;

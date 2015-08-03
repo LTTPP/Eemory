@@ -2,7 +2,7 @@ package com.prairie.eemory.client.impl.model;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.prairie.eemory.client.masterdata.ENObjectType;
+import com.prairie.eemory.client.metadata.ENObjectType;
 import com.prairie.eemory.client.model.ENObject;
 
 public class ENObjectImpl implements ENObject {

@@ -6,7 +6,7 @@ import com.evernote.edam.error.EDAMSystemException;
 import com.evernote.edam.error.EDAMUserException;
 import com.evernote.edam.type.LinkedNotebook;
 import com.evernote.thrift.TException;
-import com.prairie.eemory.client.masterdata.ENObjectType;
+import com.prairie.eemory.client.metadata.ENObjectType;
 import com.prairie.eemory.client.model.ENNote;
 
 
