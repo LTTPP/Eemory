@@ -16,8 +16,8 @@
 
     <properties>
         <tycho-version>0.19.0</tycho-version>
-        <repo-name>indigo</repo-name>
-        <repo-url>http://download.eclipse.org/releases/indigo</repo-url>
+        <repo-name>mars</repo-name>
+        <repo-url>http://download.eclipse.org/releases/mars</repo-url>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
