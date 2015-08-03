@@ -1,5 +1,35 @@
 package com.prairie.eemory.enml;
 
+import static com.prairie.eemory.Constants.ENML_ATTR_COLOR;
+import static com.prairie.eemory.Constants.ENML_ATTR_FACE;
+import static com.prairie.eemory.Constants.ENML_ATTR_FONT;
+import static com.prairie.eemory.Constants.ENML_ATTR_HASH;
+import static com.prairie.eemory.Constants.ENML_ATTR_STYLE;
+import static com.prairie.eemory.Constants.ENML_ATTR_TYPE;
+import static com.prairie.eemory.Constants.ENML_DOCTYPE_DECLARATION_SYSTEM_ID;
+import static com.prairie.eemory.Constants.ENML_DTD;
+import static com.prairie.eemory.Constants.ENML_DTD_LOCATION;
+import static com.prairie.eemory.Constants.ENML_TAG_BOLD;
+import static com.prairie.eemory.Constants.ENML_TAG_BR;
+import static com.prairie.eemory.Constants.ENML_TAG_DIV;
+import static com.prairie.eemory.Constants.ENML_TAG_EN_MEDIA;
+import static com.prairie.eemory.Constants.ENML_TAG_EN_NOTE;
+import static com.prairie.eemory.Constants.ENML_TAG_EN_NOTE_SELF_CLOSING_REGEX;
+import static com.prairie.eemory.Constants.ENML_TAG_EN_NOTE_SELF_CLOSING_REPLACEMENT;
+import static com.prairie.eemory.Constants.ENML_TAG_EN_NOTE_START_REGEX;
+import static com.prairie.eemory.Constants.ENML_TAG_EN_NOTE_START_REPLACEMENT_P1;
+import static com.prairie.eemory.Constants.ENML_TAG_ITALIC;
+import static com.prairie.eemory.Constants.ENML_TAG_SPAN;
+import static com.prairie.eemory.Constants.ENML_VALUE_FONT_SIZE;
+import static com.prairie.eemory.Constants.ENML_VALUE_PT;
+import static com.prairie.eemory.Constants.XHTML_1_0_LATIN_1_ENT;
+import static com.prairie.eemory.Constants.XHTML_1_0_LATIN_1_ENT_LOCATION;
+import static com.prairie.eemory.Constants.XHTML_1_0_SPECIAL_ENT;
+import static com.prairie.eemory.Constants.XHTML_1_0_SPECIAL_ENT_LOCATION;
+import static com.prairie.eemory.Constants.XHTML_1_0_SYMBOL_ENT;
+import static com.prairie.eemory.Constants.XHTML_1_0_SYMBOL_ENT_LOCATION;
+import static com.prairie.eemory.Constants.XML_VERSION_1_0;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
@@ -29,7 +59,7 @@ import com.prairie.eemory.util.ListUtil;
 import com.prairie.eemory.util.LogUtil;
 import com.prairie.eemory.util.StringEscapeUtil;
 
-public class ENML implements Constants {
+public class ENML {
 
     // used to create new note
     private final Document document;

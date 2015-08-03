@@ -1,5 +1,24 @@
 package com.prairie.eemory.handlers;
 
+import static com.prairie.eemory.Constants.FileNamePartSimpleDateFormat;
+import static com.prairie.eemory.Constants.PLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE;
+import static com.prairie.eemory.Constants.PLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE;
+import static com.prairie.eemory.Constants.PLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE;
+import static com.prairie.eemory.Constants.PLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE;
+import static com.prairie.eemory.Constants.PLUGIN_COMMAND_ID_CONFIGURATIONS;
+import static com.prairie.eemory.Constants.PLUGIN_COMMAND_PARAM_ID;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_KEY_GUID;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_KEY_NAME;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_KEY_OBJECT;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_KEY_TOKEN;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_KEY_TYPE;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_SECTION_COMMENTS;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_SECTION_NOTE;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_SECTION_NOTEBOOK;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_SECTION_TAGS;
+import static com.prairie.eemory.Constants.TAB_WIDTH;
+import static com.prairie.eemory.Constants.TAGS_SEPARATOR;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +42,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.EeClipperFactory;
@@ -33,9 +51,9 @@ import com.prairie.eemory.client.model.ENNote;
 import com.prairie.eemory.exception.NoDataFoundException;
 import com.prairie.eemory.exception.ThrowableHandler;
 import com.prairie.eemory.oauth.OAuth;
+import com.prairie.eemory.ui.BootstrappingDialog;
 import com.prairie.eemory.ui.CaptureView;
 import com.prairie.eemory.ui.ConfigurationsDialog;
-import com.prairie.eemory.ui.BootstrappingDialog;
 import com.prairie.eemory.ui.QuickOrganizeDialog;
 import com.prairie.eemory.ui.ScreenCaptureProcessor;
 import com.prairie.eemory.ui.SyncQuickOrganizeDialog;
@@ -50,7 +68,7 @@ import com.prairie.eemory.util.LogUtil;
 import com.prairie.eemory.util.NumberUtil;
 import com.prairie.eemory.util.ObjectUtil;
 
-public class EeHandler extends AbstractHandler implements ScreenCaptureProcessor, Constants {
+public class EeHandler extends AbstractHandler implements ScreenCaptureProcessor {
 
     @Override
     public Object execute(final ExecutionEvent event) throws ExecutionException {

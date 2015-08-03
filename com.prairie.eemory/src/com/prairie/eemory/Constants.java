@@ -2,7 +2,11 @@ package com.prairie.eemory;
 
 import com.prairie.eemory.util.ConstantsUtil;
 
-public interface Constants {
+public final class Constants {
+
+    private Constants() {
+
+    }
 
     public static final String EVERNOTE_INTERNATIONAL = "Evernote International";
     public static final String EVERNOTE_YINXIANG = "印象笔记";

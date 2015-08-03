@@ -1,5 +1,21 @@
 package com.prairie.eemory.ui;
 
+import static com.prairie.eemory.Constants.PLUGIN_CONFIGS_COMMENTS;
+import static com.prairie.eemory.Constants.PLUGIN_CONFIGS_NOTE;
+import static com.prairie.eemory.Constants.PLUGIN_CONFIGS_NOTEBOOK;
+import static com.prairie.eemory.Constants.PLUGIN_CONFIGS_TAGS;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_KEY_CHECKED;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_KEY_GUID;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_KEY_NAME;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_KEY_OBJECT;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_KEY_TOKEN;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_KEY_TYPE;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_SECTION_COMMENTS;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_SECTION_NOTE;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_SECTION_NOTEBOOK;
+import static com.prairie.eemory.Constants.PLUGIN_SETTINGS_SECTION_TAGS;
+import static com.prairie.eemory.Constants.TAGS_SEPARATOR;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +42,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.prairie.eemory.Constants;
 import com.prairie.eemory.Messages;
 import com.prairie.eemory.client.EeClipper;
 import com.prairie.eemory.client.EeClipperFactory;
@@ -46,7 +61,7 @@ import com.prairie.eemory.util.MapUtil;
 import com.prairie.eemory.util.ObjectUtil;
 import com.prairie.eemory.util.StringUtil;
 
-public class QuickOrganizeDialog extends Dialog implements Constants {
+public class QuickOrganizeDialog extends Dialog {
 
     public static final int SHOULD_NOT_SHOW = -1;
 
