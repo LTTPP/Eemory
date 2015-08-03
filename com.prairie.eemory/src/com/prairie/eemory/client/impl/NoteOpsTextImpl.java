@@ -94,6 +94,8 @@ public class NoteOpsTextImpl extends NoteOps {
             }
         }
 
+        note.setUpdated(System.currentTimeMillis());
+
         client.updateNote(note);
     }
 
