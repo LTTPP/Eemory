@@ -1,0 +1,5 @@
+Run Configurations for Built-in Maven
+
+Base directory: ${workspace_loc:/com.prairie.eemory.build}
+
+Goals: clean package
