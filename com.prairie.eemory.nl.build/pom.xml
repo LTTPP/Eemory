@@ -9,8 +9,8 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../com.prairie.eemory.nl_zh_CN</module>
-		<module>../com.prairie.eemory.nl_zh_CN.feature</module>
+		<module>../com.prairie.eemory.nl_zh</module>
+		<module>../com.prairie.eemory.nl_zh.feature</module>
 		<module>../com.prairie.eemory.nl.updatesite</module>
 	</modules>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="com.prairie.eemory.nl_zh_CN.feature"
+      id="com.prairie.eemory.nl_zh.feature"
       label="%Feature-Name"
       version="0.1.0.qualifier"
       provider-name="%Feature-Provider-Name">
@@ -27,7 +27,7 @@
    </requires>
 
    <plugin
-         id="com.prairie.eemory.nl_zh_CN"
+         id="com.prairie.eemory.nl_zh"
          download-size="0"
          install-size="0"
          version="0.0.0"
