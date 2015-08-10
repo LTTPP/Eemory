@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="Language Packs for Eemory Update Site" url="http://dl.bintray.com/prairie/eemory-update-site">
+      Language Packs for Eemory Update Site
+   </description>
+   <feature url="features/com.prairie.eemory.nl_zh_CN.feature_0.1.0.201508092212.jar" id="com.prairie.eemory.nl_zh_CN.feature" version="0.1.0.201508092212">
+      <category name="Language Packs for Eemory"/>
+   </feature>
+   <category-def name="Language Packs for Eemory" label="Language Packs for Eemory">
+      <description>
+         Language Packs for Eemory
+      </description>
+   </category-def>
+</site>

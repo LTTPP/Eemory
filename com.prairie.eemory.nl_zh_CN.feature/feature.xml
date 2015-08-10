@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.prairie.eemory.nl_zh_CN.feature"
+      label="%Feature-Name"
+      version="0.1.0.qualifier"
+      provider-name="%Feature-Provider-Name">
+
+   <description>
+      %Feature-Description
+   </description>
+
+   <copyright>
+      %Feature-Copyright
+   </copyright>
+
+   <license url="http://opensource.org/licenses/MIT">
+      %Feature-License
+   </license>
+
+   <url>
+      <update label="%Feature-Update-Site-Name" url="http://dl.bintray.com/prairie/eemory-update-site"/>
+      <discovery label="%Feature-Discovery-Name" url="http://prairie.github.io/Eemory"/>
+   </url>
+
+   <requires>
+      <import plugin="com.prairie.eemory" version="1.1.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="com.prairie.eemory.nl_zh_CN"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+</feature>
