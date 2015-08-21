@@ -16,7 +16,7 @@ Visit [Eemory](http://marketplace.eclipse.org/content/eemory) on Eclipse Marketp
 + Comment can be added for each clip.
 + Syntax highlighting for any language on Evernote just like what you see in Eclipse.
 + One-click OAuth authorization.
-+ Support 印象笔记
++ Support 印象笔记.
 
 ## Limits
 
