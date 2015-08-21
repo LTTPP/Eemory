@@ -2,7 +2,7 @@
 
 Eemory is an Eclipse plug-in aimed at integrating Evernote within the Eclipse IDE.
 
-I love Evernote, but every time I want to save something to Evernote, I have to switch between Eclipse IDE and Evernote client, copy sometihng and paste, then go back to Eclipse and continue on my work. This is heavy and boring, so Eemory was born, which bring the benefits offered by Evernote into Eclipse. No need to open Evernote client anymore to add a note, just select something and one-click to save to Evernote right in Eclipse elegantly.
+I love Evernote, but every time I want to save something to Evernote, I have to switch between Eclipse IDE and Evernote client, copy sometihng and paste, then go back to Eclipse and continue on my work. This is heavy and boring, so Eemory was born, which brings the benefits offered by Evernote into Eclipse. No need to open Evernote client anymore to add a note, just select something and one-click to save to Evernote right in Eclipse elegantly.
 
 Visit [Eemory Home](http://prairie.github.io/Eemory).  
 Visit [Eemory](http://marketplace.eclipse.org/content/eemory) on Eclipse Marketplace.
@@ -16,6 +16,7 @@ Visit [Eemory](http://marketplace.eclipse.org/content/eemory) on Eclipse Marketp
 + Comment can be added for each clip.
 + Syntax highlighting for any language on Evernote just like what you see in Eclipse.
 + One-click OAuth authorization.
++ Support 印象笔记
 
 ## Limits
 
@@ -48,15 +49,13 @@ Need more information? Please check out this [Wiki](https://github.com/prairie/E
 
 ## Todo
 
++ Clip video support. Allow user to record a video and add to Evernote.
++ Caching user data that was sent to Evernote when the error occurred so it can be sent again after troubleshooted.
++ Chinese language support.
 + Add preference page with preference configurations:
  - Customize title of clipped note. User can specify the format of clipped note title using Regex or something else.
  - Appending or prepending for updating note case.
  - To one note or separate notes when clipping multiple files once.
-+ Clip video support. Allow user to record a video and add to Evernote.
-+ Caching user data that was sent to Evernote when the error occurred so it can be sent again after troubleshooted.
-+ YXBJ support.
-+ Revoke authorization from plug-in side.
-+ Chinese language support.
 + Business support.
 
 ## Authors and Contributors
