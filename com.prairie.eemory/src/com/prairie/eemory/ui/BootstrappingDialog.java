@@ -150,12 +150,12 @@ public class BootstrappingDialog {
                 } else if (b == EvernoteBrand.EVERNOTE_INTERNATIONAL) {
                     label = Messages.bind(Messages.Plugin_OAuth_SWITCH_INTL, b.brandName());
                 }
-                int pixels = convertHorizontalDLUsToPixels(label.length());
-                if (pixels > maxLen) {
-                    maxLen = pixels;
+                int len = label.length();
+                if (len > maxLen) {
+                    maxLen = len;
                 }
             }
-            return maxLen;
+            return maxLen + 2; // +2 is just in case and not platform and language specific, so no need to take additional care here.
         }
     }
 
