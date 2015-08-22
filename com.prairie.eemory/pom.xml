@@ -6,7 +6,7 @@
         <relativePath>../com.prairie.eemory.build/pom.xml</relativePath>
         <groupId>com.prairie.eemory.build</groupId>
         <artifactId>parent</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
+        <version>1.1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>com.prairie.eemory</artifactId>
