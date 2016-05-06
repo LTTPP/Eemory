@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.prairie.eemory.feature"
+      label="%Feature-Name"
+      version="1.1.1.qualifier"
+      provider-name="%Feature-Provider-Name"
+      plugin="com.prairie.eemory">
+
+   <description>
+      %Feature-Description
+   </description>
+
+   <copyright>
+      %Feature-Copyright
+   </copyright>
+
+   <license url="http://opensource.org/licenses/MIT">
+      %Feature-License
+   </license>
+
+   <url>
+      <update label="%Feature-Update-Site-Name" url="http://dl.bintray.com/prairie/eemory-update-site"/>
+      <discovery label="%Feature-Discovery-Name" url="http://prairie.github.io/Eemory"/>
+   </url>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.core.expressions"/>
+   </requires>
+
+   <plugin
+         id="com.prairie.eemory"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>

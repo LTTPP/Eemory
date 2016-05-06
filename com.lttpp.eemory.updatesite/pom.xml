@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<relativePath>../com.prairie.eemory.build/pom.xml</relativePath>
+		<groupId>com.prairie.eemory.build</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.1.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>com.prairie.eemory.updatesite</artifactId>
+	<packaging>eclipse-repository</packaging>
+</project>
