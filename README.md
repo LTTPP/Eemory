@@ -1,6 +1,6 @@
-# ![Eemory](com.lttpp.eemory/icons/plugin_172x56.png)
+# ![Eemory](org.lttpp.eemory/icons/plugin_172x56.png)
 
-[ ![Download](https://api.bintray.com/packages/lttpp/eemory-update-site/com.lttpp.eemory.updatesite/images/download.svg) ](https://bintray.com/lttpp/eemory-update-site/com.lttpp.eemory.updatesite/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/lttpp/eemory-update-site/org.lttpp.eemory.updatesite/images/download.svg) ](https://bintray.com/lttpp/eemory-update-site/org.lttpp.eemory.updatesite/_latestVersion)
 
 Eemory is an Eclipse plug-in aimed at integrating Evernote within the Eclipse IDE.
 
@@ -27,7 +27,7 @@ Visit [Eemory](http://marketplace.eclipse.org/content/eemory) on Eclipse Marketp
 
 ## Screenshots
 
-![screenshot](com.lttpp.eemory/res/plugin-screenshot.png)
+![screenshot](org.lttpp.eemory/res/plugin-screenshot.png)
 
 ## Installation
 
