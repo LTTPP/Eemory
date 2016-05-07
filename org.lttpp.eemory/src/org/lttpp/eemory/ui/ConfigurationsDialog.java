@@ -659,8 +659,10 @@ public class ConfigurationsDialog extends TitleAreaDialog {
                 /*
                  * Workaround for Eclipse Bug 193933: Text is not grayed out
                  * when disabled if custom foreground color is set.
+                 * 
+                 * This happens on Win 7 and earlier version, not observed on Win 10.
                  */
-                text.setBackground(button.getSelection() ? null : shell.getDisplay().getSystemColor(SWT.COLOR_TITLE_INACTIVE_FOREGROUND));
+                text.setBackground(button.getSelection() ? null : shell.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
             }
         });
 
