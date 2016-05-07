@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="com.lttpp.eemory.feature"
+      id="org.lttpp.eemory.feature"
       label="%Feature-Name"
       version="1.1.1.qualifier"
       provider-name="%Feature-Provider-Name"
-      plugin="com.lttpp.eemory">
+      plugin="org.lttpp.eemory">
 
    <description>
       %Feature-Description
@@ -32,7 +32,7 @@
    </requires>
 
    <plugin
-         id="com.lttpp.eemory"
+         id="org.lttpp.eemory"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

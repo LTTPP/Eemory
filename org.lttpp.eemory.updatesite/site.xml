@@ -3,7 +3,7 @@
    <description name="Eemory Update Site" url="http://dl.bintray.com/lttpp/eemory-update-site">
       Eemory Update Site
    </description>
-   <feature url="features/com.lttpp.eemory.feature_1.0.0.201402181129.jar" id="com.lttpp.eemory.feature" version="1.0.0.201402181129">
+   <feature url="features/org.lttpp.eemory.feature_1.0.0.201402181129.jar" id="org.lttpp.eemory.feature" version="1.0.0.201402181129">
       <category name="Eemory"/>
    </feature>
    <category-def name="Eemory" label="Eemory">

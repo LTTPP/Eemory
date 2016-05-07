@@ -1,8 +1,8 @@
 REM  Eclipse for Windows
 REM  External Tools Configurations
 REM  Location: location of this file
-REM  Working Directory: ${workspace_loc:/com.lttpp.eemory.build}
-REM  Arguments: ${workspace_loc:/com.lttpp.eemory.build}
+REM  Working Directory: ${workspace_loc:/org.lttpp.eemory.build}
+REM  Arguments: ${workspace_loc:/org.lttpp.eemory.build}
 
 
 @ECHO OFF

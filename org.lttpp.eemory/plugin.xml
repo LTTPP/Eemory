@@ -3,56 +3,56 @@
 <plugin>
 
     <extension point="org.eclipse.ui.commands">
-        <category name="Eemory Category" id="com.lttpp.eemory.commands.category">
+        <category name="Eemory Category" id="org.lttpp.eemory.commands.category">
         </category>
-        <command name="Clip to Evernote" categoryId="com.lttpp.eemory.commands.category" id="com.lttpp.eemory.commands.ClipToEvernote">
-            <commandParameter id="com.lttpp.eemory.command.parameter" name="Command Parameter" optional="true">
+        <command name="Clip to Evernote" categoryId="org.lttpp.eemory.commands.category" id="org.lttpp.eemory.commands.ClipToEvernote">
+            <commandParameter id="org.lttpp.eemory.command.parameter" name="Command Parameter" optional="true">
             </commandParameter>
         </command>
-        <command name="Clip File to Evernote" categoryId="com.lttpp.eemory.commands.category" id="com.lttpp.eemory.commands.ClipFileToEvernote">
-            <commandParameter id="com.lttpp.eemory.command.parameter" name="Command Parameter" optional="true">
+        <command name="Clip File to Evernote" categoryId="org.lttpp.eemory.commands.category" id="org.lttpp.eemory.commands.ClipFileToEvernote">
+            <commandParameter id="org.lttpp.eemory.command.parameter" name="Command Parameter" optional="true">
             </commandParameter>
         </command>
-        <command name="Clip Selection to Evernote" categoryId="com.lttpp.eemory.commands.category" id="com.lttpp.eemory.commands.ClipSelectionToEvernote">
-            <commandParameter id="com.lttpp.eemory.command.parameter" name="Command Parameter" optional="true">
+        <command name="Clip Selection to Evernote" categoryId="org.lttpp.eemory.commands.category" id="org.lttpp.eemory.commands.ClipSelectionToEvernote">
+            <commandParameter id="org.lttpp.eemory.command.parameter" name="Command Parameter" optional="true">
             </commandParameter>
         </command>
-        <command name="Clip Screenshot to Evernote" categoryId="com.lttpp.eemory.commands.category" id="com.lttpp.eemory.commands.ClipScreenshotToEvernote">
-            <commandParameter id="com.lttpp.eemory.command.parameter" name="Command Parameter" optional="true">
+        <command name="Clip Screenshot to Evernote" categoryId="org.lttpp.eemory.commands.category" id="org.lttpp.eemory.commands.ClipScreenshotToEvernote">
+            <commandParameter id="org.lttpp.eemory.command.parameter" name="Command Parameter" optional="true">
             </commandParameter>
         </command>
-        <command name="Clip Configurations..." categoryId="com.lttpp.eemory.commands.category" id="com.lttpp.eemory.commands.Configurations">
-            <commandParameter id="com.lttpp.eemory.command.parameter" name="Command Parameter" optional="true">
+        <command name="Clip Configurations..." categoryId="org.lttpp.eemory.commands.category" id="org.lttpp.eemory.commands.Configurations">
+            <commandParameter id="org.lttpp.eemory.command.parameter" name="Command Parameter" optional="true">
             </commandParameter>
         </command>
     </extension>
 
-    <!--extension point="org.eclipse.ui.commandImages"> <image commandId="com.lttpp.eemory.commands.ClipFileToEvernote"
-    icon="icons/icon_file_16x16.png"/> <image commandId="com.lttpp.eemory.commands.ClipSelectionToEvernote"
+    <!--extension point="org.eclipse.ui.commandImages"> <image commandId="org.lttpp.eemory.commands.ClipFileToEvernote"
+    icon="icons/icon_file_16x16.png"/> <image commandId="org.lttpp.eemory.commands.ClipSelectionToEvernote"
     icon="icons/icon_selection_16x16.png"/> </extension -->
 
     <extension point="org.eclipse.ui.handlers">
-        <handler name="Eemory Handler" commandId="com.lttpp.eemory.commands.ClipToEvernote" class="com.lttpp.eemory.handlers.EeHandler">
+        <handler name="Eemory Handler" commandId="org.lttpp.eemory.commands.ClipToEvernote" class="org.lttpp.eemory.handlers.EeHandler">
             <enabledWhen>
-                <reference definitionId="com.lttpp.eemory.definitions.Clipable"/>
+                <reference definitionId="org.lttpp.eemory.definitions.Clipable"/>
             </enabledWhen>
         </handler>
-        <handler name="Eemory Handler" commandId="com.lttpp.eemory.commands.ClipFileToEvernote" class="com.lttpp.eemory.handlers.EeHandler">
+        <handler name="Eemory Handler" commandId="org.lttpp.eemory.commands.ClipFileToEvernote" class="org.lttpp.eemory.handlers.EeHandler">
         </handler>
-        <handler name="Eemory Handler" commandId="com.lttpp.eemory.commands.ClipSelectionToEvernote" class="com.lttpp.eemory.handlers.EeHandler">
+        <handler name="Eemory Handler" commandId="org.lttpp.eemory.commands.ClipSelectionToEvernote" class="org.lttpp.eemory.handlers.EeHandler">
             <enabledWhen>
-                <reference definitionId="com.lttpp.eemory.definitions.TextSelection"/>
+                <reference definitionId="org.lttpp.eemory.definitions.TextSelection"/>
             </enabledWhen>
         </handler>
-        <handler name="Eemory Handler" commandId="com.lttpp.eemory.commands.ClipScreenshotToEvernote" class="com.lttpp.eemory.handlers.EeHandler">
+        <handler name="Eemory Handler" commandId="org.lttpp.eemory.commands.ClipScreenshotToEvernote" class="org.lttpp.eemory.handlers.EeHandler">
         </handler>
-        <handler name="Eemory Handler" commandId="com.lttpp.eemory.commands.Configurations" class="com.lttpp.eemory.handlers.EeHandler">
+        <handler name="Eemory Handler" commandId="org.lttpp.eemory.commands.Configurations" class="org.lttpp.eemory.handlers.EeHandler">
         </handler>
     </extension>
 
-    <!--extension point="org.eclipse.ui.bindings"> <key commandId="com.lttpp.eemory.commands.ClipFileToEvernote"
+    <!--extension point="org.eclipse.ui.bindings"> <key commandId="org.lttpp.eemory.commands.ClipFileToEvernote"
     contextId="org.eclipse.ui.contexts.window" sequence="M1+6" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-    </key> <key commandId="com.lttpp.eemory.commands.ClipSelectionToEvernote"
+    </key> <key commandId="org.lttpp.eemory.commands.ClipSelectionToEvernote"
     contextId="org.eclipse.ui.contexts.window" sequence="M1+8" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
     </key> </extension -->
 
@@ -61,43 +61,43 @@
         <menuContribution
                 locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
             <toolbar
-                    id="com.lttpp.eemory.toolbars.ClipToEvernoteToolbar">
+                    id="org.lttpp.eemory.toolbars.ClipToEvernoteToolbar">
                 <command style="pulldown"
-                        commandId="com.lttpp.eemory.commands.ClipToEvernote"
+                        commandId="org.lttpp.eemory.commands.ClipToEvernote"
                         icon="icons/icon_evernote_16x16.png" tooltip="%ClipToEvernote"
-                        id="com.lttpp.eemory.toolbars.ClipToEvernoteCommand">
-                    <parameter name="com.lttpp.eemory.command.parameter"
+                        id="org.lttpp.eemory.toolbars.ClipToEvernoteCommand">
+                    <parameter name="org.lttpp.eemory.command.parameter"
                             value="Clip to Evernote">
                     </parameter>
                 </command>
             </toolbar>
         </menuContribution>
         <menuContribution
-                locationURI="menu:com.lttpp.eemory.toolbars.ClipToEvernoteCommand">
-            <!--menu label="Sample Menu" mnemonic="M" id="com.lttpp.eemory.menus.sampleMenu" -->
+                locationURI="menu:org.lttpp.eemory.toolbars.ClipToEvernoteCommand">
+            <!--menu label="Sample Menu" mnemonic="M" id="org.lttpp.eemory.menus.sampleMenu" -->
             <command label="%ClipSelectionToEvernote" icon="icons/icon_selection_16x16.png"
-                    commandId="com.lttpp.eemory.commands.ClipSelectionToEvernote">
-                <parameter name="com.lttpp.eemory.command.parameter"
+                    commandId="org.lttpp.eemory.commands.ClipSelectionToEvernote">
+                <parameter name="org.lttpp.eemory.command.parameter"
                         value="Clip Selection to Evernote">
                 </parameter>
             </command>
             <command label="%ClipFileToEvernote" icon="icons/icon_file_16x16.png"
-                    commandId="com.lttpp.eemory.commands.ClipFileToEvernote">
-                <parameter name="com.lttpp.eemory.command.parameter"
+                    commandId="org.lttpp.eemory.commands.ClipFileToEvernote">
+                <parameter name="org.lttpp.eemory.command.parameter"
                         value="Clip File to Evernote">
                 </parameter>
             </command>
             <command label="%ClipScreenshotToEvernote" icon="icons/icon_screenshot_16x16.png"
-                    commandId="com.lttpp.eemory.commands.ClipScreenshotToEvernote">
-                <parameter name="com.lttpp.eemory.command.parameter"
+                    commandId="org.lttpp.eemory.commands.ClipScreenshotToEvernote">
+                <parameter name="org.lttpp.eemory.command.parameter"
                         value="Clip Screenshot to Evernote">
                 </parameter>
             </command>
             <separator name="separatorLine" visible="true">
             </separator>
             <command label="%ClipConfigs"
-                    commandId="com.lttpp.eemory.commands.Configurations">
-                <parameter name="com.lttpp.eemory.command.parameter"
+                    commandId="org.lttpp.eemory.commands.Configurations">
+                <parameter name="org.lttpp.eemory.command.parameter"
                         value="Clip Configurations...">
                 </parameter>
             </command>
@@ -106,35 +106,35 @@
 
         <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
             <menu label="%ClipToEvernote" icon="icons/icon_evernote_16x16.png"
-                    id="com.lttpp.eemory.popupMenu">
+                    id="org.lttpp.eemory.popupMenu">
                 <command label="%ClipSelectionToEvernote" icon="icons/icon_selection_16x16.png"
-                        commandId="com.lttpp.eemory.commands.ClipSelectionToEvernote">
-                    <parameter name="com.lttpp.eemory.command.parameter"
+                        commandId="org.lttpp.eemory.commands.ClipSelectionToEvernote">
+                    <parameter name="org.lttpp.eemory.command.parameter"
                             value="Clip Selection to Evernote">
                     </parameter>
                 </command>
                 <command label="%ClipFileToEvernote" icon="icons/icon_file_16x16.png"
-                        commandId="com.lttpp.eemory.commands.ClipFileToEvernote">
-                    <parameter name="com.lttpp.eemory.command.parameter"
+                        commandId="org.lttpp.eemory.commands.ClipFileToEvernote">
+                    <parameter name="org.lttpp.eemory.command.parameter"
                             value="Clip File to Evernote">
                     </parameter>
                 </command>
                 <command label="%ClipScreenshotToEvernote" icon="icons/icon_screenshot_16x16.png"
-                        commandId="com.lttpp.eemory.commands.ClipScreenshotToEvernote">
-                    <parameter name="com.lttpp.eemory.command.parameter"
+                        commandId="org.lttpp.eemory.commands.ClipScreenshotToEvernote">
+                    <parameter name="org.lttpp.eemory.command.parameter"
                             value="Clip Screenshot to Evernote">
                     </parameter>
                 </command>
                 <separator name="separatorLine" visible="true">
                 </separator>
                 <command label="%ClipConfigs"
-                        commandId="com.lttpp.eemory.commands.Configurations">
-                    <parameter name="com.lttpp.eemory.command.parameter"
+                        commandId="org.lttpp.eemory.commands.Configurations">
+                    <parameter name="org.lttpp.eemory.command.parameter"
                             value="Clip Configurations...">
                     </parameter>
                 </command>
                 <visibleWhen checkEnabled="false">
-                    <reference definitionId="com.lttpp.eemory.definitions.Clipable"/>
+                    <reference definitionId="org.lttpp.eemory.definitions.Clipable"/>
                 </visibleWhen>
             </menu>
         </menuContribution>
@@ -143,16 +143,16 @@
 
     <extension point="org.eclipse.core.expressions.propertyTesters">
         <propertyTester
-            id="com.lttpp.eemory.testers.FileTester"
+            id="org.lttpp.eemory.testers.FileTester"
             type="org.eclipse.core.runtime.IAdaptable"
-            namespace="com.lttpp.eemory.testers"
+            namespace="org.lttpp.eemory.testers"
             properties="isFile"
-            class="com.lttpp.eemory.handlers.FileTester">
+            class="org.lttpp.eemory.handlers.FileTester">
         </propertyTester>
     </extension>
 
     <extension point="org.eclipse.core.expressions.definitions">
-        <definition id="com.lttpp.eemory.definitions.TextSelection">
+        <definition id="org.lttpp.eemory.definitions.TextSelection">
             <with variable="selection">
                 <adapt type="org.eclipse.jface.text.ITextSelection" />
             </with>
@@ -165,20 +165,20 @@
     </extension>
 
     <extension point="org.eclipse.core.expressions.definitions">
-        <definition id="com.lttpp.eemory.definitions.File">
+        <definition id="org.lttpp.eemory.definitions.File">
             <with variable="selection">
                 <iterate ifEmpty="false"  operator="and">
-                    <test property="com.lttpp.eemory.testers.isFile" forcePluginActivation="true"/>
+                    <test property="org.lttpp.eemory.testers.isFile" forcePluginActivation="true"/>
                 </iterate>
             </with>
         </definition>
     </extension>
 
     <extension point="org.eclipse.core.expressions.definitions">
-        <definition id="com.lttpp.eemory.definitions.Clipable">
+        <definition id="org.lttpp.eemory.definitions.Clipable">
             <or>
-                <reference definitionId="com.lttpp.eemory.definitions.TextSelection"/>
-                <reference definitionId="com.lttpp.eemory.definitions.File"/>
+                <reference definitionId="org.lttpp.eemory.definitions.TextSelection"/>
+                <reference definitionId="org.lttpp.eemory.definitions.File"/>
             </or>
         </definition>
     </extension>

@@ -1,5 +1,5 @@
 Run Configurations for Built-in Maven
 
-Base directory: ${workspace_loc:/com.lttpp.eemory.build}
+Base directory: ${workspace_loc:/org.lttpp.eemory.build}
 
 Goals: clean package

@@ -3,15 +3,15 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.lttpp.eemory.build</groupId>
+    <groupId>org.lttpp.eemory.build</groupId>
     <artifactId>parent</artifactId>
     <version>1.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>../com.lttpp.eemory</module>
-        <module>../com.lttpp.eemory.feature</module>
-        <module>../com.lttpp.eemory.updatesite</module>
+        <module>../org.lttpp.eemory</module>
+        <module>../org.lttpp.eemory.feature</module>
+        <module>../org.lttpp.eemory.updatesite</module>
     </modules>
 
     <properties>
