@@ -3,15 +3,15 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.prairie.eemory.build</groupId>
+    <groupId>com.lttpp.eemory.build</groupId>
     <artifactId>parent</artifactId>
     <version>1.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>../com.prairie.eemory</module>
-        <module>../com.prairie.eemory.feature</module>
-        <module>../com.prairie.eemory.updatesite</module>
+        <module>../com.lttpp.eemory</module>
+        <module>../com.lttpp.eemory.feature</module>
+        <module>../com.lttpp.eemory.updatesite</module>
     </modules>
 
     <properties>

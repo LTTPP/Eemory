@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="com.prairie.eemory.feature"
+      id="com.lttpp.eemory.feature"
       label="%Feature-Name"
       version="1.1.1.qualifier"
       provider-name="%Feature-Provider-Name"
-      plugin="com.prairie.eemory">
+      plugin="com.lttpp.eemory">
 
    <description>
       %Feature-Description
@@ -19,8 +19,8 @@
    </license>
 
    <url>
-      <update label="%Feature-Update-Site-Name" url="http://dl.bintray.com/prairie/eemory-update-site"/>
-      <discovery label="%Feature-Discovery-Name" url="http://prairie.github.io/Eemory"/>
+      <update label="%Feature-Update-Site-Name" url="http://dl.bintray.com/lttpp/eemory-update-site"/>
+      <discovery label="%Feature-Discovery-Name" url="http://lttpp.github.io/Eemory"/>
    </url>
 
    <requires>
@@ -32,7 +32,7 @@
    </requires>
 
    <plugin
-         id="com.prairie.eemory"
+         id="com.lttpp.eemory"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

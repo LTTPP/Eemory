@@ -10,7 +10,7 @@ import org.osgi.framework.BundleContext;
 public class EemoryPlugin extends AbstractUIPlugin {
 
     // The plug-in ID
-    public static final String PLUGIN_ID = "com.prairie.eemory";
+    public static final String PLUGIN_ID = "com.lttpp.eemory";
 
     // The shared instance
     private static EemoryPlugin plugin;

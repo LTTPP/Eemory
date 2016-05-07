@@ -13,12 +13,12 @@ public final class Constants {
     public static final String EVERNOTE_SANDBOX = "Evernote Sandbox";
 
     // Command IDs
-    public static final String PLUGIN_COMMAND_PARAM_ID = "com.prairie.eemory.command.parameter";
-    public static final String PLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE = "com.prairie.eemory.commands.ClipToEvernote";
-    public static final String PLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE = "com.prairie.eemory.commands.ClipSelectionToEvernote";
-    public static final String PLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE = "com.prairie.eemory.commands.ClipFileToEvernote";
-    public static final String PLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE = "com.prairie.eemory.commands.ClipScreenshotToEvernote";
-    public static final String PLUGIN_COMMAND_ID_CONFIGURATIONS = "com.prairie.eemory.commands.Configurations";
+    public static final String PLUGIN_COMMAND_PARAM_ID = "com.lttpp.eemory.command.parameter";
+    public static final String PLUGIN_COMMAND_ID_CLIP_TO_EVERNOTE = "com.lttpp.eemory.commands.ClipToEvernote";
+    public static final String PLUGIN_COMMAND_ID_CLIP_SELECTION_TO_EVERNOTE = "com.lttpp.eemory.commands.ClipSelectionToEvernote";
+    public static final String PLUGIN_COMMAND_ID_CLIP_FILE_TO_EVERNOTE = "com.lttpp.eemory.commands.ClipFileToEvernote";
+    public static final String PLUGIN_COMMAND_ID_CLIP_SCREENSHOT_TO_EVERNOTE = "com.lttpp.eemory.commands.ClipScreenshotToEvernote";
+    public static final String PLUGIN_COMMAND_ID_CONFIGURATIONS = "com.lttpp.eemory.commands.Configurations";
     public static final String PLUGIN_TESTERS_ISFILE = "isFile";
 
     // field properties
@@ -129,7 +129,7 @@ public final class Constants {
     public static final String MimeDetector = "eu.medsea.mimeutil.detector.MagicMimeMimeDetector";
 
     // Plug-in
-    public static final String PLUGIN_DEBUG_MODE = "com.prairie.eemory.debug";
+    public static final String PLUGIN_DEBUG_MODE = "com.lttpp.eemory.debug";
     public static final String PLUGIN_RUN_ON_SANDBOX = "com.evernote.sandbox";
 
     // Button properties

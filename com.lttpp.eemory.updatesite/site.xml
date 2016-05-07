@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <description name="Eemory Update Site" url="http://dl.bintray.com/prairie/eemory-update-site">
+   <description name="Eemory Update Site" url="http://dl.bintray.com/lttpp/eemory-update-site">
       Eemory Update Site
    </description>
-   <feature url="features/com.prairie.eemory.feature_1.0.0.201402181129.jar" id="com.prairie.eemory.feature" version="1.0.0.201402181129">
+   <feature url="features/com.lttpp.eemory.feature_1.0.0.201402181129.jar" id="com.lttpp.eemory.feature" version="1.0.0.201402181129">
       <category name="Eemory"/>
    </feature>
    <category-def name="Eemory" label="Eemory">
