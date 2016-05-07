@@ -17,8 +17,8 @@ I love Evernote, but every time I want to save something to Evernote, I have to 
 + Support 印象笔记.
 
 ### Releases
-#### Eemory 1.1.1 (requires Eclipse Helios(3.6)+ and Java 7+)
-Eemory 1.1.1 is the latest version and requires Eclipse Helios(3.6)+ and Java 7+.
+#### Eemory 1.1.2 (requires Eclipse Helios(3.6)+ and Java 7+)
+Eemory 1.1.2 is the latest version and requires Eclipse Helios(3.6)+ and Java 7+.
 
 View [Readme](https://github.com/lttpp/Eemory/blob/master/README.md) and [Wiki](https://github.com/lttpp/Eemory/wiki) for limits and more information.
 
