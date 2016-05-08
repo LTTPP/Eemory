@@ -29,7 +29,7 @@ There are three approaches you can choose:
 + Install via update site URL: `http://dl.bintray.com/lttpp/eemory-update-site`.
 + Install via [archived update site](https://github.com/lttpp/Eemory/releases) locally.
 
-New to Eclipse plug-in? Please check out this [Wiki](https://github.com/lttpp/Eemory/wiki) for complete instructions, or go to [Eclipse Marketplace](http://dl.bintray.com/lttpp/eemory-update-site) website for more information.
+New to Eclipse plug-in? Please check out this [Wiki](https://github.com/lttpp/Eemory/wiki) for complete instructions, or go to [Eclipse Marketplace](http://marketplace.eclipse.org/content/eemory) website for more information.
 
 ### Authors and Contributors
 + Jianwei Liu (@liujienwei)
