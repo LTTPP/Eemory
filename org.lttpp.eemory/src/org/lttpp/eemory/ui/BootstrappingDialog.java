@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -154,7 +155,7 @@ public class BootstrappingDialog {
                     maxLen = len;
                 }
             }
-            return maxLen + 2; // +2 is just in case and not platform and language specific, so no need to take additional care here.
+            return SystemUtils.IS_OS_LINUX ? maxLen * 2 : maxLen + 12; // *2, +12 are just in case and no platform and language specific issue, also 4k displayer is verified, so no need to take additional care here.
         }
     }
 
