@@ -662,7 +662,7 @@ public class ConfigurationsDialog extends TitleAreaDialog {
                  * 
                  * This happens on Win 7 and earlier version, not observed on Win 10.
                  */
-                text.setBackground(button.getSelection() ? null : shell.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+                text.setBackground(button.getSelection() ? null : shell.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));  // null means the default system color for this control.
             }
         });
 
