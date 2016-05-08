@@ -71,11 +71,15 @@ public class GeomPoint {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj instanceof GeomPoint) {
-            GeomPoint p = (GeomPoint) obj;
-            if (p.getX() == getX() && p.getY() == getY()) {
-                return true;
-            }
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof GeomPoint)) {
+            return false;
+        }
+        GeomPoint p = (GeomPoint) obj;
+        if (x == p.x && y == p.y) {
+            return true;
         }
         return false;
     }
